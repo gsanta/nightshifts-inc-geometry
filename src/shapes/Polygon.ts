@@ -4,9 +4,9 @@ import { Line } from './Line';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import without from 'lodash/without';
-import chain from 'lodash/chain';
 import last from 'lodash/last';
 import polylabel from 'polylabel';
+import _ from 'lodash';
 
 export class Polygon {
     public points: Point[];
@@ -259,7 +259,7 @@ export class Polygon {
             return false;
         }
 
-        return chain(this.points)
+        return _.chain(this.points)
             .map((point, index) => point.equalTo(otherPolygon.points[index]))
             .every(isEqual => isEqual === true)
             .value();
