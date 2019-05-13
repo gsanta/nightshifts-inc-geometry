@@ -111,7 +111,7 @@ export class Rectangle extends Polygon {
     }
 
     public mirrorY(): Polygon {
-        return new Rectangle(this.left, -this.top + this.height, this.width, this.height);
+        return new Rectangle(this.left, -(this.top + this.height / 2), this.width, this.height);
     }
 
     /**
