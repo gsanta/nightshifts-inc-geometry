@@ -44,6 +44,13 @@ export class Polygon {
         return new Polygon(translatedPoints);
     }
 
+    /**
+     * TODO: `negateY` is not correct here but seems to be difficult to mirror a `Polygon`
+     */
+    public mirrorY(): Polygon {
+        return this.negateY();
+    }
+
     public getCircumference(): number {
         return this.points.reduce(
             (sum: number, currentItem: Point, index: number) => sum + this.getNthLine(index).getLength(),

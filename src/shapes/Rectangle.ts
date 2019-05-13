@@ -103,8 +103,15 @@ export class Rectangle extends Polygon {
         return new Rectangle(-this.left, this.top, this.width, this.height);
     }
 
+    /**
+     * @deprecated not clear why is it useful most of the time `mirrorY` should be used
+     */
     public negateY(): Polygon {
         return new Rectangle(this.left, -this.top, this.width, this.height);
+    }
+
+    public mirrorY(): Polygon {
+        return new Rectangle(this.left, -this.top + this.height, this.width, this.height);
     }
 
     /**
