@@ -369,6 +369,30 @@ describe('Polygon', () => {
         });
     });
 
+    describe('`getUnion`', () => {
+
+        const polygon1 = new Polygon([
+            new Point(1, 1),
+            new Point(3, 1),
+            new Point(3, 3),
+            new Point(1, 3),
+            new Point(1, 1)
+        ]);
+
+        const polygon2 = new Polygon([
+            new Point(1, 3),
+            new Point(3, 3),
+            new Point(4, 4),
+            new Point(1, 4),
+            new Point(1, 3)
+
+        ]);
+
+        const union = polygon1.getUnion(polygon2);
+
+        1
+    });
+
     // describe('getBoundingCenter', () => {
     //     it ('returns the visual center of the polygon', () => {
     //         const map = `

@@ -36,10 +36,17 @@ export class Point {
         return this.x !== otherPoint.x && this.y !== otherPoint.y;
     }
 
-    public distanceTo(otherPoint: Point): [number, number] {
+    public absoluteDistanceTo(otherPoint: Point): [number, number] {
         return [
             Math.abs(this.x - otherPoint.x),
             Math.abs(this.y - otherPoint.y)
+        ];
+    }
+
+    public distanceTo(otherPoint: Point) {
+        return [
+            this.x - otherPoint.x,
+            this.y - otherPoint.y
         ];
     }
 

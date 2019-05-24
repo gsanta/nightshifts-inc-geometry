@@ -7,6 +7,11 @@ import without from 'lodash/without';
 import last from 'lodash/last';
 import polylabel from 'polylabel';
 import _ from 'lodash';
+import * as PolyBool from 'polybooljs';
+
+export enum PolygonOrigin {
+    CENTER
+}
 
 export class Polygon {
     public points: Point[];
@@ -179,6 +184,33 @@ export class Polygon {
     public getBoundingCenter(): Point {
         const center = polylabel([this.toTwoDimensionalArray()], 1.0);
         return new Point(center[0], center[1]);
+    }
+
+    public setPosition(point: Point, origin: PolygonOrigin = PolygonOrigin.CENTER): Polygon {
+        const diff = this.getBoundingCenter().distanceTo(point);
+
+        const points = this.points.map(point => point.addX(diff[0]).addY(diff[1]));
+
+        return new Polygon(points);
+    }
+
+    public getUnion(otherPolygon: Polygon): Polygon {
+        const coordinates = this.toTwoDimensionalArray();
+        const otherCoordinates = otherPolygon.toTwoDimensionalArray();
+
+        const union = PolyBool.union(
+            {
+                regions: [[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]],
+                inverted: false
+            },
+            {
+                regions: [[[1, 2], [2, 2], [2, 3], [1, 3], [1, 2]]],
+                inverted: false
+            }
+        );
+
+        const points = union.regions.map(region => new Point(region[0], region[1]));
+        return new Polygon(points);
     }
 
     /**

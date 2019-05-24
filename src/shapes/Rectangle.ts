@@ -1,4 +1,4 @@
-import { Polygon } from './Polygon';
+import { Polygon, PolygonOrigin } from './Polygon';
 import { Point } from './Point';
 import { Line } from './Line';
 import range from 'lodash/range';
@@ -112,6 +112,12 @@ export class Rectangle extends Polygon {
 
     public mirrorY(): Polygon {
         return new Rectangle(this.left, -(this.top + this.height), this.width, this.height);
+    }
+
+    public setPosition(point: Point, origin: PolygonOrigin = PolygonOrigin.CENTER): Polygon {
+        const diff = this.getBoundingCenter().distanceTo(point);
+
+        return this.addX(diff[0]).addY(diff[1]);
     }
 
     /**

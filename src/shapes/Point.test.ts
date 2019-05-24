@@ -8,7 +8,7 @@ describe('`Point`', () => {
             const point = new Point(2, 3);
             const otherPoint = new Point(4, -2);
 
-            expect(point.distanceTo(otherPoint)).to.eql([2, 5]);
+            expect(point.absoluteDistanceTo(otherPoint)).to.eql([2, 5]);
         });
     });
 });
