@@ -117,7 +117,7 @@ export class Rectangle extends Polygon {
     public setPosition(point: Point, origin: PolygonOrigin = PolygonOrigin.CENTER): Polygon {
         const diff = this.getBoundingCenter().distanceTo(point);
 
-        return this.addX(diff[0]).addY(diff[1]);
+        return this.addX(-diff[0]).addY(-diff[1]);
     }
 
     /**
