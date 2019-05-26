@@ -195,9 +195,6 @@ export class Polygon {
     }
 
     public getUnion(otherPolygon: Polygon): Polygon {
-        const coordinates = this.toTwoDimensionalArray();
-        const otherCoordinates = otherPolygon.toTwoDimensionalArray();
-
         const union = PolyBool.union(
             {
                 regions: [[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]],
@@ -211,6 +208,29 @@ export class Polygon {
 
         const points = union.regions.map(region => new Point(region[0], region[1]));
         return new Polygon(points);
+    }
+
+    public getSidesFromBottomLeftClockwise(): Line[] {
+        // const minY = _.minBy(this.points, point => point.y).y;
+        // const minX = _.minBy(this.points, point => point.x).x;
+
+        // const bottomLeftPoint = _.chain(this.points)
+        //     .filter(point => point.y === minY)
+        //     .filter(point => point.x === minX)
+        //     .value()[0];
+
+        // const points = _.without(this.points, _.last(this.points))
+
+        // const separatorIndex = this.points.indexOf(bottomLeftPoint);
+        // const orderedPoints = [...this.points.slice(separatorIndex, this.points.length), ...this.points.slice(0, separatorIndex)];
+
+        return this.points.map((point, index) => {
+            if (index < this.points.length - 1) {
+                return new Line(point, this.points[index + 1]);
+            } else {
+                return new Line(point, this.points[0]);
+            }
+        });
     }
 
     /**

@@ -2,6 +2,7 @@ import { Polygon, PolygonOrigin } from './Polygon';
 import { Point } from './Point';
 import { Line } from './Line';
 import range from 'lodash/range';
+import _ from 'lodash';
 
 export class Rectangle extends Polygon {
     constructor(left: number, top: number, width: number, height: number) {
@@ -88,7 +89,6 @@ export class Rectangle extends Polygon {
                 return new Rectangle(currentLeft, this.top, sliceWidth, this.height);
             })
             .map(rect => rect.translate(translate));
-
     }
 
     public addX(amount: number): Polygon {

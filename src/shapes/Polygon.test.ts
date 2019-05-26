@@ -369,57 +369,24 @@ describe('Polygon', () => {
         });
     });
 
-    describe('`getUnion`', () => {
 
-        const polygon1 = new Polygon([
-            new Point(1, 1),
-            new Point(3, 1),
-            new Point(3, 3),
-            new Point(1, 3),
-            new Point(1, 1)
-        ]);
+    describe.only('`getSidesFromBottomLeftClockwise`', () => {
+        it ('returns with a `Line` array representing the `Polygon` sides from bottom left clockwise', () => {
+            const polygon = new Polygon([
+                new Point(1, 1),
+                new Point(3, 1),
+                new Point(3, 3),
+                new Point(1, 3)
+            ]);
 
-        const polygon2 = new Polygon([
-            new Point(1, 3),
-            new Point(3, 3),
-            new Point(4, 4),
-            new Point(1, 4),
-            new Point(1, 3)
-
-        ]);
-
-        const union = polygon1.getUnion(polygon2);
-
-        1
+            expect(polygon.getSidesFromBottomLeftClockwise()).to.eql(
+                [
+                    new Line(new Point(1, 1), new Point(3, 1)),
+                    new Line(new Point(3, 1), new Point(3, 3)),
+                    new Line(new Point(3, 3), new Point(1, 3)),
+                    new Line(new Point(1, 3), new Point(1, 1)),
+                ]
+            )
+        });
     });
-
-    // describe('getBoundingCenter', () => {
-    //     it ('returns the visual center of the polygon', () => {
-    //         const map = `
-    //             map \`
-
-    //             WWWWWWWWWWWWWW
-    //             W---W--------W
-    //             W---WWWWWWWWWW
-    //             W------------W
-    //             W------------W
-    //             WWWWWWWWWWWWWW
-
-    //             \`
-    //         `;
-    //         const worldMapParser = GwmWorldMapParser.createWithCustomWorldItemGenerator(
-    //             new CombinedWorldItemParser(
-    //                 [
-    //                     new RoomInfoParser(),
-    //                 ]
-    //             ),
-    //         );
-
-
-    //         const rooms = worldMapParser.parse(map);
-
-    //         const center = rooms[0].dimensions.getBoundingCenter();
-    //         expect(center).to.eql(new Point(2.5, 3.5));
-    //     });
-    // });
 });
