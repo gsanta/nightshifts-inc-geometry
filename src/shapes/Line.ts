@@ -16,6 +16,27 @@ export class Line {
         return this.start.y === this.end.y;
     }
 
+    /**
+     * Returns true if the `Line` segment in the parameter determines the same infinite line.
+     */
+    public isCoincidentToLine(otherLine: Line) {
+        return this.isPointOnTheLine(otherLine.start) && this.isPointOnTheLine(otherLine.end);
+    }
+
+    /**
+     * Returns true if the `Point` in the parameter lies on the `Line`.
+     */
+    public isPointOnTheLine(point: Point): boolean {
+        return point.y - this.start.y === this.getSlope() * (point.x - this.start.x)
+    }
+
+    /**
+     * Calculates the slope of the `Line`.
+     */
+    public getSlope() {
+        return (this.end.y - this.start.y) / (this.end.x - this.start.x);
+    }
+
     public scaleX(times: number): Line {
         return new Line(this.start.scaleX(times), this.end.scaleX(times));
     }

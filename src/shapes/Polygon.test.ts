@@ -370,7 +370,7 @@ describe('Polygon', () => {
     });
 
 
-    describe.only('`getSidesFromBottomLeftClockwise`', () => {
+    describe('`getSidesFromBottomLeftClockwise`', () => {
         it ('returns with a `Line` array representing the `Polygon` sides from bottom left clockwise', () => {
             const polygon = new Polygon([
                 new Point(1, 1),

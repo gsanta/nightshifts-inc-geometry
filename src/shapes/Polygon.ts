@@ -234,6 +234,16 @@ export class Polygon {
     }
 
     /**
+     * Returns with the side of the polygon and the index of that side counting from bottom left to clockwise direction
+     * which lies on the same line as the parameter.
+     */
+    public getCoincidingSideForLine(line: Line) {
+        const sides = this.getSidesFromBottomLeftClockwise();
+
+        // sides.forEach()
+    }
+
+    /**
      * Returns with the minimum x position of all of the polygon's points
      */
     public minX(): number {
