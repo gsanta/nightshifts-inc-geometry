@@ -81,6 +81,13 @@ describe('Line', () => {
 
             expect(line1.overlapsLine(line2)).to.eql(undefined);
         });
+
+        it ('works well also when the lines are vertical.', () => {
+            const line1 = new Line(new Point(1, 4), new Point(1, 0));
+            const line2 = new Line(new Point(1, 1), new Point(1, 3));
+
+            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(1, 1), new Point(1, 3)));
+        });
     });
 
     describe ('equalTo', () => {

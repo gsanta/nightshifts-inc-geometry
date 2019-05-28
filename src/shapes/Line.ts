@@ -46,18 +46,40 @@ export class Line {
             return undefined;
         }
 
-        const [p1MinX, p1MaxX] = this.start.x < this.end.x ? [this.start, this.end] : [this.end, this.start];
-        const [p2MinX, p2MaxX] = otherLine.start.x < otherLine.end.x ? [otherLine.start, otherLine.end] : [otherLine.end, otherLine.start];
+        let [a, b] = [this.start.x, this.start.y];
+        let [c, d] = [this.end.x, this.end.y];
+        let [e, f] = [otherLine.start.x, otherLine.start.y];
+        let [g, h] = [otherLine.end.x, otherLine.end.y];
 
-        if (p1MinX.x < p2MinX.x && p1MaxX.x > p2MaxX.x) {
-            return new Line(p2MinX, p2MaxX);
-        } else if (p2MinX.x < p1MinX.x && p2MaxX.x > p1MaxX.x) {
-            return new Line(p1MinX, p1MaxX);
-        } else if (p1MinX.x < p2MinX.x && p1MaxX.x > p2MinX.x) {
-            return new Line(p2MinX, p1MaxX);
-        } else if (p2MinX.x < p1MinX.x && p2MaxX.x > p1MinX.x) {
-            return new Line(p1MinX, p2MaxX);
+        if (this.isVertical()) {
+            [a, b, c, d] = b < d ? [a, b, c, d] : [c, d, a, b];
+            [e, f, g, h] = f < h ? [e, f, g, h] : [g, h, e, f];
+
+            if (b < f && d > h) {
+                return new Line(new Point(e, f), new Point(g, h));
+            } else if (f < b && h > d) {
+                return new Line(new Point(a, b), new Point(c, d));
+            } else if (b < f && d > f) {
+                return new Line(new Point(e, f), new Point(c, d));
+            } else if (f < b && h > b) {
+                return new Line(new Point(a, b), new Point(g, h));
+            }
+        } else {
+            [a, b, c, d] = a < c ? [a, b, c, d] : [c, d, a, b];
+            [e, f, g, h] = e < g ? [e, f, g, h] : [g, h, e, f];
+
+            if (a < e && c > g) {
+                return new Line(new Point(e, f), new Point(g, h));
+            } else if (e < a && g > c) {
+                return new Line(new Point(a, b), new Point(c, d));
+            } else if (a < e && c > e) {
+                return new Line(new Point(e, f), new Point(c, d));
+            } else if (e < a && g > a) {
+                return new Line(new Point(a, b), new Point(g, h));
+            }
         }
+
+
     }
 
     /**
