@@ -13,6 +13,20 @@ export enum PolygonOrigin {
     CENTER
 }
 
+export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
+    const minY = _.minBy(points, point => point.y).y;
+
+    const bottomLeftPoint = _.chain(points)
+        .filter(point => point.y === minY)
+        .minBy(point => point.x)
+        .value();
+
+    const separatorIndex = points.indexOf(bottomLeftPoint);
+    const orderedPoints = [...points.slice(separatorIndex, points.length), ...points.slice(0, separatorIndex)];
+
+    return orderedPoints;
+}
+
 export class Polygon {
     public points: Point[];
     public left: number;
@@ -21,7 +35,7 @@ export class Polygon {
     public height: number;
 
     constructor(points: Point[]) {
-        this.points = points;
+        this.points = orderPointsToStartAtBottomLeft(points);
     }
 
     public addX(amount: number): Polygon {
@@ -211,19 +225,6 @@ export class Polygon {
     }
 
     public getSidesFromBottomLeftClockwise(): Line[] {
-        // const minY = _.minBy(this.points, point => point.y).y;
-        // const minX = _.minBy(this.points, point => point.x).x;
-
-        // const bottomLeftPoint = _.chain(this.points)
-        //     .filter(point => point.y === minY)
-        //     .filter(point => point.x === minX)
-        //     .value()[0];
-
-        // const points = _.without(this.points, _.last(this.points))
-
-        // const separatorIndex = this.points.indexOf(bottomLeftPoint);
-        // const orderedPoints = [...this.points.slice(separatorIndex, this.points.length), ...this.points.slice(0, separatorIndex)];
-
         return this.points.map((point, index) => {
             if (index < this.points.length - 1) {
                 return new Line(point, this.points[index + 1]);
@@ -234,13 +235,20 @@ export class Polygon {
     }
 
     /**
-     * Returns with the side of the polygon and the index of that side counting from bottom left to clockwise direction
-     * which lies on the same line as the parameter.
+     * Determines which side (if any) of the `Polygon` lies on the same line as the given `Line` segment.
+     * @returns the `Line` segment representing the side of the `Polygon` and the index of that side being the 0 index
+     *      the bottom left side and counting clockwise.
      */
-    public getCoincidingSideForLine(line: Line) {
+    public getCoincidingSideForLine(line: Line): [Line, number] {
         const sides = this.getSidesFromBottomLeftClockwise();
 
-        // sides.forEach()
+        const coincidingSides = sides.filter(side => side.isCoincidentToLine(line));
+
+        if (coincidingSides.length > 0) {
+            return [coincidingSides[0], sides.indexOf(coincidingSides[0])];
+        }
+
+        return undefined;
     }
 
     /**

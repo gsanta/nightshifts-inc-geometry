@@ -31,6 +31,29 @@ export class Line {
     }
 
     /**
+     * Determines if the `Line` segment in the parameter overlaps with this `Line`, if so returns the overlap as a `Line` segment,
+     * otherwise returns undefined.
+     */
+    public overlapsLine(otherLine: Line): Line {
+        if (!this.isCoincidentToLine(otherLine)) {
+            return undefined;
+        }
+
+        const [p1MinX, p1MaxX] = this.start.x < this.end.x ? [this.start, this.end] : [this.end, this.start];
+        const [p2MinX, p2MaxX] = otherLine.start.x < otherLine.end.x ? [otherLine.start, otherLine.end] : [otherLine.end, otherLine.start];
+
+        if (p1MinX.x < p2MinX.x && p1MaxX.x > p2MaxX.x) {
+            return new Line(p2MinX, p2MaxX);
+        } else if (p2MinX.x < p1MinX.x && p2MaxX.x > p1MaxX.x) {
+            return new Line(p1MinX, p1MaxX);
+        } else if (p1MinX.x < p2MinX.x && p1MaxX.x > p2MinX.x) {
+            return new Line(p2MinX, p1MaxX);
+        } else if (p2MinX.x < p1MinX.x && p2MaxX.x > p1MinX.x) {
+            return new Line(p1MinX, p2MaxX);
+        }
+    }
+
+    /**
      * Calculates the slope of the `Line`.
      */
     public getSlope() {

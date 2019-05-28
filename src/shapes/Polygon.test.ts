@@ -1,9 +1,30 @@
-import { Polygon } from './Polygon';
+import { Polygon, orderPointsToStartAtBottomLeft } from './Polygon';
 import { Point } from './Point';
 import { expect } from 'chai';
 import { Rectangle } from './Rectangle';
 import { Line } from './Line';
 
+describe('`orderPointsToStartAtBottomLeft`', () => {
+    it ('orders a list of points so that the relative order of the points remain, but the first point will be the bottom left', () => {
+        const points = [
+            new Point(5, 5),
+            new Point(5, 3),
+            new Point(4, 3),
+            new Point(4, 2),
+            new Point(1, 2),
+            new Point(1, 5)
+        ];
+
+        expect(orderPointsToStartAtBottomLeft(points)).to.eql([
+            new Point(1, 2),
+            new Point(1, 5),
+            new Point(5, 5),
+            new Point(5, 3),
+            new Point(4, 3),
+            new Point(4, 2)
+        ]);
+    });
+});
 
 describe('Polygon', () => {
     describe('contains', () => {
@@ -181,18 +202,20 @@ describe('Polygon', () => {
         it ('negates the x coordinates of the `Polygon`', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
-                new Point(5, 3),
-                new Point(5, 6),
+                new Point(2, 7),
                 new Point(4, 7),
-                new Point(2, 7)
+                new Point(5, 6),
+                new Point(5, 3),
+                new Point(2, 3)
             ]);
 
             const expectedPolygon = new Polygon([
                 new Point(2, -3),
-                new Point(5, -3),
-                new Point(5, -6),
+                new Point(2, -7),
                 new Point(4, -7),
-                new Point(2, -7)
+                new Point(5, -6),
+                new Point(5, -3),
+                new Point(2, -3)
             ])
 
             expect(polygon.negateY().equalTo(expectedPolygon)).to.be.true;
@@ -248,9 +271,10 @@ describe('Polygon', () => {
         it ('calculates the circumference of the `Polygon`', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
-                new Point(5, 3),
+                new Point(2, 6),
                 new Point(5, 6),
-                new Point(2, 6)
+                new Point(5, 3),
+                new Point(2, 3)
             ]);
 
             expect(polygon.getCircumference()).to.eql(12);
@@ -262,19 +286,17 @@ describe('Polygon', () => {
         it ('stretches the `Polygon` with the given amount on the x axis', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
-                new Point(5, 3),
+                new Point(2, 6),
                 new Point(5, 6),
-                new Point(2, 6)
+                new Point(5, 3)
             ]);
 
-            const expectedPolygon = new Polygon([
+            expect(polygon.stretchX(1)).to.eql(new Polygon([
                 new Point(1, 3),
-                new Point(6, 3),
+                new Point(1, 6),
                 new Point(6, 6),
-                new Point(1, 6)
-            ]);
-
-            expect(polygon.stretchX(1).equalTo(expectedPolygon)).to.be.true;
+                new Point(6, 3)
+            ]));
         });
     });
 
