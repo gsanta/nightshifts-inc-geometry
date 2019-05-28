@@ -235,20 +235,16 @@ export class Polygon {
     }
 
     /**
-     * Determines which side (if any) of the `Polygon` lies on the same line as the given `Line` segment.
-     * @returns the `Line` segment representing the side of the `Polygon` and the index of that side being the 0 index
-     *      the bottom left side and counting clockwise.
+     * Determines which sides (if any) of the `Polygon` lies on the same line as the given `Line` segment.
+     * @returns an array of the following structure: the `Line` segment representing the side of the `Polygon` and the index of that side
+     *      being the 0 index the bottom left side and counting clockwise.
      */
-    public getCoincidingSideForLine(line: Line): [Line, number] {
+    public getCoincidingSidesForLine(line: Line): [Line, number][] {
         const sides = this.getSidesFromBottomLeftClockwise();
 
-        const coincidingSides = sides.filter(side => side.isCoincidentToLine(line));
-
-        if (coincidingSides.length > 0) {
-            return [coincidingSides[0], sides.indexOf(coincidingSides[0])];
-        }
-
-        return undefined;
+        return sides
+            .filter(side => side.isCoincidentToLine(line))
+            .map(side => [side, sides.indexOf(side)]);
     }
 
     /**

@@ -411,4 +411,22 @@ describe('Polygon', () => {
             )
         });
     });
+
+    describe('`getCoincidingSidesForLine`', () => {
+        it ('returns the correct side of the `Polygon` and it\'s index which conincides with the `Line` given as a parameter.', () => {
+            const polygon = new Polygon([
+                new Point(5, 5),
+                new Point(5, 3),
+                new Point(4, 3),
+                new Point(4, 2),
+                new Point(1, 2),
+                new Point(1, 5)
+            ]);
+
+            const coincidingSides = polygon.getCoincidingSidesForLine(new Line(new Point(3, 3), new Point(5, 3)));
+
+            expect(coincidingSides.length).to.equal(1);
+            expect(coincidingSides[0]).to.eql([new Line(new Point(5, 3), new Point(4, 3)), 3]);
+        });
+    });
 });
