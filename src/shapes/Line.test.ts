@@ -17,6 +17,12 @@ describe('Line', () => {
             expect(line.isPointOnTheLine(new Point(-2, -1))).to.be.true;
         });
 
+        it ('can handle vertical lines where slope is undefined.', () => {
+            const line = new Line(new Point(1, 2), new Point(1, 5));
+
+            expect(line.isPointOnTheLine(new Point(1, 3))).to.be.true;
+        });
+
         it ('returns false if the given `Point` does not lie on the line.', () => {
             const line = new Line(new Point(1, 2), new Point(5, 6));
 

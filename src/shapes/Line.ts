@@ -27,7 +27,14 @@ export class Line {
      * Returns true if the `Point` in the parameter lies on the `Line`.
      */
     public isPointOnTheLine(point: Point): boolean {
-        return point.y - this.start.y === this.getSlope() * (point.x - this.start.x)
+        const slope = this.getSlope();
+
+        if (slope === undefined) {
+            return point.x === this.start.x;
+        } else {
+            return point.y - this.start.y === this.getSlope() * (point.x - this.start.x)
+        }
+
     }
 
     /**
@@ -54,9 +61,12 @@ export class Line {
     }
 
     /**
-     * Calculates the slope of the `Line`.
+     * Calculates the slope of the `Line` or undefined if vertical line.
      */
-    public getSlope() {
+    public getSlope(): number {
+        if (this.start.x === this.end.x) {
+            return undefined;
+        }
         return (this.end.y - this.start.y) / (this.end.x - this.start.x);
     }
 
