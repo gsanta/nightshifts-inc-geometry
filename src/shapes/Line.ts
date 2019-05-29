@@ -1,11 +1,61 @@
 import { Point } from "./Point";
+import { Shape, ShapeOrigin } from './Shape';
 
-export class Line {
+export class Line implements Shape {
     public start: Point;
     public end: Point;
 
     constructor(endPoint1: Point, endPoint2: Point) {
         [this.start, this.end] = this.orderPoints(endPoint1, endPoint2);
+    }
+
+    public addX(amount: number): Shape {
+        return new Line(this.start.addX(amount), this.end.addX(amount));
+    }
+
+    public addY(amount: number): Shape {
+        return new Line(this.start.addY(amount), this.end.addY(amount));
+    }
+
+    public translate(point: Point): Shape {
+        return this.addX(point.x).addY(point.y);
+    }
+
+    public negateX(): Shape {
+        return new Line(this.start.negateX(), this.end.negateX());
+    }
+
+    public negateY(): Shape {
+        return new Line(this.start.negateY(), this.end.negateY());
+    }
+
+    public mirrorY(): Shape {
+        /**
+         * For a `Line` negate and mirror means the same
+         */
+        return this.negateY();
+    }
+
+    public getCircumference(): number {
+        return 2 * this.getLength();
+    }
+
+    public getArea(): number {
+        return 0;
+    }
+
+    public clone(): Shape {
+        return new Line(this.start, this.end);
+    }
+
+    public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Shape {
+        const diff = this.getBoundingCenter().distanceTo(point);
+
+        return new Line(this.start.addX(diff[0]).addY(diff[1]), this.end.addX(diff[0]).addY(diff[1]));
+    }
+
+    public getBoundingCenter(): Point {
+        return new Point((this.start.x + this.end.x) / 2, (this.start.y + this.end.y) / 2);
     }
 
     public isVertical() {

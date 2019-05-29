@@ -8,10 +8,7 @@ import last from 'lodash/last';
 import polylabel from 'polylabel';
 import _ from 'lodash';
 import * as PolyBool from 'polybooljs';
-
-export enum PolygonOrigin {
-    CENTER
-}
+import { Shape, ShapeOrigin } from './Shape';
 
 export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
     const minY = _.minBy(points, point => point.y).y;
@@ -27,7 +24,7 @@ export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
     return orderedPoints;
 }
 
-export class Polygon {
+export class Polygon implements Shape {
     public points: Point[];
     public left: number;
     public top: number;
@@ -200,7 +197,7 @@ export class Polygon {
         return new Point(center[0], center[1]);
     }
 
-    public setPosition(point: Point, origin: PolygonOrigin = PolygonOrigin.CENTER): Polygon {
+    public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
         const diff = this.getBoundingCenter().distanceTo(point);
 
         const points = this.points.map(point => point.addX(diff[0]).addY(diff[1]));

@@ -1,8 +1,9 @@
-import { Polygon, PolygonOrigin } from './Polygon';
+import { Polygon } from './Polygon';
 import { Point } from './Point';
 import { Line } from './Line';
 import range from 'lodash/range';
 import _ from 'lodash';
+import { ShapeOrigin } from './Shape';
 
 export class Rectangle extends Polygon {
     constructor(left: number, top: number, width: number, height: number) {
@@ -114,7 +115,7 @@ export class Rectangle extends Polygon {
         return new Rectangle(this.left, -(this.top + this.height), this.width, this.height);
     }
 
-    public setPosition(point: Point, origin: PolygonOrigin = PolygonOrigin.CENTER): Polygon {
+    public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
         const diff = this.getBoundingCenter().distanceTo(point);
 
         return this.addX(-diff[0]).addY(-diff[1]);

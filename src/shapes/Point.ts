@@ -28,6 +28,14 @@ export class Point {
         return new Point(-this.x, - this.y);
     }
 
+    public negateX(): Point {
+        return new Point(-this.x, this.y);
+    }
+
+    public negateY(): Point {
+        return new Point(this.x, -this.y);
+    }
+
     /*
      * Returns true if the line through this and the parameter is not
      * vertical and not horizontal
