@@ -127,6 +127,7 @@ export class Polygon implements Shape {
     }
 
     /**
+     * @deprecated use `getCoincidentLineSegment`
      * Returns true if the two polygons intersect only at a border (but do not overlap)
      */
     public intersectBorder(other: Polygon): Line {
@@ -221,6 +222,9 @@ export class Polygon implements Shape {
         return new Polygon(points);
     }
 
+    /**
+     * @deprecated use `getEdges` instead, it has the same behaviour, but a more unified naming convention
+     */
     public getSidesFromBottomLeftClockwise(): Line[] {
         return this.points.map((point, index) => {
             if (index < this.points.length - 1) {
@@ -242,6 +246,24 @@ export class Polygon implements Shape {
         return sides
             .filter(side => side.isCoincidentToLine(line))
             .map(side => [side, sides.indexOf(side)]);
+    }
+
+    public getCoincidentLineSegment(other: Shape): [Line, number, number] {
+        const otherEdges = other.getEdges();
+        const thisEdges = this.getEdges();
+
+        for (let i = 0; i < otherEdges.length; i++) {
+            for (let j = 0; j < thisEdges.length; j++) {
+                const overlap = otherEdges[i].overlapsLine(thisEdges[j]);
+                if (overlap) {
+                    return [overlap, j, i];
+                }
+            }
+        }
+    }
+
+    public getEdges(): Line[] {
+        return this.getSidesFromBottomLeftClockwise();
     }
 
     /**

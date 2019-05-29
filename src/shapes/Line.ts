@@ -17,6 +17,14 @@ export class Line implements Shape {
         return new Line(this.start.addY(amount), this.end.addY(amount));
     }
 
+    public minX(): number {
+        return this.start.x < this.end.x ? this.start.x : this.end.x;
+    }
+
+    public maxX(): number {
+        return this.start.x > this.end.x ? this.start.x : this.end.x;
+    }
+
     public translate(point: Point): Shape {
         return this.addX(point.x).addY(point.y);
     }
@@ -66,6 +74,21 @@ export class Line implements Shape {
         return this.start.y === this.end.y;
     }
 
+    public getCoincidentLineSegment(other: Shape): [Line, number, number] {
+        const otherEdges = other.getEdges();
+
+        for (let i = 0; i < otherEdges.length; i++) {
+            const overlap = this.overlapsLine(otherEdges[i]);
+            if (overlap) {
+                return [overlap, 0, i];
+            }
+        }
+    }
+
+    public getEdges(): Line[] {
+        return [this];
+    }
+
     /**
      * Returns true if the `Line` segment in the parameter determines the same infinite line.
      */
@@ -84,7 +107,6 @@ export class Line implements Shape {
         } else {
             return point.y - this.start.y === this.getSlope() * (point.x - this.start.x)
         }
-
     }
 
     /**

@@ -139,6 +139,26 @@ describe('Polygon', () => {
         });
     });
 
+    describe('`getCoincidentLineSegment`', () => {
+        it.only ('returns with the common `Line` segment if the `Polygon` has a common edge with the other `Shape`', () => {
+            const poly1 = new Polygon([
+                new Point(1, 1),
+                new Point(1, 4),
+                new Point(3, 4),
+                new Point(3, 1)
+            ]);
+
+            const poly2 = new Polygon([
+                new Point(3, 1),
+                new Point(3, 4),
+                new Point(4, 4),
+                new Point(4, 1)
+            ]);
+
+            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(new Line(new Point(3, 1), new Point(3, 4)));
+        });
+    });
+
     describe('scaleX', () => {
         it ('scales the polygon on the x axis', () => {
             const polygon = new Rectangle(1, 2, 3, 2);
@@ -392,8 +412,8 @@ describe('Polygon', () => {
     });
 
 
-    describe('`getSidesFromBottomLeftClockwise`', () => {
-        it ('returns with a `Line` array representing the `Polygon` sides from bottom left clockwise', () => {
+    describe('`getEdges`', () => {
+        it ('returns with a `Line` array representing the `Polygon` sides from bottom left to clockwise', () => {
             const polygon = new Polygon([
                 new Point(1, 1),
                 new Point(3, 1),
@@ -401,7 +421,7 @@ describe('Polygon', () => {
                 new Point(1, 3)
             ]);
 
-            expect(polygon.getSidesFromBottomLeftClockwise()).to.eql(
+            expect(polygon.getEdges()).to.eql(
                 [
                     new Line(new Point(1, 1), new Point(3, 1)),
                     new Line(new Point(3, 1), new Point(3, 3)),
