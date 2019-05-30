@@ -254,9 +254,9 @@ export class Polygon implements Shape {
 
         for (let i = 0; i < otherEdges.length; i++) {
             for (let j = 0; j < thisEdges.length; j++) {
-                const overlap = otherEdges[i].overlapsLine(thisEdges[j]);
-                if (overlap) {
-                    return [overlap, j, i];
+                const coincidentInfo = otherEdges[i].getCoincidentLineSegment(thisEdges[j]);
+                if (coincidentInfo) {
+                    return [coincidentInfo[0], j, i];
                 }
             }
         }

@@ -140,7 +140,7 @@ describe('Polygon', () => {
     });
 
     describe('`getCoincidentLineSegment`', () => {
-        it.only ('returns with the common `Line` segment if the `Polygon` has a common edge with the other `Shape`', () => {
+        it ('returns with the common `Line` segment if the `Polygon` has a common edge with the other `Shape`', () => {
             const poly1 = new Polygon([
                 new Point(1, 1),
                 new Point(1, 4),
@@ -155,7 +155,43 @@ describe('Polygon', () => {
                 new Point(4, 1)
             ]);
 
-            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(new Line(new Point(3, 1), new Point(3, 4)));
+            expect(poly1.getCoincidentLineSegment(poly2)).to.eql([new Line(new Point(3, 1), new Point(3, 4)), 2, 0]);
+        });
+
+        it ('returns undefined if the two `Shape`s don\'t have common edges', () => {
+            const poly1 = new Polygon([
+                new Point(1, 1),
+                new Point(1, 4),
+                new Point(3, 4),
+                new Point(3, 1)
+            ]);
+
+            const poly2 = new Polygon([
+                new Point(4, 1),
+                new Point(4, 4),
+                new Point(5, 4),
+                new Point(5, 1)
+            ]);
+
+            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(undefined);
+        });
+
+        it ('returns undefined if the two `Shape`s touches only at a vertex.', () => {
+            const poly1 = new Polygon([
+                new Point(1, 1),
+                new Point(1, 4),
+                new Point(3, 4),
+                new Point(3, 1)
+            ]);
+
+            const poly2 = new Polygon([
+                new Point(3, 4),
+                new Point(3, 6),
+                new Point(6, 6),
+                new Point(6, 4)
+            ]);
+
+            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(undefined);
         });
     });
 

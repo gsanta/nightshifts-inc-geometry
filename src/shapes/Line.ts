@@ -78,7 +78,7 @@ export class Line implements Shape {
         const otherEdges = other.getEdges();
 
         for (let i = 0; i < otherEdges.length; i++) {
-            const overlap = this.overlapsLine(otherEdges[i]);
+            const overlap = this.getCommonLineSegmentIfExists(otherEdges[i]);
             if (overlap) {
                 return [overlap, 0, i];
             }
@@ -113,7 +113,7 @@ export class Line implements Shape {
      * Determines if the `Line` segment in the parameter overlaps with this `Line`, if so returns the overlap as a `Line` segment,
      * otherwise returns undefined.
      */
-    public overlapsLine(otherLine: Line): Line {
+    private getCommonLineSegmentIfExists(otherLine: Line): Line {
         if (!this.isCoincidentToLine(otherLine)) {
             return undefined;
         }
@@ -127,9 +127,9 @@ export class Line implements Shape {
             [a, b, c, d] = b < d ? [a, b, c, d] : [c, d, a, b];
             [e, f, g, h] = f < h ? [e, f, g, h] : [g, h, e, f];
 
-            if (b < f && d > h) {
+            if (b <= f && d >= h) {
                 return new Line(new Point(e, f), new Point(g, h));
-            } else if (f < b && h > d) {
+            } else if (f <= b && h >= d) {
                 return new Line(new Point(a, b), new Point(c, d));
             } else if (b < f && d > f) {
                 return new Line(new Point(e, f), new Point(c, d));
@@ -140,9 +140,9 @@ export class Line implements Shape {
             [a, b, c, d] = a < c ? [a, b, c, d] : [c, d, a, b];
             [e, f, g, h] = e < g ? [e, f, g, h] : [g, h, e, f];
 
-            if (a < e && c > g) {
+            if (a <= e && c >= g) {
                 return new Line(new Point(e, f), new Point(g, h));
-            } else if (e < a && g > c) {
+            } else if (e <= a && g >= c) {
                 return new Line(new Point(a, b), new Point(c, d));
             } else if (a < e && c > e) {
                 return new Line(new Point(e, f), new Point(c, d));

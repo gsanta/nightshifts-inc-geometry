@@ -46,47 +46,54 @@ describe('Line', () => {
         });
     });
 
-    describe('`overlapsLine`', () => {
+    describe('`getCoincidentLineSegment`', () => {
         it ('returns the overlap `Line` segment when line1 extends line2 in both ends.', () => {
             const line1 = new Line(new Point(1, 2), new Point(7, 8));
             const line2 = new Line(new Point(3, 4), new Point(5, 6));
 
-            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(3, 4), new Point(5, 6)));
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(3, 4), new Point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Line` segment when line2 extends line1 in both ends.', () => {
             const line1 = new Line(new Point(3, 4), new Point(5, 6));
             const line2 = new Line(new Point(1, 2), new Point(7, 8));
 
-            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(3, 4), new Point(5, 6)));
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(3, 4), new Point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Line` segment when the two lines overlap and line1 starts at smaller x coordinate.', () => {
             const line1 = new Line(new Point(1, 2), new Point(5, 6));
             const line2 = new Line(new Point(3, 4), new Point(7, 8));
 
-            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(3, 4), new Point(5, 6)));
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(3, 4), new Point(5, 6)), 0, 0]);
+        });
+
+        it ('returns the overlap `Line` segment when the two lines are identical.', () => {
+            const line1 = new Line(new Point(1, 2), new Point(5, 6));
+            const line2 = new Line(new Point(1, 2), new Point(5, 6));
+
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(1, 2), new Point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Line` segment when the two lines overlap and line2 starts at smaller x coordinate.', () => {
             const line1 = new Line(new Point(3, 4), new Point(7, 8));
             const line2 = new Line(new Point(1, 2), new Point(5, 6));
 
-            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(3, 4), new Point(5, 6)));
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(3, 4), new Point(5, 6)), 0, 0]);
         });
 
         it ('returns undefined when the two lines do not overlap.', () => {
             const line1 = new Line(new Point(1, 2), new Point(3, 4));
             const line2 = new Line(new Point(5, 6), new Point(7, 8));
 
-            expect(line1.overlapsLine(line2)).to.eql(undefined);
+            expect(line1.getCoincidentLineSegment(line2)).to.eql(undefined);
         });
 
         it ('works well also when the lines are vertical.', () => {
             const line1 = new Line(new Point(1, 4), new Point(1, 0));
             const line2 = new Line(new Point(1, 1), new Point(1, 3));
 
-            expect(line1.overlapsLine(line2)).to.eql(new Line(new Point(1, 1), new Point(1, 3)));
+            expect(line1.getCoincidentLineSegment(line2)).to.eql([new Line(new Point(1, 1), new Point(1, 3)), 0, 0]);
         });
     });
 
