@@ -6,7 +6,7 @@ export enum ShapeOrigin {
 }
 
 export interface Shape {
-    
+    points: Point[];
     addX(amount: number): Shape;
     addY(amount: number): Shape;
     /**
