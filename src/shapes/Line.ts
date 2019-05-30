@@ -1,6 +1,7 @@
 import { Point } from "./Point";
 import { Shape, ShapeOrigin } from './Shape';
 import { Rectangle } from "./Rectangle";
+import _ from "lodash";
 
 export class Line implements Shape {
     public points: [Point, Point] = [null, null];
@@ -189,6 +190,18 @@ export class Line implements Shape {
 
     public scaleY(times: number): Line {
         return new Line(this.points[0].scaleY(times), this.points[1].scaleY(times));
+    }
+
+    public stretchX(amount: number): Line {
+        const minByX = _.minBy(this.points, point => point.x);
+        const maxByX = _.maxBy(this.points, point => point.x);
+        return new Line(new Point(minByX.x - amount, minByX.y), new Point(maxByX.x + amount, maxByX.y));
+    }
+
+    public stretchY(amount: number): Line {
+        const minByY = _.minBy(this.points, point => point.y);
+        const maxByY = _.maxBy(this.points, point => point.y);
+        return new Line(new Point(minByY.x, minByY.y - amount), new Point(maxByY.x, maxByY.y + amount));
     }
 
     public addToEnd(amount: number) {

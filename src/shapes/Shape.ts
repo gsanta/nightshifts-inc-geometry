@@ -29,6 +29,14 @@ export interface Shape {
     maxY(): number;
     scaleX(times: number): Shape;
     scaleY(times: number): Shape;
+    /**
+     * Stretches the `Shape` in the x direction by the given `amount` while keeping the center point
+     */
+    stretchX(amount: number): Shape;
+    /**
+     * Stretches the `Shape` in the x direction by the given `amount` while keeping the center point
+     */
+    stretchY(amount: number): Shape;
     translate(point: Point): Shape;
     negateX(): Shape;
     negateY(): Shape;
@@ -36,7 +44,7 @@ export interface Shape {
     getCircumference(): number;
     getArea(): number;
     clone(): Shape;
-    setPosition(point: Point, origin: ShapeOrigin): Shape;
+    setPosition(point: Point, origin?: ShapeOrigin): Shape;
     getBoundingCenter(): Point;
     getBoundingRectangle(): Rectangle;
     /**
