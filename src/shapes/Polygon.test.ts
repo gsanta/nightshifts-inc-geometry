@@ -485,4 +485,34 @@ describe('Polygon', () => {
             expect(coincidingSides[0]).to.eql([new Line(new Point(5, 3), new Point(4, 3)), 3]);
         });
     });
+
+    describe('`getBoundingRectangle`', () => {
+        it ('calculates the `Rectangle` which surrounds the `Polygon`', () => {
+            const polygon = new Polygon([
+                new Point(1, 1),
+                new Point(1, 3),
+                new Point(3, 3),
+                new Point(3, 5),
+                new Point(6, 5),
+                new Point(6, 4),
+                new Point(5, 4),
+                new Point(5, 1)
+            ]);
+
+            const boundingRectangle = polygon.getBoundingRectangle();
+            expect(boundingRectangle).to.eql(new Rectangle(1, 5, 5, 4));
+        });
+
+        it ('gives back the same shape if the `Polygon` is already a `Rectangle`', () => {
+            const polygon = new Polygon([
+                new Point(1, 1),
+                new Point(1, 3),
+                new Point(3, 3),
+                new Point(3, 1)
+            ]);
+
+            const boundingRectangle = polygon.getBoundingRectangle();
+            expect(boundingRectangle).to.eql(new Rectangle(1, 3, 2, 2));
+        });
+    });
 });

@@ -1,5 +1,6 @@
 import { Point } from "./Point";
 import { Shape, ShapeOrigin } from './Shape';
+import { Rectangle } from "./Rectangle";
 
 export class Line implements Shape {
     public points: [Point, Point] = [null, null];
@@ -68,6 +69,16 @@ export class Line implements Shape {
         const diff = this.getBoundingCenter().distanceTo(point);
 
         return new Line(this.points[0].addX(diff[0]).addY(diff[1]), this.points[1].addX(diff[0]).addY(diff[1]));
+    }
+
+    public getBoundingRectangle(): Rectangle {
+        let [x1, x2] = [this.points[0].x, this.points[1].x];
+        let [y1, y2] = [this.points[0].y, this.points[1].y];
+
+        [x1, x2] = x1 < x2 ? [x1, x2] : [x2, x1];
+        [y1, y2] = y1 < y2 ? [y1, y2] : [y2, y1];
+
+        return new Rectangle(x1, y2, x2 - x1, y2 - y1);
     }
 
     public getBoundingCenter(): Point {

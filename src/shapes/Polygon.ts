@@ -9,6 +9,7 @@ import polylabel from 'polylabel';
 import _ from 'lodash';
 import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin } from './Shape';
+import { Rectangle } from './Rectangle';
 
 export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
     const minY = _.minBy(points, point => point.y).y;
@@ -196,6 +197,15 @@ export class Polygon implements Shape {
     public getBoundingCenter(): Point {
         const center = polylabel([this.toTwoDimensionalArray()], 1.0);
         return new Point(center[0], center[1]);
+    }
+
+    public getBoundingRectangle(): Rectangle {
+        const minX = this.minX();
+        const maxX = this.maxX();
+        const minY = this.minY();
+        const maxY = this.maxY();
+
+        return new Rectangle(minX, maxY, maxX - minX, maxY - minY);
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {

@@ -1,5 +1,6 @@
 import { Point } from "./Point";
 import { Line } from "./Line";
+import { Rectangle } from "./Rectangle";
 
 export enum ShapeOrigin {
     CENTER
@@ -37,6 +38,7 @@ export interface Shape {
     clone(): Shape;
     setPosition(point: Point, origin: ShapeOrigin): Shape;
     getBoundingCenter(): Point;
+    getBoundingRectangle(): Rectangle;
     /**
      * Determines whether the two `Shape`s have coincident edges, if they have returns the following array structure
      * [the common `Line` segment, the index of the edge in this `Shape`, the index of the edge in the other `Shape`],

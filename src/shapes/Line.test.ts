@@ -1,6 +1,7 @@
 import { Line } from "./Line";
 import { Point } from "./Point";
 import { expect } from "chai";
+import { Rectangle } from "./Rectangle";
 
 
 describe('Line', () => {
@@ -136,6 +137,15 @@ describe('Line', () => {
             const line = new Line(new Point(4, 2), new Point(1, 2));
 
             expect(line.getLength()).to.eql(3);
+        });
+    });
+
+    describe('`getBoundingRectangle`', () => {
+        it ('calculates the `Rectangle` which surrounds the `Polygon`', () => {
+            const polygon = new Line(new Point(1, 1), new Point(3, 3));
+
+            const boundingRectangle = polygon.getBoundingRectangle();
+            expect(boundingRectangle).to.eql(new Rectangle(1, 3, 2, 2));
         });
     });
 });
