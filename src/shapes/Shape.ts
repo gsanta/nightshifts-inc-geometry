@@ -13,11 +13,21 @@ export interface Shape {
      * Returns with the minimum x position of all of the `Shape`'s points.
      */
     minX(): number
-
+    /**
+     * Returns with the maximum x position of all of the `Shape`'s points.
+     */
+    maxX(): number;
     /**
      * Returns with the minimum y position of all of the `Shape`'s points.
      */
-    maxX(): number;
+    minY(): number
+
+    /**
+     * Returns with the maximum y position of all of the `Shape`'s points.
+     */
+    maxY(): number;
+    scaleX(times: number): Shape;
+    scaleY(times: number): Shape;
     translate(point: Point): Shape;
     negateX(): Shape;
     negateY(): Shape;

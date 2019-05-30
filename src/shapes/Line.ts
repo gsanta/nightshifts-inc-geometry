@@ -24,6 +24,15 @@ export class Line implements Shape {
         return this.points[0].x > this.points[1].x ? this.points[0].x : this.points[1].x;
     }
 
+    public minY(): number {
+        return this.points[0].y < this.points[1].y ? this.points[0].y : this.points[1].y;
+
+    }
+
+    public maxY(): number {
+        return this.points[0].y > this.points[1].y ? this.points[0].y : this.points[1].y;
+    }
+
     public translate(point: Point): Shape {
         return this.addX(point.x).addY(point.y);
     }
