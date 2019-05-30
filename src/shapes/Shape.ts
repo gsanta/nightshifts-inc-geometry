@@ -6,6 +6,7 @@ export enum ShapeOrigin {
 }
 
 export interface Shape {
+    
     addX(amount: number): Shape;
     addY(amount: number): Shape;
     /**

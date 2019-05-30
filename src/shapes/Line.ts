@@ -2,27 +2,26 @@ import { Point } from "./Point";
 import { Shape, ShapeOrigin } from './Shape';
 
 export class Line implements Shape {
-    public start: Point;
-    public end: Point;
+    public points: [Point, Point] = [null, null];
 
     constructor(endPoint1: Point, endPoint2: Point) {
-        [this.start, this.end] = this.orderPoints(endPoint1, endPoint2);
+        [this.points[0], this.points[1]] = this.orderPoints(endPoint1, endPoint2);
     }
 
     public addX(amount: number): Shape {
-        return new Line(this.start.addX(amount), this.end.addX(amount));
+        return new Line(this.points[0].addX(amount), this.points[1].addX(amount));
     }
 
     public addY(amount: number): Shape {
-        return new Line(this.start.addY(amount), this.end.addY(amount));
+        return new Line(this.points[0].addY(amount), this.points[1].addY(amount));
     }
 
     public minX(): number {
-        return this.start.x < this.end.x ? this.start.x : this.end.x;
+        return this.points[0].x < this.points[1].x ? this.points[0].x : this.points[1].x;
     }
 
     public maxX(): number {
-        return this.start.x > this.end.x ? this.start.x : this.end.x;
+        return this.points[0].x > this.points[1].x ? this.points[0].x : this.points[1].x;
     }
 
     public translate(point: Point): Shape {
@@ -30,11 +29,11 @@ export class Line implements Shape {
     }
 
     public negateX(): Shape {
-        return new Line(this.start.negateX(), this.end.negateX());
+        return new Line(this.points[0].negateX(), this.points[1].negateX());
     }
 
     public negateY(): Shape {
-        return new Line(this.start.negateY(), this.end.negateY());
+        return new Line(this.points[0].negateY(), this.points[1].negateY());
     }
 
     public mirrorY(): Shape {
@@ -53,25 +52,25 @@ export class Line implements Shape {
     }
 
     public clone(): Shape {
-        return new Line(this.start, this.end);
+        return new Line(this.points[0], this.points[1]);
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Shape {
         const diff = this.getBoundingCenter().distanceTo(point);
 
-        return new Line(this.start.addX(diff[0]).addY(diff[1]), this.end.addX(diff[0]).addY(diff[1]));
+        return new Line(this.points[0].addX(diff[0]).addY(diff[1]), this.points[1].addX(diff[0]).addY(diff[1]));
     }
 
     public getBoundingCenter(): Point {
-        return new Point((this.start.x + this.end.x) / 2, (this.start.y + this.end.y) / 2);
+        return new Point((this.points[0].x + this.points[1].x) / 2, (this.points[0].y + this.points[1].y) / 2);
     }
 
     public isVertical() {
-        return this.start.x === this.end.x;
+        return this.points[0].x === this.points[1].x;
     }
 
     public isHorizontal() {
-        return this.start.y === this.end.y;
+        return this.points[0].y === this.points[1].y;
     }
 
     public getCoincidentLineSegment(other: Shape): [Line, number, number] {
@@ -93,7 +92,7 @@ export class Line implements Shape {
      * Returns true if the `Line` segment in the parameter determines the same infinite line.
      */
     public isCoincidentToLine(otherLine: Line) {
-        return this.isPointOnTheLine(otherLine.start) && this.isPointOnTheLine(otherLine.end);
+        return this.isPointOnTheLine(otherLine.points[0]) && this.isPointOnTheLine(otherLine.points[1]);
     }
 
     /**
@@ -103,9 +102,9 @@ export class Line implements Shape {
         const slope = this.getSlope();
 
         if (slope === undefined) {
-            return point.x === this.start.x;
+            return point.x === this.points[0].x;
         } else {
-            return point.y - this.start.y === this.getSlope() * (point.x - this.start.x)
+            return point.y - this.points[0].y === this.getSlope() * (point.x - this.points[0].x)
         }
     }
 
@@ -118,10 +117,10 @@ export class Line implements Shape {
             return undefined;
         }
 
-        let [a, b] = [this.start.x, this.start.y];
-        let [c, d] = [this.end.x, this.end.y];
-        let [e, f] = [otherLine.start.x, otherLine.start.y];
-        let [g, h] = [otherLine.end.x, otherLine.end.y];
+        let [a, b] = [this.points[0].x, this.points[0].y];
+        let [c, d] = [this.points[1].x, this.points[1].y];
+        let [e, f] = [otherLine.points[0].x, otherLine.points[0].y];
+        let [g, h] = [otherLine.points[1].x, otherLine.points[1].y];
 
         if (this.isVertical()) {
             [a, b, c, d] = b < d ? [a, b, c, d] : [c, d, a, b];
@@ -158,43 +157,43 @@ export class Line implements Shape {
      * Calculates the slope of the `Line` or undefined if vertical line.
      */
     public getSlope(): number {
-        if (this.start.x === this.end.x) {
+        if (this.points[0].x === this.points[1].x) {
             return undefined;
         }
-        return (this.end.y - this.start.y) / (this.end.x - this.start.x);
+        return (this.points[1].y - this.points[0].y) / (this.points[1].x - this.points[0].x);
     }
 
     public scaleX(times: number): Line {
-        return new Line(this.start.scaleX(times), this.end.scaleX(times));
+        return new Line(this.points[0].scaleX(times), this.points[1].scaleX(times));
     }
 
     public scaleY(times: number): Line {
-        return new Line(this.start.scaleY(times), this.end.scaleY(times));
+        return new Line(this.points[0].scaleY(times), this.points[1].scaleY(times));
     }
 
     public addToEnd(amount: number) {
         if (this.isVertical()) {
-            return new Line(this.start, this.end.addY(amount));
+            return new Line(this.points[0], this.points[1].addY(amount));
         } else {
-            return new Line(this.start, this.end.addX(amount));
+            return new Line(this.points[0], this.points[1].addX(amount));
         }
     }
 
     public addToStart(amount: number) {
         if (this.isVertical()) {
-            return new Line(this.start.addY(amount), this.end);
+            return new Line(this.points[0].addY(amount), this.points[1]);
         } else {
-            return new Line(this.start.addX(amount), this.end);
+            return new Line(this.points[0].addX(amount), this.points[1]);
         }
     }
 
     public equalTo(otherLine: Line): boolean {
-        return this.start.equalTo(otherLine.start) && this.end.equalTo(otherLine.end);
+        return this.points[0].equalTo(otherLine.points[0]) && this.points[1].equalTo(otherLine.points[1]);
     }
 
     public getLength(): number {
-        const xDistance = Math.abs(this.start.x - this.end.x);
-        const yDistance = Math.abs(this.start.y - this.end.y);
+        const xDistance = Math.abs(this.points[0].x - this.points[1].x);
+        const yDistance = Math.abs(this.points[0].y - this.points[1].y);
 
         return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
     }
