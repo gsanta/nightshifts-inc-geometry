@@ -112,6 +112,14 @@ describe('Rectangle', () => {
         });
     });
 
+    describe('`getCenterLines`', () => {
+        const rect = new Rectangle(1, 1, 5, 4);
+
+        const centerLines = rect.getCenterLines();
+        expect(centerLines[0]).to.eql(new Line(new Point(3.5, -3), new Point(3.5, 1)));
+        expect(centerLines[1]).to.eql(new Line(new Point(1, -1), new Point(6, -1)));
+    });
+
     describe('`cutToEqualVerticalSlices`', () => {
         it ('cuts the `Rectangle` into two slices without any parameters', () => {
             const rectangle = new Rectangle(1, 3, 4, 2);

@@ -122,6 +122,19 @@ export class Rectangle extends Polygon {
     }
 
     /**
+     * Returns the two `Line`s which halve the `Rectangle` into two smaller `Rectangle`s
+     * TODO: it only works for `Rectangle`s which are aligned to the x or y axis, but does not work for rotated `Rectangle`s
+     */
+    public getCenterLines(): Line[] {
+        const centerX = this.left + this.width / 2;
+        const centerY = this.top - this.height / 2;
+        const line1 = new Line(new Point(centerX, this.top), new Point(centerX, this.top - this.height));
+        const line2 = new Line(new Point(this.left, centerY), new Point(this.left + this.width, centerY));
+
+        return [line1, line2];
+    }
+
+    /**
      * Calculates the two sides that are narrower than the other two or null
      * if it is a square.
      */
