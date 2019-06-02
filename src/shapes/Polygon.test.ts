@@ -545,10 +545,10 @@ describe('Polygon', () => {
             const rectangle = Polygon.createRectangle(3, 5, 3, 2);
 
             expect(rectangle).to.eql(new Polygon([
-                new Point(3, 3),
                 new Point(3, 5),
-                new Point(6, 5),
-                new Point(6, 3)
+                new Point(3, 7),
+                new Point(6, 7),
+                new Point(6, 5)
             ]));
         });
     });

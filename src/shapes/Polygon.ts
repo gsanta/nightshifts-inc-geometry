@@ -356,11 +356,11 @@ export class Polygon implements Shape {
             .value();
     }
 
-    public static createRectangle(left: number, top: number,  width: number, height: number): Polygon {
+    public static createRectangle(left: number, bottom: number,  width: number, height: number): Polygon {
         const minX = left;
         const maxX = left + width;
-        const minY = top - height;
-        const maxY = top;
+        const minY = bottom;
+        const maxY = bottom + height;
 
         return new Polygon([
             new Point(minX, minY),
