@@ -1,7 +1,6 @@
 import { Polygon, orderPointsToStartAtBottomLeft } from './Polygon';
 import { Point } from './Point';
 import { expect } from 'chai';
-import { Rectangle } from './Rectangle';
 import { Segment } from './Segment';
 
 describe('`orderPointsToStartAtBottomLeft`', () => {

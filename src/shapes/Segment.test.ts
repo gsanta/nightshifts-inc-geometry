@@ -1,7 +1,6 @@
 import { Segment } from "./Segment";
 import { Point } from "./Point";
 import { expect } from "chai";
-import { Rectangle } from "./Rectangle";
 import { Polygon } from './Polygon';
 
 
