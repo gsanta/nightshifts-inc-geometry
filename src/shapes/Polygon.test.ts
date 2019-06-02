@@ -2,7 +2,7 @@ import { Polygon, orderPointsToStartAtBottomLeft } from './Polygon';
 import { Point } from './Point';
 import { expect } from 'chai';
 import { Rectangle } from './Rectangle';
-import { Line } from './Line';
+import { Segment } from './Segment';
 
 describe('`orderPointsToStartAtBottomLeft`', () => {
     it ('orders a list of points so that the relative order of the points remain, but the first point will be the bottom left', () => {
@@ -99,7 +99,7 @@ describe('Polygon', () => {
                 new Point(3, 4)
             ]);
 
-            expect(poly1.intersectBorder(poly2)).to.eql(new Line(new Point(3, 1), new Point(3, 4)));
+            expect(poly1.intersectBorder(poly2)).to.eql(new Segment(new Point(3, 1), new Point(3, 4)));
         });
 
         it ('returns false if the two polygons do have any common parts', () => {
@@ -140,7 +140,7 @@ describe('Polygon', () => {
     });
 
     describe('`getCoincidentLineSegment`', () => {
-        it ('returns with the common `Line` segment if the `Polygon` has a common edge with the other `Shape`', () => {
+        it ('returns with the common `Segment` segment if the `Polygon` has a common edge with the other `Shape`', () => {
             const poly1 = new Polygon([
                 new Point(1, 1),
                 new Point(1, 4),
@@ -155,7 +155,7 @@ describe('Polygon', () => {
                 new Point(4, 1)
             ]);
 
-            expect(poly1.getCoincidentLineSegment(poly2)).to.eql([new Line(new Point(3, 1), new Point(3, 4)), 2, 0]);
+            expect(poly1.getCoincidentLineSegment(poly2)).to.eql([new Segment(new Point(3, 1), new Point(3, 4)), 2, 0]);
         });
 
         it ('returns undefined if the two `Shape`s don\'t have common edges', () => {
@@ -197,15 +197,35 @@ describe('Polygon', () => {
 
     describe('scaleX', () => {
         it ('scales the polygon on the x axis', () => {
-            const polygon = new Rectangle(1, 2, 3, 2);
-            expect(polygon.scaleX(3)).to.eql(new Rectangle(3, 2, 9, 2));
+            const polygon = new Polygon([
+                new Point(1, 0),
+                new Point(1, 2),
+                new Point(4, 2),
+                new Point(4, 0)
+            ]);
+            expect(polygon.scaleX(3)).to.eql(new Polygon([
+                new Point(3, 0),
+                new Point(3, 2),
+                new Point(12, 2),
+                new Point(12, 0)
+            ]));
         });
     });
 
     describe('scaleY', () => {
         it ('scales the polygon on the y axis', () => {
-            const polygon = new Rectangle(1, 2, 1, 3);
-            expect(polygon.scaleY(3)).to.eql(new Rectangle(1, 6, 1, 9));
+            const polygon = new Polygon([
+                new Point(1, 0),
+                new Point(1, 2),
+                new Point(4, 2),
+                new Point(4, 0)
+            ]);
+            expect(polygon.scaleY(3)).to.eql(new Polygon([
+                new Point(1, 0),
+                new Point(1, 6),
+                new Point(4, 6),
+                new Point(4, 0)
+            ]));
         });
     });
 
@@ -449,7 +469,7 @@ describe('Polygon', () => {
 
 
     describe('`getEdges`', () => {
-        it ('returns with a `Line` array representing the `Polygon` sides from bottom left to clockwise', () => {
+        it ('returns with a `Segment` array representing the `Polygon` sides from bottom left to clockwise', () => {
             const polygon = new Polygon([
                 new Point(1, 1),
                 new Point(3, 1),
@@ -459,17 +479,17 @@ describe('Polygon', () => {
 
             expect(polygon.getEdges()).to.eql(
                 [
-                    new Line(new Point(1, 1), new Point(3, 1)),
-                    new Line(new Point(3, 1), new Point(3, 3)),
-                    new Line(new Point(3, 3), new Point(1, 3)),
-                    new Line(new Point(1, 3), new Point(1, 1)),
+                    new Segment(new Point(1, 1), new Point(3, 1)),
+                    new Segment(new Point(3, 1), new Point(3, 3)),
+                    new Segment(new Point(3, 3), new Point(1, 3)),
+                    new Segment(new Point(1, 3), new Point(1, 1)),
                 ]
             )
         });
     });
 
     describe('`getCoincidingSidesForLine`', () => {
-        it ('returns the correct side of the `Polygon` and it\'s index which conincides with the `Line` given as a parameter.', () => {
+        it ('returns the correct side of the `Polygon` and it\'s index which conincides with the `Segment` given as a parameter.', () => {
             const polygon = new Polygon([
                 new Point(5, 5),
                 new Point(5, 3),
@@ -479,10 +499,10 @@ describe('Polygon', () => {
                 new Point(1, 5)
             ]);
 
-            const coincidingSides = polygon.getCoincidingSidesForLine(new Line(new Point(3, 3), new Point(5, 3)));
+            const coincidingSides = polygon.getCoincidingSidesForLine(new Segment(new Point(3, 3), new Point(5, 3)));
 
             expect(coincidingSides.length).to.equal(1);
-            expect(coincidingSides[0]).to.eql([new Line(new Point(5, 3), new Point(4, 3)), 3]);
+            expect(coincidingSides[0]).to.eql([new Segment(new Point(5, 3), new Point(4, 3)), 3]);
         });
     });
 
@@ -500,7 +520,12 @@ describe('Polygon', () => {
             ]);
 
             const boundingRectangle = polygon.getBoundingRectangle();
-            expect(boundingRectangle).to.eql(new Rectangle(1, 5, 5, 4));
+            expect(boundingRectangle).to.eql(new Polygon([
+                new Point(1, 1),
+                new Point(1, 5),
+                new Point(6, 5),
+                new Point(6, 1)
+            ]));
         });
 
         it ('gives back the same shape if the `Polygon` is already a `Rectangle`', () => {
@@ -512,7 +537,7 @@ describe('Polygon', () => {
             ]);
 
             const boundingRectangle = polygon.getBoundingRectangle();
-            expect(boundingRectangle).to.eql(new Rectangle(1, 3, 2, 2));
+            expect(boundingRectangle).to.eql(polygon);
         });
     });
 });

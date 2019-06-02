@@ -1,22 +1,56 @@
-import { Polygon } from './Polygon';
 import { Point } from './Point';
-import { Line } from './Line';
+import { Segment } from './Segment';
 import range from 'lodash/range';
 import _ from 'lodash';
-import { ShapeOrigin } from './Shape';
+import { ShapeOrigin, Shape } from './Shape';
+import { Polygon } from '../index';
 
-export class Rectangle extends Polygon {
+export class Rectangle implements Shape {
+    private polygon: Polygon;
+    public points: Point[];
+    public left: number;
+    public top: number;
+    public width: number;
+    public height: number;
+
     constructor(left: number, top: number, width: number, height: number) {
-        super([
+        this.polygon = new Polygon([
             new Point(left, top),
             new Point(left + width, top),
             new Point(left + width, top + height),
             new Point(left, top + height),
-        ])
+        ]);
+        this.points = this.polygon.points;
         this.left = left;
         this.top = top;
         this.width = width;
         this.height = height;
+    }
+
+    public minX(): number {
+        return this.polygon.minX();
+    }
+
+    public maxX(): number {
+        return this.polygon.maxX();
+    }
+
+    public minY(): number {
+        return this.polygon.minY();
+    }
+
+    public maxY(): number {
+        return this.polygon.maxY();
+    }
+
+    public scaleX(times: number): Shape {
+        const scaled = this.polygon.scaleX(times);
+        return new Rectangle(scaled.maxY(), scaled.minX(), scaled.maxX() - scaled.minX(), scaled.maxY() - scaled.minY());
+    }
+
+    public scaleY(times: number): Shape {
+        const scaled = this.polygon.scaleY(times);
+        return new Rectangle(scaled.maxY(), scaled.minX(), scaled.maxX() - scaled.minX(), scaled.maxY() - scaled.minY());
     }
 
     /**
@@ -32,6 +66,11 @@ export class Rectangle extends Polygon {
     public stretchY(amount: number): Rectangle {
         return new Rectangle(this.left, this.top - amount, this.width, this.height + amount * 2);
     }
+
+    public translate(point: Point): Shape {
+        return this.polygon.translate(point).getBoundingRectangle();
+    }
+
 
     /**
      * Sets the height of the `Rectangle`, the name is general to be able to apply it
@@ -56,80 +95,61 @@ export class Rectangle extends Polygon {
         return new Point(this.left + this.width / 2, this.top + this.height / 2);
     }
 
-    /**
-     * Cuts the `Rectangle` into equal slices and returns with an array representing each slice.
-     * The area of the slices adds up to the original `Rectangle`
-     */
-    public cutToEqualHorizontalSlices(numberOfCuts: number = 1, areCoordinatesRelativeToTheCuttingRectangle = false): Polygon[] {
-        const sliceHeight = this.height / (numberOfCuts + 1);
-
-        const translate = areCoordinatesRelativeToTheCuttingRectangle ? new Point(this.left, this.top + sliceHeight / 2).negate() : new Point(0, 0);
-
-        return range(0, numberOfCuts + 1)
-            .map(index => {
-                const currentTop = this.top + index * sliceHeight;
-
-                return new Rectangle(this.left, currentTop, this.width, sliceHeight);
-            })
-            .map(rect => rect.translate(translate));
+    public getBoundingRectangle(): Rectangle {
+        return this;
     }
 
-    /**
-     * Cuts the `Rectangle` into equal slices and returns with an array representing each slice.
-     * The area of the slices adds up to the original `Rectangle`
-     */
-    public cutToEqualVerticalSlices(numberOfCuts: number = 1, areCoordinatesRelativeToTheCuttingRectangle = false): Polygon[] {
-        const sliceWidth = this.width / (numberOfCuts + 1);
-
-        const translate = areCoordinatesRelativeToTheCuttingRectangle ? new Point(this.left + sliceWidth / 2, this.top).negate() : new Point(0, 0);
-
-        return range(0, numberOfCuts + 1)
-            .map(index => {
-                const currentLeft = this.left + index * sliceWidth;
-
-                return new Rectangle(currentLeft, this.top, sliceWidth, this.height);
-            })
-            .map(rect => rect.translate(translate));
+    public getCoincidentLineSegment(other: Shape): [Segment, number, number] {
+        return this.polygon.getCoincidentLineSegment(other);
     }
 
-    public addX(amount: number): Polygon {
+    public addX(amount: number): Shape {
         return new Rectangle(this.left + amount, this.top, this.width, this.height);
     }
 
-    public addY(amount: number): Polygon {
+    public addY(amount: number): Shape {
         return new Rectangle(this.left, this.top + amount, this.width, this.height);
     }
 
-    public negateX(): Polygon {
+    public negateX(): Shape {
         return new Rectangle(-this.left, this.top, this.width, this.height);
     }
 
     /**
      * @deprecated not clear why is it useful most of the time `mirrorY` should be used
      */
-    public negateY(): Polygon {
+    public negateY(): Shape {
         return new Rectangle(this.left, -this.top, this.width, this.height);
     }
 
-    public mirrorY(): Polygon {
+    public mirrorY(): Shape {
         return new Rectangle(this.left, -(this.top + this.height), this.width, this.height);
     }
 
-    public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
+    public getCircumference(): number {
+        return this.polygon.getCircumference();
+    }
+
+    public getArea(): number {
+        return this.polygon.getArea();
+    }
+
+
+    public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Shape {
         const diff = this.getBoundingCenter().distanceTo(point);
 
         return this.addX(-diff[0]).addY(-diff[1]);
     }
 
     /**
-     * Returns the two `Line`s which halve the `Rectangle` into two smaller `Rectangle`s
+     * Returns the two `Segment`s which halve the `Rectangle` into two smaller `Rectangle`s
      * TODO: it only works for `Rectangle`s which are aligned to the x or y axis, but does not work for rotated `Rectangle`s
      */
-    public getCenterLines(): Line[] {
+    public getCenterLines(): Segment[] {
         const centerX = this.left + this.width / 2;
         const centerY = this.top - this.height / 2;
-        const line1 = new Line(new Point(centerX, this.top), new Point(centerX, this.top - this.height));
-        const line2 = new Line(new Point(this.left, centerY), new Point(this.left + this.width, centerY));
+        const line1 = new Segment(new Point(centerX, this.top), new Point(centerX, this.top - this.height));
+        const line2 = new Segment(new Point(this.left, centerY), new Point(this.left + this.width, centerY));
 
         return [line1, line2];
     }
@@ -138,16 +158,16 @@ export class Rectangle extends Polygon {
      * Calculates the two sides that are narrower than the other two or null
      * if it is a square.
      */
-    public getNarrowSides(): [Line, Line] {
+    public getNarrowSides(): [Segment, Segment] {
         if (this.width < this.height) {
             return [
-                new Line(this.points[0], this.points[1]),
-                new Line(this.points[3], this.points[2])
+                new Segment(this.points[0], this.points[1]),
+                new Segment(this.points[3], this.points[2])
             ]
         } else if (this.width > this.height) {
             return [
-                new Line(this.points[1], this.points[2]),
-                new Line(this.points[0], this.points[3])
+                new Segment(this.points[1], this.points[2]),
+                new Segment(this.points[0], this.points[3])
             ]
         } else {
             return null;
@@ -157,4 +177,9 @@ export class Rectangle extends Polygon {
     public clone(): Rectangle {
         return new Rectangle(this.left, this.top, this.width, this.height);
     }
+
+    public getEdges(): Segment[] {
+        return this.polygon.getEdges();
+    }
+
 }

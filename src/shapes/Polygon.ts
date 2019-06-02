@@ -1,6 +1,6 @@
 import { Point } from './Point';
 import * as turf from '@turf/turf';
-import { Line } from './Line';
+import { Segment } from './Segment';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import without from 'lodash/without';
@@ -9,7 +9,6 @@ import polylabel from 'polylabel';
 import _ from 'lodash';
 import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin } from './Shape';
-import { Rectangle } from './Rectangle';
 
 export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
     const minY = _.minBy(points, point => point.y).y;
@@ -27,6 +26,7 @@ export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
 
 export class Polygon implements Shape {
     public points: Point[];
+
     public left: number;
     public top: number;
     public width: number;
@@ -131,7 +131,7 @@ export class Polygon implements Shape {
      * @deprecated use `getCoincidentLineSegment`
      * Returns true if the two polygons intersect only at a border (but do not overlap)
      */
-    public intersectBorder(other: Polygon): Line {
+    public intersectBorder(other: Polygon): Segment {
         const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
         const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
@@ -141,36 +141,20 @@ export class Polygon implements Shape {
             // return intersection.geometry.coordinates;
             const coordinates: [[number, number], [number, number]] = intersection.geometry.coordinates;
 
-            return new Line(new Point(coordinates[0][0], coordinates[0][1]), new Point(coordinates[1][0], coordinates[1][1]));
+            return new Segment(new Point(coordinates[0][0], coordinates[0][1]), new Point(coordinates[1][0], coordinates[1][1]));
         }
     }
 
     public scaleX(times: number): Polygon {
         const points = this.points.map(point => point.scaleX(times));
-        const left = this.left ? this.left * times : this.left;
-        const width = this.width ? this.width * times : this.width;
 
-        const newPolygon = this.clone();
-        newPolygon.points = points;
-        newPolygon.left = left;
-        newPolygon.width = width;
-
-        return newPolygon;
+        return new Polygon(points);
     }
 
     public scaleY(times: number) {
         const points = this.points.map(point => point.scaleY(times));
 
-        const top = this.top ? this.top * times : this.top;
-        const height = this.height ? this.height * times : this.height;
-
-        const newPolygon = this.clone();
-        newPolygon.points = points;
-
-        newPolygon.top = top;
-        newPolygon.height = height;
-
-        return newPolygon;
+        return new Polygon(points);
     }
 
     /**
@@ -199,13 +183,18 @@ export class Polygon implements Shape {
         return new Point(center[0], center[1]);
     }
 
-    public getBoundingRectangle(): Rectangle {
+    public getBoundingRectangle(): Shape {
         const minX = this.minX();
         const maxX = this.maxX();
         const minY = this.minY();
         const maxY = this.maxY();
 
-        return new Rectangle(minX, maxY, maxX - minX, maxY - minY);
+        return new Polygon([
+            new Point(minX, minY),
+            new Point(minX, maxY),
+            new Point (maxX, maxY),
+            new Point(maxX, minY)
+        ]);
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
@@ -235,22 +224,22 @@ export class Polygon implements Shape {
     /**
      * @deprecated use `getEdges` instead, it has the same behaviour, but a more unified naming convention
      */
-    public getSidesFromBottomLeftClockwise(): Line[] {
+    public getSidesFromBottomLeftClockwise(): Segment[] {
         return this.points.map((point, index) => {
             if (index < this.points.length - 1) {
-                return new Line(point, this.points[index + 1]);
+                return new Segment(point, this.points[index + 1]);
             } else {
-                return new Line(point, this.points[0]);
+                return new Segment(point, this.points[0]);
             }
         });
     }
 
     /**
-     * Determines which sides (if any) of the `Polygon` lies on the same line as the given `Line` segment.
-     * @returns an array of the following structure: the `Line` segment representing the side of the `Polygon` and the index of that side
+     * Determines which sides (if any) of the `Polygon` lies on the same line as the given `Segment` segment.
+     * @returns an array of the following structure: the `Segment` segment representing the side of the `Polygon` and the index of that side
      *      being the 0 index the bottom left side and counting clockwise.
      */
-    public getCoincidingSidesForLine(line: Line): [Line, number][] {
+    public getCoincidingSidesForLine(line: Segment): [Segment, number][] {
         const sides = this.getSidesFromBottomLeftClockwise();
 
         return sides
@@ -258,7 +247,7 @@ export class Polygon implements Shape {
             .map(side => [side, sides.indexOf(side)]);
     }
 
-    public getCoincidentLineSegment(other: Shape): [Line, number, number] {
+    public getCoincidentLineSegment(other: Shape): [Segment, number, number] {
         const otherEdges = other.getEdges();
         const thisEdges = this.getEdges();
 
@@ -272,7 +261,7 @@ export class Polygon implements Shape {
         }
     }
 
-    public getEdges(): Line[] {
+    public getEdges(): Segment[] {
         return this.getSidesFromBottomLeftClockwise();
     }
 
@@ -378,11 +367,11 @@ export class Polygon implements Shape {
     }
 
 
-    private getNthLine(index: number): Line {
+    private getNthLine(index: number): Segment {
         if (this.points.length - 1 === index) {
-            return new Line(this.points[index], this.points[0]);
+            return new Segment(this.points[index], this.points[0]);
         }
-        return new Line(this.points[index], this.points[index + 1]);
+        return new Segment(this.points[index], this.points[index + 1]);
     }
 
     private createPolygonFromTurfGeometry(geometry: {type: string, coordinates: [[number, number][]]}): Polygon {
