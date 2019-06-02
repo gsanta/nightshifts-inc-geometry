@@ -539,4 +539,17 @@ describe('Polygon', () => {
             expect(boundingRectangle).to.eql(polygon);
         });
     });
+
+    describe(`createRectangle`, () => {
+        it ('creates a `Polygon` which has the features of a rectangle.', () => {
+            const rectangle = Polygon.createRectangle(3, 5, 3, 2);
+
+            expect(rectangle).to.eql(new Polygon([
+                new Point(3, 3),
+                new Point(3, 5),
+                new Point(6, 5),
+                new Point(6, 3)
+            ]));
+        });
+    });
 });

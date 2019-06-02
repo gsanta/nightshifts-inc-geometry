@@ -356,6 +356,20 @@ export class Polygon implements Shape {
             .value();
     }
 
+    public static createRectangle(left: number, top: number,  width: number, height: number): Polygon {
+        const minX = left;
+        const maxX = left + width;
+        const minY = top - height;
+        const maxY = top;
+
+        return new Polygon([
+            new Point(minX, minY),
+            new Point(minX, maxY),
+            new Point (maxX, maxY),
+            new Point(maxX, minY)
+        ]);
+    }
+
     private toTwoDimensionalArray(): number[][] {
         return <number[][]> this.points.map(point => [point.x, point.y]);
     }
