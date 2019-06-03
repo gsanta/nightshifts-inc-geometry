@@ -1,0 +1,57 @@
+import { Point } from "./Point";
+import { Line } from './Line';
+import { expect } from 'chai';
+
+describe(`Line`, () => {
+    describe(`createFromPointSlopeForm`, () => {
+        it ('creates a line with the correct \'b\' and \'m\' values from a `Point` and a slope.', () => {
+            const point = new Point(4, 3);
+            const slope = 0.5;
+
+            const line = Line.createFromPointSlopeForm(point, slope);
+
+            expect(line.b).to.eq(1);
+            expect(line.m).to.eq(0.5);
+        });
+    });
+
+    describe(`getX`, () => {
+        it ('calculates the \'x\' value on the line for the given \'y\'.', () => {
+            const point = new Point(4, 4);
+            const slope = 0.5;
+
+            const line = Line.createFromPointSlopeForm(point, slope);
+
+            expect(line.getX(3)).to.eq(2);
+        });
+    });
+
+    describe(`getY`, () => {
+        it ('calculates the \'y\' value on the line for the given \'x\'.', () => {
+            const point = new Point(4, 4);
+            const slope = 0.5;
+
+            const line = Line.createFromPointSlopeForm(point, slope);
+
+            expect(line.getX(2)).to.eq(0);
+        });
+    });
+
+    describe(`getSegmentWithCenterPointAndDistance`, () => {
+        it ('returns the two endpoints of a segment given the center `Point` and the distance from the center.', () => {
+            const center = new Point(4, 3);
+
+            const line = Line.createFromPointSlopeForm(center, 1);
+
+            expect(line.getSegmentWithCenterPointAndDistance(center, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
+        });
+
+        it ('returns the two endpoints of a segment given the center `Point` and the distance from the center.', () => {
+            const center = new Point(4, 3);
+
+            const line = Line.createFromPointSlopeForm(center, 1);
+
+            expect(line.getSegmentWithCenterPointAndDistance(center, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
+        });
+    });
+});

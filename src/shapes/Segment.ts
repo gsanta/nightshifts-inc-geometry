@@ -2,6 +2,7 @@ import { Point } from "./Point";
 import { Shape, ShapeOrigin } from './Shape';
 import _ from "lodash";
 import { Polygon } from './Polygon';
+import { Line } from './Line';
 
 export class Segment implements Shape {
     public points: [Point, Point] = [null, null];
@@ -135,6 +136,10 @@ export class Segment implements Shape {
         } else {
             return point.y - this.points[0].y === this.getSlope() * (point.x - this.points[0].x)
         }
+    }
+
+    public getPerpendicularBisector(): Line {
+        return Line.createFromPointSlopeForm(this.getBoundingCenter(), this.getSlope());
     }
 
     /**
