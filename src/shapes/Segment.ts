@@ -18,6 +18,14 @@ export class Segment implements Shape {
         return new Segment(this.points[0].addY(amount), this.points[1].addY(amount));
     }
 
+    public xExtent(): number {
+        return this.maxX() - this.minX();
+    }
+
+    public yExtent(): number {
+        return this.maxY() - this.minY();
+    }
+
     public minX(): number {
         return this.points[0].x < this.points[1].x ? this.points[0].x : this.points[1].x;
     }

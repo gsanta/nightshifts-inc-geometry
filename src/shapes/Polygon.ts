@@ -265,6 +265,15 @@ export class Polygon implements Shape {
         return this.getSidesFromBottomLeftClockwise();
     }
 
+
+    public xExtent(): number {
+        return this.maxX() - this.minX();
+    }
+
+    public yExtent(): number {
+        return this.maxY() - this.minY();
+    }
+
     /**
      * Returns with the minimum x position of all of the polygon's points
      */

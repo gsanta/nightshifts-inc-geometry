@@ -9,6 +9,15 @@ export interface Shape {
     points: Point[];
     addX(amount: number): Shape;
     addY(amount: number): Shape;
+
+    /**
+     * A more general term for the 'width' of the `Shape`, that returns `maxX` - `minX`.
+     */
+    xExtent(): number;
+    /**
+     * A more general term for the 'height' of the `Shape`, that returns `maxY` - `minY`.
+     */
+    yExtent(): number;
     /**
      * Returns with the minimum x position of all of the `Shape`'s points.
      */
