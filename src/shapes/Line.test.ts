@@ -46,12 +46,20 @@ describe(`Line`, () => {
             expect(line.getSegmentWithCenterPointAndDistance(center, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
         });
 
-        it ('returns the two endpoints of a segment given the center `Point` and the distance from the center.', () => {
+        it ('handles vertical lines', () => {
             const center = new Point(4, 3);
 
-            const line = Line.createFromPointSlopeForm(center, 1);
+            const line = Line.createVerticalLine(4);
 
-            expect(line.getSegmentWithCenterPointAndDistance(center, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
+            expect(line.getSegmentWithCenterPointAndDistance(center, 1)).to.eql([new Point(4, 2), new Point(4, 4)]);
+        });
+
+        it ('handles horizontal lines', () => {
+            const center = new Point(2, 4);
+
+            const line = Line.createHorizontalLIne(4);
+
+            expect(line.getSegmentWithCenterPointAndDistance(center, 2)).to.eql([new Point(0, 4), new Point(4, 4)]);
         });
     });
 });

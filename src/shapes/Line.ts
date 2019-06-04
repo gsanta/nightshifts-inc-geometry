@@ -53,10 +53,10 @@ export class Line {
     }
 
     public static createVerticalLine(x: number) {
-        return new Line(x, undefined);
+        return new Line(undefined, x);
     }
 
     public static createHorizontalLIne(y: number) {
-        return new Line(y, 0);
+        return new Line(0, y);
     }
 }
