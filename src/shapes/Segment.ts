@@ -255,9 +255,9 @@ export class Segment implements Shape {
         return new Point(0, this.points[0].y - this.getSlope() * this.points[0].x);
     }
 
-    // public getEquation(): Line {
-
-    // }
+    public getLine(): Line {
+        return Line.createFromPointSlopeForm(this.points[0], this.getSlope());
+    }
 
     private orderPoints(endPoint1: Point, endPoint2: Point): [Point, Point] {
         if (endPoint1.y < endPoint2.y) {
