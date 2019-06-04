@@ -27,11 +27,6 @@ export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
 export class Polygon implements Shape {
     public points: Point[];
 
-    public left: number;
-    public top: number;
-    public width: number;
-    public height: number;
-
     constructor(points: Point[]) {
         this.points = orderPointsToStartAtBottomLeft(points);
     }
@@ -91,10 +86,6 @@ export class Polygon implements Shape {
         const points = this.points.map(point => point.clone());
 
         const clone = new Polygon(points);
-        clone.left = this.left;
-        clone.top = this.top;
-        clone.width = this.width;
-        clone.height = this.height;
 
         return clone;
     }
