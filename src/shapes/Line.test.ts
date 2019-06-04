@@ -13,6 +13,26 @@ describe(`Line`, () => {
             expect(line.b).to.eq(1);
             expect(line.m).to.eq(0.5);
         });
+
+        it ('can create a vertical line.', () => {
+            const point = new Point(4, 3);
+            const slope = undefined;
+
+            const line = Line.createFromPointSlopeForm(point, slope);
+
+            expect(line.b).to.eq(4);
+            expect(line.m).to.eq(undefined);
+        });
+
+        it ('can create a horizontal line.', () => {
+            const point = new Point(4, 3);
+            const slope = 0;
+
+            const line = Line.createFromPointSlopeForm(point, slope);
+
+            expect(line.b).to.eq(3);
+            expect(line.m).to.eq(0);
+        });
     });
 
     describe(`getX`, () => {

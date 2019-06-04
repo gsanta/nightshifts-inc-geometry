@@ -2,6 +2,7 @@ import { Segment } from "./Segment";
 import { Point } from "./Point";
 import { expect } from "chai";
 import { Polygon } from './Polygon';
+import { Line } from "./Line";
 
 
 describe('`Segment`', () => {
@@ -44,6 +45,25 @@ describe('`Segment`', () => {
             const line2 = new Segment(new Point(4, 1), new Point(5, 2));
 
             expect(line1.isCoincidentToLine(line2)).to.be.false;
+        });
+    });
+
+    describe(`getPerpendicularBisector`, () => {
+        it ('returns with the `Line` representing the perpendicular bisector', () => {
+            const segment = new Segment(new Point(1, 1), new Point(3, 3));
+
+            expect(segment.getPerpendicularBisector()).to.eql(new Line(-1, 4));
+        });
+
+        it ('handles vertical segments', () => {
+            const segment = new Segment(new Point(1, 1), new Point(1, 3));
+
+            expect(segment.getPerpendicularBisector()).to.eql(new Line(0, 2));
+        });
+
+        it ('handles horizontal segments', () => {
+            const segment = new Segment(new Point(1, 1), new Point(3, 1));
+            expect(segment.getPerpendicularBisector()).to.eql(new Line(undefined, 2));
         });
     });
 

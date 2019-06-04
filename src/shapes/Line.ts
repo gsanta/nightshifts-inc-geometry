@@ -48,8 +48,14 @@ export class Line {
     }
 
     public static createFromPointSlopeForm(point: Point, m: number): Line {
-        const b = (0 - point.x) * m + point.y;
-        return new Line(m, b);
+        if (m === undefined) {
+            return new Line(undefined, point.x);
+        } else if (m === 0) {
+            return new Line(0, point.y);
+        } else {
+            const b = (0 - point.x) * m + point.y;
+            return new Line(m, b);
+        }
     }
 
     public static createVerticalLine(x: number) {
