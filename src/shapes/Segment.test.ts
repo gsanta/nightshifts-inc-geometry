@@ -174,6 +174,20 @@ describe('`Segment`', () => {
         });
     });
 
+    describe('shorten', () => {
+        it ('makes the segment shorter by the given amount', () => {
+            const segment = new Segment(new Point(1, 1), new Point(5, 5));
+
+            expect(segment.shorten(Math.SQRT2)).to.eql(new Segment(new Point(2, 2), new Point(4, 4)));
+        });
+
+        it ('throws an error if the shortening would result 0 or negative length', () => {
+            const segment = new Segment(new Point(1, 1), new Point(1, 3));
+
+            expect(segment.shorten.bind(segment, 2)).to.throw('Can not shorten segment by 2 unit because the resulting length would be <= 0.');
+        });
+    });
+
     // describe(`getB`, () => {
     //     const segment = new Segment(new Point(2, 1), new Point(4, 2));
 
