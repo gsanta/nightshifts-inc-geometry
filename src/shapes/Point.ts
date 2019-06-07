@@ -51,11 +51,32 @@ export class Point {
         ];
     }
 
-    public distanceTo(otherPoint: Point) {
-        return [
-            this.x - otherPoint.x,
-            this.y - otherPoint.y
-        ];
+    public distanceTo(otherPoint: Point): number {
+        return this.subtract(otherPoint).distanceToOrigin();
+    }
+
+    public distanceToOrigin(): number {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    public subtract(otherPoint: Point): Point {
+        return new Point(this.x - otherPoint.x, this.y - otherPoint.y);
+    }
+
+    public normalize() {
+        const length = this.distanceToOrigin();
+
+        return new Point(this.x / length, this.y / length);
+    }
+
+    public isNormalized() {
+        return this.distanceToOrigin() === 1;
+    }
+
+    public angleTo(otherPoint: Point) {
+        const norm1 = this.normalize();
+        const norm2 = otherPoint.normalize();
+        return Math.atan2(norm1.y, norm1.x) - Math.atan2(norm2.y, norm2.x);
     }
 
     public clone(): Point {
@@ -65,4 +86,5 @@ export class Point {
     public equalTo(otherPoint: Point) {
         return this.x === otherPoint.x && this.y === otherPoint.y;
     }
+
 }

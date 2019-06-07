@@ -320,7 +320,7 @@ export class Polygon implements Shape {
     public stretchY(amount: number): Polygon {
         return this.points.reduce(
             (stretchedPolygon, point, index) => {
-            const currentArea = stretchedPolygon.getArea();
+                const currentArea = stretchedPolygon.getArea();
 
                 const stretchNeg = point.addY(-amount);
                 let clonedPoints = [...stretchedPolygon.points];

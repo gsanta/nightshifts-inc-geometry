@@ -43,4 +43,12 @@ export class GeometryUtils {
 
         return GeometryUtils.createRectangleFromTwoOppositeSides(new Segment(side1Point1, side1Point2), new Segment(side2Point1, side2Point2));
      }
+
+     public static toRadian(degree: number) {
+        return degree * Math.PI / 180;
+     }
+
+     public static toDegree(radian: number) {
+        return radian * 180 / Math.PI;
+     }
 }

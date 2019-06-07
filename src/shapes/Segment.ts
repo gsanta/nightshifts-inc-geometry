@@ -259,14 +259,14 @@ export class Segment implements Shape {
         return Line.createFromPointSlopeForm(this.points[0], this.getSlope());
     }
 
-    public shorten(amount: number, end: 'END_0' | 'END_1' | 'END_BOTH' = 'END_BOTH'): Segment {
-        const radius = this.getLength() / 2 - amount;
+    public stretch(amount: number, end: 'END_0' | 'END_1' | 'END_BOTH' = 'END_BOTH'): Segment {
+        const radius = this.getLength() / 2 + amount;
 
         if (radius <= 0) {
-            throw new Error(`Can not shorten segment by ${amount} unit because the resulting length would be <= 0.`);
+            throw new Error(`Can not stretch segment by ${amount} unit because the resulting length would be <= 0.`);
         }
 
-        if (end !== 'END_0') {
+        if (end !== 'END_BOTH') {
             throw new Error(`shorten by ${end} is not implemented yet.`);
         }
 
