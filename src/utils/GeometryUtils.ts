@@ -14,7 +14,7 @@ export class GeometryUtils {
             side1 = new Segment(side1.points[1], side1.points[0]);
         }
 
-        if (side1.getSlope() !== side2.getSlope()) {
+        if (side1.getLine().hasEqualSlope(side2.getLine()) === false) {
             throw new Error('Lines should be parallel.');
         }
 
