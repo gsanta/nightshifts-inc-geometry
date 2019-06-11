@@ -47,6 +47,13 @@ export class Line {
         return this.m === 0;
     }
 
+    public hasEqualSlope(otherLine: Line): boolean {
+        const thisM = this.m === undefined ? Math.max() : this.m;
+        const thatM = otherLine.m === undefined ? Math.max() : otherLine.m;
+
+        return thisM - thatM < 0.1;
+    }
+
     public static createFromPointSlopeForm(point: Point, m: number): Line {
         if (m === undefined) {
             return new Line(undefined, point.x);
