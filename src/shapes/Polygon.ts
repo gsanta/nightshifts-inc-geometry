@@ -189,9 +189,9 @@ export class Polygon implements Shape {
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
-        const diff = this.getBoundingCenter().distanceTo(point);
+        const diff = this.getBoundingCenter().subtract(point);
 
-        const points = this.points.map(point => point.addX(diff[0]).addY(diff[1]));
+        const points = this.points.map(point => point.addX(diff.x).addY(diff.y));
 
         return new Polygon(points);
     }

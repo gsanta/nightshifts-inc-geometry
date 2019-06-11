@@ -76,9 +76,9 @@ export class Segment implements Shape {
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Shape {
-        const diff = this.getBoundingCenter().distanceTo(point);
+        const diff = this.getBoundingCenter().subtract(point);
 
-        return new Segment(this.points[0].addX(diff[0]).addY(diff[1]), this.points[1].addX(diff[0]).addY(diff[1]));
+        return new Segment(this.points[0].addX(diff.x).addY(diff.y), this.points[1].addX(diff.x).addY(diff.y));
     }
 
     public getBoundingRectangle(): Shape {
