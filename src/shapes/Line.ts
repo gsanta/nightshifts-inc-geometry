@@ -54,6 +54,17 @@ export class Line {
         return Math.abs(thisM - thatM) < 0.1;
     }
 
+    public intersection(otherLine: Line): Point {
+        if (this.m === otherLine.m) {
+            return undefined;
+        }
+
+        const x = (otherLine.b - this.b) / (this.m - otherLine.m);
+        const y = this.getY(x);
+
+        return new Point(x, y);
+    }
+
     public static createFromPointSlopeForm(point: Point, m: number): Line {
         if (m === undefined) {
             return new Line(undefined, point.x);

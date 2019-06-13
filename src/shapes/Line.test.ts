@@ -57,6 +57,24 @@ describe(`Line`, () => {
         });
     });
 
+    describe(`intersection`, () => {
+        it ('calculates the intersection of two `Line`s', () => {
+
+            const line1 = new Line(2, 2);
+            const line2 = new Line(3, -2);
+
+            expect(line1.intersection(line2)).to.eql(new Point(4, 10));
+        });
+
+        it ('returns undefined if the slopes are the same', () => {
+
+            const line1 = new Line(2, 2);
+            const line2 = new Line(2, -2);
+
+            expect(line1.intersection(line2)).to.eql(undefined);
+        });
+    });
+
     describe(`getSegmentWithCenterPointAndDistance`, () => {
         it ('returns the two endpoints of a segment given the center `Point` and the distance from the center.', () => {
             const center = new Point(4, 3);
