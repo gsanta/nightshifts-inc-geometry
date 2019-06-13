@@ -25,10 +25,40 @@ export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
 }
 
 export class Polygon implements Shape {
-    public points: Point[];
+    private points: Point[];
+    private orederedPoints: Point[];
 
     constructor(points: Point[]) {
-        this.points = orderPointsToStartAtBottomLeft(points);
+        this.points = points;
+        this.orederedPoints = orderPointsToStartAtBottomLeft(this.points);
+    }
+
+    public getPoints(): Point[] {
+        return this.orederedPoints;
+    }
+
+    public setPoint(index: number, newPoint: Point): Polygon {
+        const clonedPoints = [...this.points];
+        clonedPoints.splice(index, 1, newPoint);
+
+        return new Polygon(clonedPoints);
+    }
+
+
+    public getIndexedPoints(): [Point, number][] {
+        return this.points.map((point, index) => [point, index]);
+    }
+
+    /**
+     * The ordering of points within a `Shape` are stable (it is the order by which the `Polygon` was instantiated), and it returns with the previous `Point` based
+     * on that order. The `Polygon` is a circular shape so whatever the index is, a valid `Point` will be returned.
+     */
+    public getPreviousPoint(currentIndex: number): Point {
+        if (currentIndex === 0) {
+            return this.points[this.points.length - 1];
+        }
+
+        return this.points[currentIndex - 1];
     }
 
     public addX(amount: number): Polygon {
@@ -216,11 +246,11 @@ export class Polygon implements Shape {
      * @deprecated use `getEdges` instead, it has the same behaviour, but a more unified naming convention
      */
     public getSidesFromBottomLeftClockwise(): Segment[] {
-        return this.points.map((point, index) => {
-            if (index < this.points.length - 1) {
-                return new Segment(point, this.points[index + 1]);
+        return this.orederedPoints.map((point, index) => {
+            if (index < this.orederedPoints.length - 1) {
+                return new Segment(point, this.orederedPoints[index + 1]);
             } else {
-                return new Segment(point, this.points[0]);
+                return new Segment(point, this.orederedPoints[0]);
             }
         });
     }

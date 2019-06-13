@@ -10,8 +10,8 @@ export class GeometryUtils {
      * Creates a rectangular `Polyon` given two opposite sides of the rectangle as `Segment`s.
      */
     public static createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
-        if (side2.getSlope() === new Segment(side1.points[1], side1.points[0]).getSlope()) {
-            side1 = new Segment(side1.points[1], side1.points[0]);
+        if (side2.getSlope() === new Segment(side1.getPoints()[1], side1.getPoints()[0]).getSlope()) {
+            side1 = new Segment(side1.getPoints()[1], side1.getPoints()[0]);
         }
 
         if (side1.getLine().hasEqualSlope(side2.getLine()) === false) {
@@ -19,10 +19,10 @@ export class GeometryUtils {
         }
 
         return new Polygon([
-            side1.points[0],
-            side1.points[1],
-            side2.points[1],
-            side2.points[0]
+            side1.getPoints()[0],
+            side1.getPoints()[1],
+            side2.getPoints()[1],
+            side2.getPoints()[0]
         ]);
     }
 

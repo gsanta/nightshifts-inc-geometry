@@ -178,13 +178,13 @@ describe('`Segment`', () => {
         it ('makes the segment shorter by the given amount if the parameter is negative', () => {
             const segment = new Segment(new Point(1, 1), new Point(5, 5));
 
-            expect(segment.stretch(-Math.SQRT2)).to.eql(new Segment(new Point(2, 2), new Point(4, 4)));
+            expect(segment.stretch(-Math.SQRT2).equalTo(new Segment(new Point(2, 2), new Point(4, 4)))).to.be.true;
         });
 
         it ('makes the segment longer by the given amount if the parameter is positive', () => {
             const segment = new Segment(new Point(1, 1), new Point(5, 5));
 
-            expect(segment.stretch(Math.SQRT2)).to.eql(new Segment(new Point(0, 0), new Point(6, 6)));
+            expect(segment.stretch(Math.SQRT2).equalTo(new Segment(new Point(0, 0), new Point(6, 6)))).to.be.true;
         });
 
 
@@ -194,10 +194,4 @@ describe('`Segment`', () => {
             expect(segment.stretch.bind(segment, -2)).to.throw('Can not stretch segment by -2 unit because the resulting length would be <= 0.');
         });
     });
-
-    // describe(`getB`, () => {
-    //     const segment = new Segment(new Point(2, 1), new Point(4, 2));
-
-    //     expect(segment.getB()).to.eql(new Point(0, 1));
-    // });
 });

@@ -26,6 +26,16 @@ describe('`orderPointsToStartAtBottomLeft`', () => {
 });
 
 describe('Polygon', () => {
+
+    describe(`setPoint`, () => {
+        it ('sets the given `Point` and returns with the new `Shape`', () => {
+            let polygon = new Polygon([new Point(1, 1), new Point(1, 2), new Point(3, 2), new Point(3, 1)]);
+            polygon = polygon.setPoint(2, new Point(3, 3));
+
+            expect(polygon.equalTo(new Polygon([new Point(1, 1), new Point(1, 2), new Point(3, 3), new Point(3, 1)]))).to.be.true;
+        });
+    });
+
     describe('contains', () => {
         it ('returns true if the polygon contains the other', () => {
             const poly1 = new Polygon([

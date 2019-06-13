@@ -5,10 +5,27 @@ import { Polygon } from './Polygon';
 import { Line } from './Line';
 
 export class Segment implements Shape {
-    public points: [Point, Point] = [null, null];
+    private points: [Point, Point] = [null, null];
+    private orderedPoints: [Point, Point] = [null, null];
 
     constructor(endPoint1: Point, endPoint2: Point) {
-        [this.points[0], this.points[1]] = this.orderPoints(endPoint1, endPoint2);
+        [this.points[0], this.points[1]] = [endPoint1, endPoint2];
+        this.orderedPoints = this.orderPoints(...this.points);
+    }
+
+    public getPoints(): Point[] {
+        return this.orderedPoints;
+    }
+
+    public getIndexedPoints(): [Point, number][] {
+        return this.points.map((point, index) => [point, index]);
+    }
+
+    public setPoint(index: number, newPoint: Point): Shape {
+        const clonedPoints = [...this.points];
+        clonedPoints.splice(index, 1, newPoint);
+
+        return new Polygon(clonedPoints);
     }
 
     public addX(amount: number): Shape {
@@ -92,7 +109,7 @@ export class Segment implements Shape {
     }
 
     public getBoundingCenter(): Point {
-        return new Point((this.points[0].x + this.points[1].x) / 2, (this.points[0].y + this.points[1].y) / 2);
+        return new Point((this.orderedPoints[0].x + this.orderedPoints[1].x) / 2, (this.orderedPoints[0].y + this.orderedPoints[1].y) / 2);
     }
 
     public isVertical() {
@@ -241,7 +258,7 @@ export class Segment implements Shape {
     }
 
     public equalTo(otherLine: Segment): boolean {
-        return this.points[0].equalTo(otherLine.points[0]) && this.points[1].equalTo(otherLine.points[1]);
+        return this.orderedPoints[0].equalTo(otherLine.orderedPoints[0]) && this.orderedPoints[1].equalTo(otherLine.orderedPoints[1]);
     }
 
     public getLength(): number {

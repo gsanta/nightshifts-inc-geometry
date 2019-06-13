@@ -6,7 +6,17 @@ export enum ShapeOrigin {
 }
 
 export interface Shape {
-    points: Point[];
+    getPoints(): Point[];
+    /**
+     * Returns with pairs of (`Point`, index) of the `Shape`'s points so that those `Point`s can be referenced.
+     * later by their indexes.
+     */
+    getIndexedPoints(): [Point, number][];
+
+    /**
+     * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
+     */
+    setPoint(index: number, newPoint: Point): Shape;
     addX(amount: number): Shape;
     addY(amount: number): Shape;
 
