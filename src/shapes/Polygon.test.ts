@@ -540,4 +540,17 @@ describe('Polygon', () => {
             ]));
         });
     });
+
+    describe('toString', () => {
+        it ('creates a string representation of the `Polygon`', () => {
+            const polygon = new Polygon([
+                new Point(3, 5),
+                new Point(3, 7),
+                new Point(6, 7),
+                new Point(6, 5)
+            ]);
+
+            expect(polygon.toString()).to.eq('[(3,5)(3,7)(6,7)(6,5)]');
+        });
+    });
 });

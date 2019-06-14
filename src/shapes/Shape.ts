@@ -81,4 +81,6 @@ export interface Shape {
      * Determines whether two shapes are equal
      */
     equalTo(otherShape: Shape): boolean;
+
+    toString(): string;
 }

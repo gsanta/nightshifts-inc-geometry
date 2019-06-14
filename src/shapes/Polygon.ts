@@ -373,6 +373,16 @@ export class Polygon implements Shape {
             .value();
     }
 
+    public toString(): string {
+        let str = '['
+
+        this.points.forEach(point => str += point.toString());
+
+        str += ']';
+
+        return str;
+    }
+
     public static createRectangle(left: number, bottom: number,  width: number, height: number): Polygon {
         const minX = left;
         const maxX = left + width;

@@ -292,6 +292,10 @@ export class Segment implements Shape {
         return new Segment(point1, point2);
     }
 
+    public toString(): string {
+        return `[${this.points[0].toString()},${this.points[1].toString()}]`;
+    }
+
     private orderPoints(endPoint1: Point, endPoint2: Point): [Point, Point] {
         if (endPoint1.y < endPoint2.y) {
             return [endPoint1, endPoint2];
