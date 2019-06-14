@@ -59,8 +59,22 @@ export class Line {
             return undefined;
         }
 
-        const x = (otherLine.b - this.b) / (this.m - otherLine.m);
-        const y = this.getY(x);
+        let x: number;
+
+        if (this.m === undefined) {
+            x = this.b;
+        } else if (otherLine.m === undefined) {
+            x = otherLine.b;
+        } else {
+            x = (otherLine.b - this.b) / (this.m - otherLine.m);
+        }
+
+        let y: number;
+        if (this.m === undefined) {
+            y = otherLine.getY(x);
+        } else {
+            y = this.getY(x);
+        }
 
         return new Point(x, y);
     }

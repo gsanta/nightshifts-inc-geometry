@@ -73,6 +73,20 @@ describe(`Line`, () => {
 
             expect(line1.intersection(line2)).to.eql(undefined);
         });
+
+        it ('works if one of the `Line`s is vertical', () => {
+            const line1 = new Line(undefined, 2);
+            const line2 = new Line(2, -2);
+
+            expect(line1.intersection(line2)).to.eql(new Point(2, 2));
+        });
+
+        it ('works if the other `Line` is vertical', () => {
+            const line1 = new Line(2, -2);
+            const line2 = new Line(undefined, 2);
+
+            expect(line1.intersection(line2)).to.eql(new Point(2, 2));
+        });
     });
 
     describe(`getSegmentWithCenterPointAndDistance`, () => {
