@@ -76,4 +76,9 @@ export interface Shape {
      * Returns the edges of the shape
      */
     getEdges(): Segment[];
+
+    /**
+     * Determines whether two shapes are equal
+     */
+    equalTo(otherShape: Shape): boolean;
 }

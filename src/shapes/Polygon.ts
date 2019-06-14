@@ -9,20 +9,7 @@ import polylabel from 'polylabel';
 import _ from 'lodash';
 import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin } from './Shape';
-
-export const orderPointsToStartAtBottomLeft = (points: Point[]) => {
-    const minY = _.minBy(points, point => point.y).y;
-
-    const bottomLeftPoint = _.chain(points)
-        .filter(point => point.y === minY)
-        .minBy(point => point.x)
-        .value();
-
-    const separatorIndex = points.indexOf(bottomLeftPoint);
-    const orderedPoints = [...points.slice(separatorIndex, points.length), ...points.slice(0, separatorIndex)];
-
-    return orderedPoints;
-}
+import { GeometryUtils } from '../utils/GeometryUtils';
 
 export class Polygon implements Shape {
     private points: Point[];
@@ -30,7 +17,7 @@ export class Polygon implements Shape {
 
     constructor(points: Point[]) {
         this.points = points;
-        this.orederedPoints = orderPointsToStartAtBottomLeft(this.points);
+        this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.points);
     }
 
     public getPoints(): Point[] {

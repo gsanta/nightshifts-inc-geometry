@@ -2,6 +2,7 @@ import { Segment } from "../shapes/Segment";
 import { Polygon } from '../shapes/Polygon';
 import { Point } from '../shapes/Point';
 import { Line } from "../shapes/Line";
+import _ from "lodash";
 
 
 export class GeometryUtils {
@@ -51,4 +52,18 @@ export class GeometryUtils {
      public static toDegree(radian: number) {
         return radian * 180 / Math.PI;
      }
+
+     public static orderPointsToStartAtBottomLeft = (points: Point[]) => {
+        const minY = _.minBy(points, point => point.y).y;
+
+        const bottomLeftPoint = _.chain(points)
+            .filter(point => point.y === minY)
+            .minBy(point => point.x)
+            .value();
+
+        const separatorIndex = points.indexOf(bottomLeftPoint);
+        const orderedPoints = [...points.slice(separatorIndex, points.length), ...points.slice(0, separatorIndex)];
+
+        return orderedPoints;
+    }
 }

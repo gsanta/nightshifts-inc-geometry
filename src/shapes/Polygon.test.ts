@@ -1,29 +1,7 @@
-import { Polygon, orderPointsToStartAtBottomLeft } from './Polygon';
+import { Polygon } from './Polygon';
 import { Point } from './Point';
 import { expect } from 'chai';
 import { Segment } from './Segment';
-
-describe('`orderPointsToStartAtBottomLeft`', () => {
-    it ('orders a list of points so that the relative order of the points remain, but the first point will be the bottom left', () => {
-        const points = [
-            new Point(5, 5),
-            new Point(5, 3),
-            new Point(4, 3),
-            new Point(4, 2),
-            new Point(1, 2),
-            new Point(1, 5)
-        ];
-
-        expect(orderPointsToStartAtBottomLeft(points)).to.eql([
-            new Point(1, 2),
-            new Point(1, 5),
-            new Point(5, 5),
-            new Point(5, 3),
-            new Point(4, 3),
-            new Point(4, 2)
-        ]);
-    });
-});
 
 describe('Polygon', () => {
 
