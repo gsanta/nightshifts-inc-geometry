@@ -10,6 +10,7 @@ import _ from 'lodash';
 import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin } from './Shape';
 import { GeometryUtils } from '../utils/GeometryUtils';
+import { Angle } from './Angle';
 
 export class Polygon implements Shape {
     private points: Point[];
@@ -36,16 +37,35 @@ export class Polygon implements Shape {
         return this.points.map((point, index) => [point, index]);
     }
 
+    public getIndexOf(point: Point): number {
+        return this.orederedPoints.findIndex(p => p.equalTo(point));
+    }
+
     /**
      * The ordering of points within a `Shape` are stable (it is the order by which the `Polygon` was instantiated), and it returns with the previous `Point` based
      * on that order. The `Polygon` is a circular shape so whatever the index is, a valid `Point` will be returned.
      */
-    public getPreviousPoint(currentIndex: number): Point {
-        if (currentIndex === 0) {
+    public getPreviousPoint(point: Point): Point {
+        const index = this.getIndexOf(point);
+
+        if (index === 0) {
             return this.points[this.points.length - 1];
         }
 
-        return this.points[currentIndex - 1];
+        return this.points[index - 1];
+    }
+
+    public getNextPoint(point: Point): Point {
+        const index = this.getIndexOf(point);
+        if (index === this.orederedPoints.length - 1) {
+            return this.points[0];
+        }
+
+        return this.points[index + 1];
+    }
+
+    public getOrderedIndex(point: Point) {
+        return _.findIndex(this.orederedPoints, p => p.equalTo(point));
     }
 
     public addX(amount: number): Polygon {
@@ -371,6 +391,33 @@ export class Polygon implements Shape {
             .map((point, index) => point.equalTo(otherPolygon.points[index]))
             .every(isEqual => isEqual === true)
             .value();
+    }
+
+    public removeStraightVertices(): Polygon {
+        const firstPoint: Point = _.find(this.getPoints(), point => {
+            const a = point;
+            const b = this.getPreviousPoint(point);
+            const c = this.getNextPoint(point);
+            return new Angle(a, b, c).isStraightAngle() === false
+        });
+
+        const reducedPoints: Point[] = [firstPoint];
+
+
+        let currentPoint = this.getNextPoint(firstPoint);
+        while(currentPoint.equalTo(firstPoint) === false) {
+            const a = currentPoint;
+            const b = this.getPreviousPoint(currentPoint);
+            const c = this.getNextPoint(currentPoint);
+
+            if (new Angle(a, b, c).isStraightAngle() === false) {
+                reducedPoints.push(currentPoint);
+            }
+
+            currentPoint = this.getNextPoint(currentPoint);
+        }
+
+        return new Polygon(reducedPoints);
     }
 
     public toString(): string {

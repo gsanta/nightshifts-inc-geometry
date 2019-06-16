@@ -66,4 +66,36 @@ export class GeometryUtils {
 
         return orderedPoints;
     }
+
+    public static mergePolygonsIfHaveCommonEdges(polygon1: Polygon, polygon2: Polygon): Polygon | undefined {
+        const edges1 = polygon1.getEdges();
+        const edges2 = polygon2.getEdges();
+        const polygon1Points = [...polygon1.getPoints()];
+        const polygon2Points = [...polygon2.getPoints()];
+
+        let commonEdge: Segment;
+        for (let i = 0; i < edges1.length; i++) {
+            for (let j = 0; j < edges2.length; j++) {
+                if (edges1[i].equalTo(edges2[j])) {
+                    commonEdge = edges1[i];
+                    break;
+                }
+            }
+        }
+
+        if (commonEdge) {
+            const index1 = polygon1.getOrderedIndex(commonEdge.getPoints()[0]);
+            const index2 = polygon1.getOrderedIndex(commonEdge.getPoints()[1]);
+
+            if (index1 < index2) {
+                polygon1Points.splice(index1, 2, ...polygon2Points);
+            } else {
+                polygon1Points.splice(index2, 2, ...polygon2Points);
+            }
+
+            return new Polygon(polygon1Points).removeStraightVertices();;
+        }
+
+        return undefined;
+    }
 }

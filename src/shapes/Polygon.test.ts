@@ -541,6 +541,27 @@ describe('Polygon', () => {
         });
     });
 
+    describe(`removeStraightVertices`, () => {
+        it ('removes the points from the `Polygon` which form a straight angle between the prev and next `Point`s', () => {
+            const polygon = new Polygon([
+                new Point(1, 1),
+                new Point(1, 3),
+                new Point(1, 5),
+                new Point(4, 5),
+                new Point(6, 5),
+                new Point(7, 5),
+                new Point(7, 1),
+            ]);
+
+            expect(polygon.removeStraightVertices()).to.eql(new Polygon([
+                new Point(1, 1),
+                new Point(1, 5),
+                new Point(7, 5),
+                new Point(7, 1),
+            ]))
+        });
+    });
+
     describe('toString', () => {
         it ('creates a string representation of the `Polygon`', () => {
             const polygon = new Polygon([
