@@ -37,6 +37,12 @@ export class Polygon implements Shape {
         return this.points.map((point, index) => [point, index]);
     }
 
+    public getPointsStartingFrom(point: Point) {
+        const index = this.getIndexOf(point);
+
+        return [...this.getPoints().slice(index), this.getPoints().slice(0, index)];
+    }
+
     public getIndexOf(point: Point): number {
         return this.orederedPoints.findIndex(p => p.equalTo(point));
     }
@@ -49,19 +55,19 @@ export class Polygon implements Shape {
         const index = this.getIndexOf(point);
 
         if (index === 0) {
-            return this.points[this.points.length - 1];
+            return this.orederedPoints[this.points.length - 1];
         }
 
-        return this.points[index - 1];
+        return this.orederedPoints[index - 1];
     }
 
     public getNextPoint(point: Point): Point {
         const index = this.getIndexOf(point);
         if (index === this.orederedPoints.length - 1) {
-            return this.points[0];
+            return this.orederedPoints[0];
         }
 
-        return this.points[index + 1];
+        return this.orederedPoints[index + 1];
     }
 
     public getOrderedIndex(point: Point) {

@@ -70,8 +70,6 @@ export class GeometryUtils {
     public static mergePolygonsIfHaveCommonEdges(polygon1: Polygon, polygon2: Polygon): Polygon | undefined {
         const edges1 = polygon1.getEdges();
         const edges2 = polygon2.getEdges();
-        const polygon1Points = [...polygon1.getPoints()];
-        const polygon2Points = [...polygon2.getPoints()];
 
         let commonEdge: Segment;
         for (let i = 0; i < edges1.length; i++) {
@@ -84,18 +82,40 @@ export class GeometryUtils {
         }
 
         if (commonEdge) {
-            const index1 = polygon1.getOrderedIndex(commonEdge.getPoints()[0]);
-            const index2 = polygon1.getOrderedIndex(commonEdge.getPoints()[1]);
+            const orderedPoints1 = this.orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon1, commonEdge);
+            const orderedPoints2 = this.orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon2, commonEdge);
 
-            if (index1 < index2) {
-                polygon1Points.splice(index1, 2, ...polygon2Points);
+            orderedPoints2.pop();
+            orderedPoints2.shift();
+
+            if (polygon1.getIndexOf(orderedPoints1[0]) === 0) {
+                orderedPoints2.push(...orderedPoints1);
             } else {
-                polygon1Points.splice(index2, 2, ...polygon2Points);
+                orderedPoints2.unshift(...orderedPoints1);
             }
 
-            return new Polygon(polygon1Points).removeStraightVertices();;
+            return new Polygon(orderedPoints2).removeStraightVertices();
         }
 
         return undefined;
+    }
+
+    private static orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon: Polygon, edge: Segment): Point[] {
+        let index_1 = polygon.getOrderedIndex(edge.getPoints()[0]);
+        let index_2 = polygon.getOrderedIndex(edge.getPoints()[1]);
+
+        if (index_1 > index_2) {
+            [index_1, index_2] = [index_2, index_1];
+        }
+        let newPoints: Point[] = [];
+
+        if (index_2 < polygon.getPoints().length - 1) {
+            newPoints.push(...polygon.getPoints().slice(index_2));
+            newPoints.push(...polygon.getPoints().slice(0, index_2));
+        } else {
+            newPoints = polygon.getPoints();
+        }
+
+        return newPoints;
     }
 }

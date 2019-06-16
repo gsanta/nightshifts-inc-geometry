@@ -60,7 +60,17 @@ describe(`GeometryUtils`, () => {
         it ('merges the two Polygon if they have a common edge', () => {
             const polygon1 = Polygon.createRectangle(0, 0, 2, 3);
             const polygon2 = Polygon.createRectangle(0, 3, 2, 2);
-            expect(GeometryUtils.mergePolygonsIfHaveCommonEdges(polygon1, polygon2).equalTo(Polygon.createRectangle(0, 0, 2, 5))).to.be.true;
+
+            const merged = GeometryUtils.mergePolygonsIfHaveCommonEdges(polygon1, polygon2)
+            expect(merged.equalTo(Polygon.createRectangle(0, 0, 2, 5))).to.be.true;
+        });
+
+        it ('merges the two Polygon if they have a common edge 2', () => {
+            const polygon1 = Polygon.createRectangle(0, 0, 2, 3);
+            const polygon2 = Polygon.createRectangle(0, 3, 2, 2);
+
+            const merged = GeometryUtils.mergePolygonsIfHaveCommonEdges(polygon2, polygon1)
+            expect(merged.equalTo(Polygon.createRectangle(0, 0, 2, 5))).to.be.true;
         });
     });
 });
