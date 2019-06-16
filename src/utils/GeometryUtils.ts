@@ -109,11 +109,11 @@ export class GeometryUtils {
         }
         let newPoints: Point[] = [];
 
-        if (index_2 < polygon.getPoints().length - 1) {
+        if (index_1 === 0 && index_2 === polygon.getPoints().length - 1) {
+            newPoints = polygon.getPoints();
+        } else {
             newPoints.push(...polygon.getPoints().slice(index_2));
             newPoints.push(...polygon.getPoints().slice(0, index_2));
-        } else {
-            newPoints = polygon.getPoints();
         }
 
         return newPoints;
