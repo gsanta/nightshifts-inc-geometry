@@ -74,7 +74,7 @@ export class GeometryUtils {
         let commonEdge: Segment;
         for (let i = 0; i < edges1.length; i++) {
             for (let j = 0; j < edges2.length; j++) {
-                if (edges1[i].equalTo(edges2[j])) {
+                if (this.isCommonEdge(edges1[i], edges2[j])) {
                     commonEdge = edges1[i];
                     break;
                 }
@@ -98,6 +98,11 @@ export class GeometryUtils {
         }
 
         return undefined;
+    }
+
+    private static isCommonEdge(segment1: Segment, segment2: Segment): boolean {
+        return segment1.getLine().hasEqualSlope(segment2.getLine()) &&
+            segment1.getBoundingCenter().distanceTo(segment2.getBoundingCenter()) <= 2;
     }
 
     private static orderPolygonPointSoThatTheArrayStartsAndEndsWithEdge(polygon: Polygon, edge: Segment): Point[] {

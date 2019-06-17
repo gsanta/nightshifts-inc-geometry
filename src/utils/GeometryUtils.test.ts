@@ -80,5 +80,13 @@ describe(`GeometryUtils`, () => {
             const merged = GeometryUtils.mergePolygonsIfHaveCommonEdges(polygon2, polygon1)
             expect(merged.equalTo(Polygon.createRectangle(2, 3, 5, 1))).to.be.true;
         });
+
+        it ('merges the two `Polygon`s if even if they have some gap between them', () => {
+            const polygon1 = Polygon.createRectangle(2, 3, 2, 1);
+            const polygon2 = Polygon.createRectangle(6, 3, 3, 1);
+
+            const merged = GeometryUtils.mergePolygonsIfHaveCommonEdges(polygon2, polygon1);
+            expect(merged.equalTo(Polygon.createRectangle(2, 3, 7, 1))).to.be.true;
+        });
     });
 });
