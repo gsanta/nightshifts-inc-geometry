@@ -1,6 +1,6 @@
 {
   "name": "@nightshifts.inc/geometry",
-  "version": "1.5.30",
+  "version": "1.5.31",
   "description": "The geometry module for the game nightshifts.inc",
   "main": "build/index.js",
   "types": "build/index.d.ts",
