@@ -82,8 +82,8 @@ export class GeometryUtils {
         }
 
         if (commonEdge) {
-            const orderedPoints1 = this.orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon1, commonEdge);
-            const orderedPoints2 = this.orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon2, commonEdge);
+            const orderedPoints1 = this.orderPolygonPointSoThatTheArrayStartsAndEndsWithEdge(polygon1, commonEdge);
+            const orderedPoints2 = this.orderPolygonPointSoThatTheArrayStartsAndEndsWithEdge(polygon2, commonEdge);
 
             orderedPoints2.pop();
             orderedPoints2.shift();
@@ -100,9 +100,10 @@ export class GeometryUtils {
         return undefined;
     }
 
-    private static orderPolygonPointSoThatTheArrazStartsAndEndsWithEdge(polygon: Polygon, edge: Segment): Point[] {
+    private static orderPolygonPointSoThatTheArrayStartsAndEndsWithEdge(polygon: Polygon, edge: Segment): Point[] {
         let index_1 = polygon.getOrderedIndex(edge.getPoints()[0]);
         let index_2 = polygon.getOrderedIndex(edge.getPoints()[1]);
+        const points = [...polygon.getPoints()];
 
         if (index_1 > index_2) {
             [index_1, index_2] = [index_2, index_1];
@@ -110,10 +111,10 @@ export class GeometryUtils {
         let newPoints: Point[] = [];
 
         if (index_1 === 0 && index_2 === polygon.getPoints().length - 1) {
-            newPoints = polygon.getPoints();
+            newPoints = points;
         } else {
-            newPoints.push(...polygon.getPoints().slice(index_2));
-            newPoints.push(...polygon.getPoints().slice(0, index_2));
+            newPoints.push(...[...points].slice(index_2));
+            newPoints.push(...[...points].slice(0, index_2));
         }
 
         return newPoints;
