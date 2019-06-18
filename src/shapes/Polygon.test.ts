@@ -574,4 +574,12 @@ describe('Polygon', () => {
             expect(polygon.toString()).to.eq('[(3,5)(3,7)(6,7)(6,5)]');
         });
     });
+
+    describe('setPosition', () => {
+        it ('sets the center of the Polygon to the given position', () => {
+            const polygon = Polygon.createRectangle(1, 2, 4, 3);
+
+            expect(polygon.setPosition(new Point(3, 3))).to.eql(Polygon.createRectangle(1, 1.5, 4, 3));
+        });
+    });
 });

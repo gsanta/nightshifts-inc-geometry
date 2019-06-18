@@ -232,11 +232,14 @@ export class Polygon implements Shape {
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Polygon {
-        const diff = this.getBoundingCenter().subtract(point);
+        if (this.points.length !== 4) {
+            throw new Error('setPosition is only supported for Rectangles.');
+        }
 
-        const points = this.points.map(point => point.addX(diff.x).addY(diff.y));
+        const width = this.getBoundingRectangle().maxX() - this.getBoundingRectangle().minX();
+        const height = this.getBoundingRectangle().maxY() - this.getBoundingRectangle().minY();
 
-        return new Polygon(points);
+        return Polygon.createRectangle(point.x - width / 2, point.y - height / 2, width, height);
     }
 
     public getUnion(otherPolygon: Polygon): Polygon {
