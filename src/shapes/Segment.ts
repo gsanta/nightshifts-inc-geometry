@@ -28,6 +28,10 @@ export class Segment implements Shape {
         return new Polygon(clonedPoints);
     }
 
+    public hasPoint(point: Point): boolean {
+        return _.find(this.points, p => p.equalTo(point)) !== undefined;
+    }
+
     public addX(amount: number): Shape {
         return new Segment(this.points[0].addX(amount), this.points[1].addX(amount));
     }

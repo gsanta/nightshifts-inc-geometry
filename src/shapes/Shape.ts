@@ -17,6 +17,7 @@ export interface Shape {
      * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
      */
     setPoint(index: number, newPoint: Point): Shape;
+    hasPoint(point: Point): boolean;
     addX(amount: number): Shape;
     addY(amount: number): Shape;
 

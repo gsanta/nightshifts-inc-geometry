@@ -6,7 +6,7 @@ import maxBy from 'lodash/maxBy';
 import without from 'lodash/without';
 import last from 'lodash/last';
 import polylabel from 'polylabel';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin } from './Shape';
 import { GeometryUtils } from '../utils/GeometryUtils';
@@ -30,6 +30,10 @@ export class Polygon implements Shape {
         clonedPoints.splice(index, 1, newPoint);
 
         return new Polygon(clonedPoints);
+    }
+
+    public hasPoint(point: Point): boolean {
+        return _.find(this.points, p => p.equalTo(point)) !== undefined;
     }
 
 
