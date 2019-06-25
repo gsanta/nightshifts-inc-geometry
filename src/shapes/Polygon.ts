@@ -292,14 +292,17 @@ export class Polygon implements Shape {
         const otherEdges = other.getEdges();
         const thisEdges = this.getEdges();
 
+        let coincidentSegmentInfos: [Segment, number, number][] = [];
         for (let i = 0; i < otherEdges.length; i++) {
             for (let j = 0; j < thisEdges.length; j++) {
                 const coincidentInfo = otherEdges[i].getCoincidentLineSegment(thisEdges[j]);
                 if (coincidentInfo) {
-                    return [coincidentInfo[0], j, i];
+                    coincidentSegmentInfos.push([coincidentInfo[0], j, i]);
                 }
             }
         }
+
+        return _.maxBy(coincidentSegmentInfos, info => info[0].getLength());
     }
 
     public getEdges(): Segment[] {
