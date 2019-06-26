@@ -403,10 +403,8 @@ export class Polygon implements Shape {
             return false;
         }
 
-        return _.chain(this.points)
-            .map((point, index) => point.equalTo(otherPolygon.points[index]))
-            .every(isEqual => isEqual === true)
-            .value();
+        return _.every(this.points, (point, index) => point.equalTo(otherPolygon.points[index])) ||
+            _.chain(this.points).reverse().every((point, index) => point.equalTo(otherPolygon.points[index])).value();
     }
 
     public removeStraightVertices(): Polygon {
