@@ -85,8 +85,7 @@ describe('Polygon', () => {
                 new Point(4, 4),
                 new Point(3, 4)
             ]);
-
-            expect(poly1.intersectBorder(poly2)).to.eql(new Segment(new Point(3, 1), new Point(3, 4)));
+            expect(poly1.intersectBorder(poly2).equalTo(new Segment(new Point(3, 1), new Point(3, 4)))).to.be.true
         });
 
         it ('returns false if the two polygons do have any common parts', () => {
@@ -463,13 +462,12 @@ describe('Polygon', () => {
                 new Point(3, 3),
                 new Point(1, 3)
             ]);
-
             expect(polygon.getEdges()).to.eql(
                 [
-                    new Segment(new Point(1, 1), new Point(3, 1)),
-                    new Segment(new Point(3, 1), new Point(3, 3)),
-                    new Segment(new Point(3, 3), new Point(1, 3)),
-                    new Segment(new Point(1, 3), new Point(1, 1)),
+                    new Segment(new Point(1, 1), new Point(1, 3)),
+                    new Segment(new Point(1, 3), new Point(3, 3)),
+                    new Segment(new Point(3, 3), new Point(3, 1)),
+                    new Segment(new Point(3, 1), new Point(1, 1)),
                 ]
             )
         });

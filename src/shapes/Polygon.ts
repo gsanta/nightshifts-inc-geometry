@@ -19,6 +19,10 @@ export class Polygon implements Shape {
     constructor(points: Point[]) {
         this.points = points;
         this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.points);
+
+        if (!this.arePointsClockwise()) {
+            this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.orederedPoints.reverse());
+        }
     }
 
     public getPoints(): Point[] {
@@ -500,5 +504,20 @@ export class Polygon implements Shape {
         const polygon = new Polygon(points.map(p => new Point(p[0], p[1])));
 
         return polygon;
+    }
+
+    private arePointsClockwise() {
+        const edges = this.getEdges();
+
+        const sum = edges.reduce(
+            (sum: number, nextEdge) => {
+                const point1 = nextEdge.getPoints()[0];
+                const point2 = nextEdge.getPoints()[1];
+                return sum + (point2.x - point1.x) * (point2.y + point1.y);
+            },
+            0
+        );
+
+        return sum >= 0;
     }
 }

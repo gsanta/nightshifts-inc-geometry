@@ -11,20 +11,23 @@ export class GeometryUtils {
      * Creates a rectangular `Polyon` given two opposite sides of the rectangle as `Segment`s.
      */
     public static createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
-        if (side2.getSlope() === new Segment(side1.getPoints()[1], side1.getPoints()[0]).getSlope()) {
-            side1 = new Segment(side1.getPoints()[1], side1.getPoints()[0]);
+        const testSegment1 = new Segment(side1.getPoints()[0], side2.getPoints()[0]);
+        const testSegment2 = new Segment(side1.getPoints()[1], side2.getPoints()[1]);
+        if (testSegment1.getLine().hasEqualSlope(testSegment2.getLine())) {
+            return new Polygon([
+                side1.getPoints()[0],
+                side1.getPoints()[1],
+                side2.getPoints()[1],
+                side2.getPoints()[0],
+            ]);
+        } else {
+            return new Polygon([
+                side1.getPoints()[0],
+                side1.getPoints()[1],
+                side2.getPoints()[0],
+                side2.getPoints()[1],
+            ]);
         }
-
-        if (side1.getLine().hasEqualSlope(side2.getLine()) === false) {
-            throw new Error('Lines should be parallel.');
-        }
-
-        return new Polygon([
-            side1.getPoints()[0],
-            side1.getPoints()[1],
-            side2.getPoints()[1],
-            side2.getPoints()[0]
-        ]);
     }
 
     /**
@@ -61,10 +64,11 @@ export class GeometryUtils {
             .minBy(point => point.x)
             .value();
 
-        const separatorIndex = points.indexOf(bottomLeftPoint);
-        const orderedPoints = [...points.slice(separatorIndex, points.length), ...points.slice(0, separatorIndex)];
+        while (!points[0].equalTo(bottomLeftPoint)) {
+            points.push(points.shift());
+        }
 
-        return orderedPoints;
+        return points;
     }
 
     public static mergePolygonsIfHaveCommonEdges(polygon1: Polygon, polygon2: Polygon): Polygon | undefined {

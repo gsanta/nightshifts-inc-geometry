@@ -24,4 +24,19 @@ describe(`StripeView`, () => {
             expect(stripe45DegreesRotated.getSlope(), 'slope of stripe rotated 45 degrees not correct').to.eql(1);
         });
     });
+
+    describe(`merge`, () => {
+        it ('merges two overlapping (horizontal) stripes', () => {
+            const stripe1 = new StripeView(Polygon.createRectangle(0, 0, 4, 1));
+            const stripe2 = new StripeView(Polygon.createRectangle(2, 0, 6, 1));
+            expect(stripe1.merge(stripe2)).to.eql(Polygon.createRectangle(0, 0, 8, 1));
+
+        });
+
+        it ('merges two overlapping (vertical) stripes', () => {
+            const stripe1 = new StripeView(Polygon.createRectangle(0, 0, 1, 4));
+            const stripe2 = new StripeView(Polygon.createRectangle(0, 2, 1, 6));
+            expect(stripe1.merge(stripe2).equalTo(Polygon.createRectangle(0, 0, 1, 8))).to.be.true;
+        });
+    });
 });

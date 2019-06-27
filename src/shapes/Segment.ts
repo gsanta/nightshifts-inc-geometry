@@ -1,6 +1,6 @@
 import { Point } from "./Point";
 import { Shape, ShapeOrigin } from './Shape';
-import _ from "lodash";
+import * as _ from "lodash";
 import { Polygon } from './Polygon';
 import { Line } from './Line';
 
@@ -10,7 +10,8 @@ export class Segment implements Shape {
 
     constructor(endPoint1: Point, endPoint2: Point) {
         [this.points[0], this.points[1]] = [endPoint1, endPoint2];
-        this.orderedPoints = this.orderPoints(...this.points);
+    //    this.orderedPoints = this.orderPoints(...this.points);
+        this.orderedPoints = this.points;
     }
 
     public getPoints(): Point[] {
@@ -262,7 +263,7 @@ export class Segment implements Shape {
     }
 
     public equalTo(otherLine: Segment): boolean {
-        return this.orderedPoints[0].equalTo(otherLine.orderedPoints[0]) && this.orderedPoints[1].equalTo(otherLine.orderedPoints[1]);
+        return _.some(otherLine.getPoints(), point => point.equalTo(this.getPoints()[0])) && _.some(otherLine.getPoints(), point => point.equalTo(this.getPoints()[1]));
     }
 
     public getLength(): number {

@@ -12,6 +12,7 @@ describe(`GeometryUtils`, () => {
             const segment2 = new Segment(new Point(3, 1), new Point(4, 2));
 
             const rectangle = GeometryUtils.createRectangleFromTwoOppositeSides(segment1, segment2);
+
             expect(rectangle).to.eql(new Polygon([
                 new Point(1, 1),
                 new Point(2, 2),
