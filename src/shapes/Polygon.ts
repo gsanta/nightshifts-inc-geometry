@@ -183,6 +183,15 @@ export class Polygon implements Shape {
         }
     }
 
+    public intersect(other: Polygon): boolean {
+        const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
+
+        const intersection = turf.intersect(poly1, poly2);
+
+        return !!intersection;
+    }
+
     public scaleX(times: number): Polygon {
         const points = this.points.map(point => point.scaleX(times));
 
@@ -403,8 +412,7 @@ export class Polygon implements Shape {
             return false;
         }
 
-        return _.every(this.orederedPoints, (point, index) => point.equalTo(otherPolygon.orederedPoints[index])) ||
-            _.chain(this.orederedPoints).reverse().every((point, index) => point.equalTo(otherPolygon.orederedPoints[index])).value();
+        return _.every(this.orederedPoints, (point, index) => point.equalTo(otherPolygon.orederedPoints[index]));
     }
 
     public removeStraightVertices(): Polygon {
