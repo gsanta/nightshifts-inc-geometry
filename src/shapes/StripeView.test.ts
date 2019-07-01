@@ -2,6 +2,7 @@ import { StripeView } from './StripeView';
 import { Polygon } from './Polygon';
 import { expect } from 'chai';
 import { Point } from './Point';
+import { Segment } from './Segment';
 
 describe(`StripeView`, () => {
     describe(`getSlope`, () => {
@@ -37,6 +38,35 @@ describe(`StripeView`, () => {
             const stripe1 = new StripeView(Polygon.createRectangle(0, 0, 1, 4));
             const stripe2 = new StripeView(Polygon.createRectangle(0, 2, 1, 6));
             expect(stripe1.merge(stripe2).equalTo(Polygon.createRectangle(0, 0, 1, 8))).to.be.true;
+        });
+    });
+
+    describe(`overlaps`, () => {
+        it ('returns with overlap info if there is an overlap on one of the long sides', () => {
+            const rect = Polygon.createRectangle(0, 0, 5, 1);
+            const stripe = new StripeView(rect);
+
+            const fullOverlap = stripe.overlaps(new Segment(new Point(2, 1), new Point(4, 1)));
+            expect(fullOverlap).to.eql([new Segment(new Point(2, 1), new Point(4, 1)), 1]);
+
+            const partialOverlap = stripe.overlaps(new Segment(new Point(-1, 1), new Point(2, 1)));
+            expect(partialOverlap).to.eql([new Segment(new Point(0, 1), new Point(2, 1)), 1]);
+        });
+
+        it ('returns with overlap info if there is an overlap on the other long side', () => {
+            const rect = Polygon.createRectangle(0, 0, 5, 1);
+            const stripe = new StripeView(rect);
+
+            const fullOverlap = stripe.overlaps(new Segment(new Point(2, 0), new Point(4, 0)));
+            expect(fullOverlap).to.eql([new Segment(new Point(2, 0), new Point(4, 0)), 3]);
+        });
+
+        it ('returns undefined if there is no overlap', () => {
+            const rect = Polygon.createRectangle(0, 0, 5, 1);
+            const stripe = new StripeView(rect);
+
+            const fullOverlap = stripe.overlaps(new Segment(new Point(-2, 0), new Point(-1, 0)));
+            expect(fullOverlap).to.eql(undefined);
         });
     });
 });

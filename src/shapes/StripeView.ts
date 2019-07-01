@@ -35,6 +35,29 @@ export class StripeView {
         return GeometryUtils.createRectangleFromTwoOppositeSides(segment1, segment2);
     }
 
+    /**
+     * Returns with the overlapping `Segment` and the index of the ovelapping edge of the `StripeView` if there is an ovelap,
+     * undefined otherwise
+     * TODO: better naming of the function
+     */
+    public overlaps(segment: Segment): [Segment, number] {
+        const longEdges = this.getLongEdges();
+        const allEdges = this.polygon.getEdges();
+
+        for (let i = 0; i < longEdges.length; i++) {
+            const coincidentInfo = segment.getCoincidentLineSegment(longEdges[i]);
+            if (coincidentInfo) {
+                return [coincidentInfo[0], _.findIndex(allEdges, edge => edge.equalTo(longEdges[i]))];
+            }
+        }
+    }
+
+    public getLongEdges(): [Segment, Segment] {
+        const sortedEdges = _.sortBy(this.polygon.getEdges(), edge => edge.getLength());
+
+        return [sortedEdges[2], sortedEdges[3]];
+    }
+
     public getCapEdges(): [Segment, Segment] {
         const sortedEdges = _.sortBy(this.polygon.getEdges(), edge => edge.getLength());
 
