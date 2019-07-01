@@ -11,23 +11,17 @@ export class GeometryUtils {
      * Creates a rectangular `Polyon` given two opposite sides of the rectangle as `Segment`s.
      */
     public static createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
-        const testSegment1 = new Segment(side1.getPoints()[0], side2.getPoints()[0]);
-        const testSegment2 = new Segment(side1.getPoints()[1], side2.getPoints()[1]);
-        if (testSegment1.getLine().hasEqualSlope(testSegment2.getLine())) {
-            return new Polygon([
-                side1.getPoints()[0],
-                side1.getPoints()[1],
-                side2.getPoints()[1],
-                side2.getPoints()[0],
-            ]);
-        } else {
-            return new Polygon([
-                side1.getPoints()[0],
-                side1.getPoints()[1],
-                side2.getPoints()[0],
-                side2.getPoints()[1],
-            ]);
+
+        if (side1.getPoints()[0].distanceTo(side2.getPoints()[0]) < side1.getPoints()[0].distanceTo(side2.getPoints()[1])) {
+            side2 = new Segment(side2.getPoints()[1], side2.getPoints()[0]);
         }
+
+        return new Polygon([
+            side1.getPoints()[0],
+            side1.getPoints()[1],
+            side2.getPoints()[0],
+            side2.getPoints()[1],
+        ]);
     }
 
     /**
