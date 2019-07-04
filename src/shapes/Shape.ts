@@ -12,40 +12,30 @@ export interface BoundingInfo {
 }
 
 export interface Shape {
-    getPoints(): Point[];
-
-    /**
-     * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
-     */
-    setPoint(index: number, newPoint: Point): Shape;
+    setPosition(point: Point, origin?: ShapeOrigin): Shape;
     hasPoint(point: Point): boolean;
-    getBoundingInfo(): BoundingInfo;
-
     scale(point: Point): Shape;
     translate(point: Point): Shape;
-    negateX(): Shape;
-    negateY(): Shape;
-    mirrorY(): Shape;
-    clone(): Shape;
-    setPosition(point: Point, origin?: ShapeOrigin): Shape;
+    negate(axis: 'x' | 'y'): Shape;
+
+    getBoundingInfo(): BoundingInfo;
     getBoundingCenter(): Point;
     getBoundingRectangle(): Shape;
+
+    clone(): Shape;
     /**
      * Determines whether the two `Shape`s have coincident edges, if they have returns the following array structure
      * [the common `Segment` segment, the index of the edge in this `Shape`, the index of the edge in the other `Shape`],
      * otherwise returns undefined
      */
+
     getCoincidentLineSegment(other: Shape): [Segment, number, number];
-
     /**
-     * Returns the edges of the shape
+     * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
      */
+    setPoint(index: number, newPoint: Point): Shape;
+    getPoints(): Point[];
     getEdges(): Segment[];
-
-    /**
-     * Determines whether two shapes are equal
-     */
     equalTo(otherShape: Shape): boolean;
-
     toString(): string;
 }

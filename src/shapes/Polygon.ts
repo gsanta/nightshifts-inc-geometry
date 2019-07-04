@@ -82,22 +82,9 @@ export class Polygon implements Shape {
         return new Polygon(translatedPoints);
     }
 
-    public negateX(): Polygon {
-        const translatedPoints = this.points.map(point => new Point(-point.x, point.y));
+    public negate(axis: 'x' | 'y'): Polygon {
+        const translatedPoints = this.points.map(point => new Point(axis === 'x' ? -point.x : point.x, axis === 'y' ? -point.y : point.y));
         return new Polygon(translatedPoints);
-    }
-
-
-    public negateY(): Polygon {
-        const translatedPoints = this.points.map(point => new Point(point.x, -point.y));
-        return new Polygon(translatedPoints);
-    }
-
-    /**
-     * TODO: `negateY` is not correct here but seems to be difficult to mirror a `Polygon`
-     */
-    public mirrorY(): Polygon {
-        return this.negateY();
     }
 
     public getArea() {
@@ -148,24 +135,6 @@ export class Polygon implements Shape {
         return false;
     }
 
-    /**
-     * @deprecated use `getCoincidentLineSegment`
-     * Returns true if the two polygons intersect only at a border (but do not overlap)
-     */
-    public intersectBorder(other: Polygon): Segment {
-        const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
-        const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
-
-        const intersection = turf.intersect(poly1, poly2);
-
-        if (intersection !== null && intersection.geometry.type === 'LineString') {
-            // return intersection.geometry.coordinates;
-            const coordinates: [[number, number], [number, number]] = intersection.geometry.coordinates;
-
-            return new Segment(new Point(coordinates[0][0], coordinates[0][1]), new Point(coordinates[1][0], coordinates[1][1]));
-        }
-    }
-
     public intersect(other: Polygon): boolean {
         const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
         const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
@@ -178,24 +147,6 @@ export class Polygon implements Shape {
     public scale(scalePoint: Point): Polygon {
         const points = this.points.map(p => p.scaleX(scalePoint.x)).map(p => p.scaleY(scalePoint.y));
         return new Polygon(points);
-    }
-
-    /**
-     * Stretches or pushes the `Polygon` so that the points min and max y coordinate stretches
-     * exactly the new height
-     */
-    // TODO: implement it
-    public setBoundingHeight(newHeight: number): Polygon {
-        throw new Error('not implemented');
-    }
-
-    /**
-     * Stretches or pushes the `Polygon` so that the points min and max x coordinate stretches
-     * exactly the new width
-     */
-    // TODO: implement it
-    public setBoundingWidth(newWidth: number): Polygon {
-        throw new Error('not implemented');
     }
 
     /**
@@ -377,14 +328,6 @@ export class Polygon implements Shape {
         const clone = this.clone();
         clone.points.push(clone.points[0]);
         return clone;
-    }
-
-
-    private getNthLine(index: number): Segment {
-        if (this.points.length - 1 === index) {
-            return new Segment(this.points[index], this.points[0]);
-        }
-        return new Segment(this.points[index], this.points[index + 1]);
     }
 
     private createPolygonFromTurfGeometry(geometry: {type: string, coordinates: [[number, number][]]}): Polygon {

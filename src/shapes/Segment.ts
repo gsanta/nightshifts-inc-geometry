@@ -48,19 +48,12 @@ export class Segment implements Shape {
         return new Segment(point0, point1);
     }
 
-    public negateX(): Shape {
-        return new Segment(this.points[0].negateX(), this.points[1].negateX());
-    }
-
-    public negateY(): Shape {
-        return new Segment(this.points[0].negateY(), this.points[1].negateY());
-    }
-
-    public mirrorY(): Shape {
-        /**
-         * For a `Segment` negate and mirror means the same
-         */
-        return this.negateY();
+    public negate(axis: 'x' | 'y'): Segment {
+        if (axis === 'x') {
+            return new Segment(this.points[0].negateX(), this.points[1].negateX());
+        } else {
+            return new Segment(this.points[0].negateY(), this.points[1].negateY());
+        }
     }
 
     public clone(): Shape {

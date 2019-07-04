@@ -236,8 +236,8 @@ describe('Polygon', () => {
         });
     });
 
-    describe('`negateX`', () => {
-        it ('negates the x coordinates of the `Polygon`', () => {
+    describe(`negate`, () => {
+        it ('can negate to the x axis', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
                 new Point(5, 3),
@@ -254,12 +254,10 @@ describe('Polygon', () => {
                 new Point(-2, 7)
             ])
 
-            expect(polygon.negateX().equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.negate('x').equalTo(expectedPolygon)).to.be.true;
         });
-    });
 
-    describe('`negateY`', () => {
-        it ('negates the x coordinates of the `Polygon`', () => {
+        it ('can negate to the y axis', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
                 new Point(2, 7),
@@ -278,7 +276,7 @@ describe('Polygon', () => {
                 new Point(2, -3)
             ])
 
-            expect(polygon.negateY().equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.negate('y').equalTo(expectedPolygon)).to.be.true;
         });
     });
 
