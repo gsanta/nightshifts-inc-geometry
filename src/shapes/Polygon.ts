@@ -8,7 +8,7 @@ import last from 'lodash/last';
 import polylabel from 'polylabel';
 import * as _ from 'lodash';
 import * as PolyBool from 'polybooljs';
-import { Shape, ShapeOrigin } from './Shape';
+import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
 import { GeometryUtils } from '../utils/GeometryUtils';
 import { Angle } from './Angle';
 
@@ -38,11 +38,6 @@ export class Polygon implements Shape {
 
     public hasPoint(point: Point): boolean {
         return _.find(this.points, p => p.equalTo(point)) !== undefined;
-    }
-
-
-    public getIndexedPoints(): [Point, number][] {
-        return this.points.map((point, index) => [point, index]);
     }
 
     public getPointsStartingFrom(point: Point) {
@@ -82,18 +77,9 @@ export class Polygon implements Shape {
         return _.findIndex(this.orederedPoints, p => p.equalTo(point));
     }
 
-    public addX(amount: number): Polygon {
-        const translatedPoints = this.points.map(point => point.addX(amount));
-        return new Polygon(translatedPoints);
-    }
-
-    public addY(amount: number): Polygon {
-        const translatedPoints = this.points.map(point => point.addY(amount));
-        return new Polygon(translatedPoints);
-    }
-
     public translate(point: Point): Polygon {
-        return this.addX(point.x).addY(point.y);
+        const translatedPoints = this.points.map(p => p.addX(point.x).addY(point.y));
+        return new Polygon(translatedPoints);
     }
 
     public negateX(): Polygon {
@@ -112,13 +98,6 @@ export class Polygon implements Shape {
      */
     public mirrorY(): Polygon {
         return this.negateY();
-    }
-
-    public getCircumference(): number {
-        return this.points.reduce(
-            (sum: number, currentItem: Point, index: number) => sum + this.getNthLine(index).getLength(),
-            0
-        );
     }
 
     public getArea() {
@@ -196,15 +175,8 @@ export class Polygon implements Shape {
         return !!intersection;
     }
 
-    public scaleX(times: number): Polygon {
-        const points = this.points.map(point => point.scaleX(times));
-
-        return new Polygon(points);
-    }
-
-    public scaleY(times: number) {
-        const points = this.points.map(point => point.scaleY(times));
-
+    public scale(scalePoint: Point): Polygon {
+        const points = this.points.map(p => p.scaleX(scalePoint.x)).map(p => p.scaleY(scalePoint.y));
         return new Polygon(points);
     }
 
@@ -235,10 +207,11 @@ export class Polygon implements Shape {
     }
 
     public getBoundingRectangle(): Shape {
-        const minX = this.minX();
-        const maxX = this.maxX();
-        const minY = this.minY();
-        const maxY = this.maxY();
+        const boudingInfo = this.getBoundingInfo();
+        const minX = boudingInfo.min[0];
+        const maxX = boudingInfo.max[0];
+        const minY = boudingInfo.min[1];
+        const maxY = boudingInfo.max[1];
 
         return new Polygon([
             new Point(minX, minY),
@@ -253,8 +226,10 @@ export class Polygon implements Shape {
             throw new Error('setPosition is only supported for Rectangles.');
         }
 
-        const width = this.getBoundingRectangle().maxX() - this.getBoundingRectangle().minX();
-        const height = this.getBoundingRectangle().maxY() - this.getBoundingRectangle().minY();
+        const boudingInfo = this.getBoundingRectangle().getBoundingInfo();
+
+        const width = boudingInfo.max[0] - boudingInfo.min[0]
+        const height = boudingInfo.max[1] - boudingInfo.min[1];
 
         return Polygon.createRectangle(point.x - width / 2, point.y - height / 2, width, height);
     }
@@ -318,97 +293,21 @@ export class Polygon implements Shape {
         return _.maxBy(coincidentSegmentInfos, info => info[0].getLength());
     }
 
+    public getBoundingInfo(): BoundingInfo {
+        const minX = minBy(this.points, point => point.x).x;
+        const maxX = maxBy(this.points, point => point.x).x;
+        const minY = minBy(this.points, point => point.y).y;
+        const maxY = maxBy(this.points, point => point.y).y;
+
+        return {
+            min: [minX, minY],
+            max: [maxX, maxY],
+            extent: [maxX - minX, maxY - minY]
+        };
+    }
+
     public getEdges(): Segment[] {
         return this.getSidesFromBottomLeftClockwise();
-    }
-
-
-    public xExtent(): number {
-        return this.maxX() - this.minX();
-    }
-
-    public yExtent(): number {
-        return this.maxY() - this.minY();
-    }
-
-    /**
-     * Returns with the minimum x position of all of the polygon's points
-     */
-    public minX(): number {
-        return minBy(this.points, point => point.x).x;
-    }
-
-    /**
-     * Returns with the maximum x position of all of the polygon's points
-     */
-    public maxX(): number {
-        return maxBy(this.points, point => point.x).x;
-    }
-
-    /**
-     * Returns with the minimum y position of all of the polygon's points
-     */
-    public minY(): number {
-        return minBy(this.points, point => point.y).y;
-    }
-
-    /**
-     * Returns with the maxmium y position of all of the polygon's points
-     */
-    public maxY(): number {
-        return maxBy(this.points, point => point.y).y;
-    }
-
-    public stretchX(amount: number): Polygon {
-        return this.points.reduce(
-            (stretchedPolygon, point, index) => {
-            const currentArea = stretchedPolygon.getArea();
-
-                const stretchNeg = point.addX(-amount);
-                let clonedPoints = [...stretchedPolygon.points];
-                clonedPoints.splice(index, 1, stretchNeg)
-                let testPolygonStretchToNeg = new Polygon(clonedPoints);
-                if (testPolygonStretchToNeg.getArea() < currentArea) {
-                    const stretchPos = point.addX(amount);
-
-                    clonedPoints = [...stretchedPolygon.points];
-                    clonedPoints.splice(index, 1, stretchPos)
-
-                    return new Polygon(clonedPoints);
-                } else {
-                    return testPolygonStretchToNeg;
-                }
-            },
-            this
-        );
-    }
-
-    public stretchY(amount: number): Polygon {
-        return this.points.reduce(
-            (stretchedPolygon, point, index) => {
-                const currentArea = stretchedPolygon.getArea();
-
-                const stretchNeg = point.addY(-amount);
-                let clonedPoints = [...stretchedPolygon.points];
-                clonedPoints.splice(index, 1, stretchNeg)
-                let testPolygonStretchToNeg = new Polygon(clonedPoints);
-                if (testPolygonStretchToNeg.getArea() < currentArea) {
-                    const stretchPos = point.addY(amount);
-
-                    clonedPoints = [...stretchedPolygon.points];
-                    clonedPoints.splice(index, 1, stretchPos)
-
-                    return new Polygon(clonedPoints);
-                } else {
-                    return testPolygonStretchToNeg;
-                }
-            },
-            this
-        );
-    }
-
-    public stretch(xAmount: number, yAmount: number): Polygon {
-        return this.stretchX(xAmount).stretchY(yAmount);
     }
 
     public equalTo(otherPolygon: Polygon): boolean {

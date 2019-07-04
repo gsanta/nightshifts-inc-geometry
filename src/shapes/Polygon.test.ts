@@ -181,32 +181,30 @@ describe('Polygon', () => {
         });
     });
 
-    describe('scaleX', () => {
-        it ('scales the polygon on the x axis', () => {
+    describe(`scale`, () => {
+        it ('scales the `Polygon` by the given x', () => {
             const polygon = new Polygon([
                 new Point(1, 0),
                 new Point(1, 2),
                 new Point(4, 2),
                 new Point(4, 0)
             ]);
-            expect(polygon.scaleX(3)).to.eql(new Polygon([
+            expect(polygon.scale(new Point(3, 1))).to.eql(new Polygon([
                 new Point(3, 0),
                 new Point(3, 2),
                 new Point(12, 2),
                 new Point(12, 0)
             ]));
         });
-    });
 
-    describe('scaleY', () => {
-        it ('scales the polygon on the y axis', () => {
+        it ('scales the `Polygon` by the given y', () => {
             const polygon = new Polygon([
                 new Point(1, 0),
                 new Point(1, 2),
                 new Point(4, 2),
                 new Point(4, 0)
             ]);
-            expect(polygon.scaleY(3)).to.eql(new Polygon([
+            expect(polygon.scale(new Point(1, 3))).to.eql(new Polygon([
                 new Point(1, 0),
                 new Point(1, 6),
                 new Point(4, 6),
@@ -284,8 +282,8 @@ describe('Polygon', () => {
         });
     });
 
-    describe('`addX`', () => {
-        it ('adds the speficied amount to the x coordinates of the `Polygon`', () => {
+    describe(`translate`, () => {
+        it ('trasnlates it by the given amount of x coordinate', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
                 new Point(5, 3),
@@ -302,12 +300,10 @@ describe('Polygon', () => {
                 new Point(5, 7)
             ]);
 
-            expect(polygon.addX(3).equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.translate(new Point(3, 0)).equalTo(expectedPolygon)).to.be.true;
         });
-    });
 
-    describe('`addY`', () => {
-        it ('adds the speficied amount to the y coordinates of the `Polygon`', () => {
+        it ('trasnlates it by the given amount of y coordinate', () => {
             const polygon = new Polygon([
                 new Point(2, 3),
                 new Point(5, 3),
@@ -324,61 +320,7 @@ describe('Polygon', () => {
                 new Point(2, 4)
             ]);
 
-            expect(polygon.addY(-3).equalTo(expectedPolygon)).to.be.true;
-        });
-    });
-
-
-    describe('`getCircumference`', () => {
-        it ('calculates the circumference of the `Polygon`', () => {
-            const polygon = new Polygon([
-                new Point(2, 3),
-                new Point(2, 6),
-                new Point(5, 6),
-                new Point(5, 3),
-                new Point(2, 3)
-            ]);
-
-            expect(polygon.getCircumference()).to.eql(12);
-        });
-    });
-
-
-    describe('`strechX`', () => {
-        it ('stretches the `Polygon` with the given amount on the x axis', () => {
-            const polygon = new Polygon([
-                new Point(2, 3),
-                new Point(2, 6),
-                new Point(5, 6),
-                new Point(5, 3)
-            ]);
-
-            expect(polygon.stretchX(1)).to.eql(new Polygon([
-                new Point(1, 3),
-                new Point(1, 6),
-                new Point(6, 6),
-                new Point(6, 3)
-            ]));
-        });
-    });
-
-    describe('`strechY`', () => {
-        it ('stretches the `Polygon` with the given amount on the y axis', () => {
-            const polygon = new Polygon([
-                new Point(2, 1),
-                new Point(5, 1),
-                new Point(5, 4),
-                new Point(2, 4)
-            ]);
-
-            const expectedPolygon = new Polygon([
-                new Point(2, -1),
-                new Point(5, -1),
-                new Point(5, 6),
-                new Point(2, 6)
-            ]);
-
-            expect(polygon.stretchY(2)).to.eql(expectedPolygon);
+            expect(polygon.translate(new Point(0, -3)).equalTo(expectedPolygon)).to.be.true;
         });
     });
 

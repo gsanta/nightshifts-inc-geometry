@@ -134,22 +134,23 @@ describe('`Segment`', () => {
         });
     });
 
-    describe('scaleX', () => {
-        it ('scales the two endpoints of the line by the given amount on the x coordinate', () => {
+    describe(`scale`, () => {
+        it ('scales the two endpoints of the `Segment` by the given x', () => {
             const line = new Segment(new Point(1, 2), new Point(3, 4));
             const scaledLine = new Segment(new Point(3, 2), new Point(9, 4));
 
-            expect(line.scaleX(3).equalTo(scaledLine));
+            expect(line.scale(new Point(3, 0)).equalTo(scaledLine));
+        });
+
+        it ('scales the two endpoints of the `Segment` by the given y', () => {
+            const line = new Segment(new Point(1, 2), new Point(3, 4));
+            const scaledLine = new Segment(new Point(1, 6), new Point(3, 12));
+
+            expect(line.scale(new Point(0, 3)).equalTo(scaledLine));
         });
     });
 
     describe('scaleY', () => {
-        it ('scales the two endpoints of the line by the given amount on the y coordinate', () => {
-            const line = new Segment(new Point(1, 2), new Point(3, 4));
-            const scaledLine = new Segment(new Point(1, 6), new Point(3, 12));
-
-            expect(line.scaleY(3).equalTo(scaledLine));
-        });
     });
 
     describe('getLength', () => {
@@ -171,27 +172,6 @@ describe('`Segment`', () => {
                 new Point(3, 3),
                 new Point(3, 1)
             ]))
-        });
-    });
-
-    describe('`stretch`', () => {
-        it ('makes the segment shorter by the given amount if the parameter is negative', () => {
-            const segment = new Segment(new Point(1, 1), new Point(5, 5));
-
-            expect(segment.stretch(-Math.SQRT2).equalTo(new Segment(new Point(2, 2), new Point(4, 4)))).to.be.true;
-        });
-
-        it ('makes the segment longer by the given amount if the parameter is positive', () => {
-            const segment = new Segment(new Point(1, 1), new Point(5, 5));
-
-            expect(segment.stretch(Math.SQRT2).equalTo(new Segment(new Point(0, 0), new Point(6, 6)))).to.be.true;
-        });
-
-
-        it ('throws an error if the negative stretching would result 0 or negative length', () => {
-            const segment = new Segment(new Point(1, 1), new Point(1, 3));
-
-            expect(segment.stretch.bind(segment, -2)).to.throw('Can not stretch segment by -2 unit because the resulting length would be <= 0.');
         });
     });
 });

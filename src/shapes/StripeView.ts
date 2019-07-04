@@ -1,7 +1,6 @@
 import { Polygon } from "./Polygon";
 import _ from "lodash";
 import { Segment } from "./Segment";
-import { distance } from "@turf/turf";
 import { GeometryUtils } from '../utils/GeometryUtils';
 
 

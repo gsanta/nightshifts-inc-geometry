@@ -5,63 +5,27 @@ export enum ShapeOrigin {
     CENTER
 }
 
+export interface BoundingInfo {
+    min: [number, number];
+    max: [number, number];
+    extent: [number, number];
+}
+
 export interface Shape {
     getPoints(): Point[];
-    /**
-     * Returns with pairs of (`Point`, index) of the `Shape`'s points so that those `Point`s can be referenced.
-     * later by their indexes.
-     */
-    getIndexedPoints(): [Point, number][];
 
     /**
      * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
      */
     setPoint(index: number, newPoint: Point): Shape;
     hasPoint(point: Point): boolean;
-    addX(amount: number): Shape;
-    addY(amount: number): Shape;
+    getBoundingInfo(): BoundingInfo;
 
-    /**
-     * A more general term for the 'width' of the `Shape`, that returns `maxX` - `minX`.
-     */
-    xExtent(): number;
-    /**
-     * A more general term for the 'height' of the `Shape`, that returns `maxY` - `minY`.
-     */
-    yExtent(): number;
-    /**
-     * Returns with the minimum x position of all of the `Shape`'s points.
-     */
-    minX(): number
-    /**
-     * Returns with the maximum x position of all of the `Shape`'s points.
-     */
-    maxX(): number;
-    /**
-     * Returns with the minimum y position of all of the `Shape`'s points.
-     */
-    minY(): number
-
-    /**
-     * Returns with the maximum y position of all of the `Shape`'s points.
-     */
-    maxY(): number;
-    scaleX(times: number): Shape;
-    scaleY(times: number): Shape;
-    /**
-     * Stretches the `Shape` in the x direction by the given `amount` while keeping the center point
-     */
-    stretchX(amount: number): Shape;
-    /**
-     * Stretches the `Shape` in the x direction by the given `amount` while keeping the center point
-     */
-    stretchY(amount: number): Shape;
+    scale(point: Point): Shape;
     translate(point: Point): Shape;
     negateX(): Shape;
     negateY(): Shape;
     mirrorY(): Shape;
-    getCircumference(): number;
-    getArea(): number;
     clone(): Shape;
     setPosition(point: Point, origin?: ShapeOrigin): Shape;
     getBoundingCenter(): Point;
