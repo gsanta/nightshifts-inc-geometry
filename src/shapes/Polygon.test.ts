@@ -70,61 +70,6 @@ describe('Polygon', () => {
         });
     });
 
-    describe('intersectBorder', () => {
-        it ('returns true if the polygon intersects with the other', () => {
-            const poly1 = new Polygon([
-                new Point(1, 1),
-                new Point(3, 1),
-                new Point(3, 4),
-                new Point(1, 4)
-            ]);
-
-            const poly2 = new Polygon([
-                new Point(3, 1),
-                new Point(4, 1),
-                new Point(4, 4),
-                new Point(3, 4)
-            ]);
-            expect(poly1.intersectBorder(poly2).equalTo(new Segment(new Point(3, 1), new Point(3, 4)))).to.be.true
-        });
-
-        it ('returns false if the two polygons do have any common parts', () => {
-            const poly1 = new Polygon([
-                new Point(1, 1),
-                new Point(3, 1),
-                new Point(3, 4),
-                new Point(1, 4)
-            ]);
-
-            const poly2 = new Polygon([
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 4),
-                new Point(4, 4)
-            ]);
-
-            expect(poly1.intersectBorder(poly2)).to.eql(undefined);
-        });
-
-        it ('returns false if the two polygons overlap', () => {
-            const poly1 = new Polygon([
-                new Point(1, 1),
-                new Point(4, 1),
-                new Point(4, 4),
-                new Point(1, 4)
-            ]);
-
-            const poly2 = new Polygon([
-                new Point(5, 1),
-                new Point(3, 1),
-                new Point(3, 4),
-                new Point(5, 4)
-            ]);
-
-            expect(poly1.intersectBorder(poly2)).to.eql(undefined);
-        });
-    });
-
     describe('`getCoincidentLineSegment`', () => {
         it ('returns with the common `Segment` segment if the `Polygon` has a common edge with the other `Shape`', () => {
             const poly1 = new Polygon([

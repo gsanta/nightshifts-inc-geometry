@@ -2,15 +2,41 @@ import { Polygon } from "./Polygon";
 import _ from "lodash";
 import { Segment } from "./Segment";
 import { GeometryUtils } from '../utils/GeometryUtils';
+import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
+import { Point } from "..";
 
-
-export class StripeView {
+export class StripeView implements Shape {
     private polygon: Polygon;
 
     // TODO: check if polygon is really a stripe.
     constructor(polygon: Polygon) {
         this.polygon = polygon;
     }
+
+    public setPosition(point: Point, origin?: ShapeOrigin): Shape { throw new Error ('Not implemented');}
+    hasPoint(point: Point): boolean { throw new Error ('Not implemented');}
+    scale(point: Point): Shape { throw new Error ('Not implemented');}
+    translate(point: Point): Shape { throw new Error ('Not implemented');}
+    negate(axis: 'x' | 'y'): Shape { throw new Error ('Not implemented');}
+    getBoundingInfo(): BoundingInfo { throw new Error ('Not implemented');}
+    getBoundingCenter(): Point { throw new Error ('Not implemented');}
+    getBoundingRectangle(): Shape { throw new Error ('Not implemented');}
+
+    clone(): Shape { throw new Error ('Not implemented');}
+    /**
+     * Determines whether the two `Shape`s have coincident edges, if they have returns the following array structure
+     * [the common `Segment` segment, the index of the edge in this `Shape`, the index of the edge in the other `Shape`],
+     * otherwise returns undefined
+     */
+
+    getCoincidentLineSegment(other: Shape): [Segment, number, number] { throw new Error ('Not implemented');}
+    /**
+     * Sets the `Point` at the given `index` based on the initial `Point` ordering, and returns with the new `Shape`.
+     */
+    setPoint(index: number, newPoint: Point): Shape { throw new Error ('Not implemented');}
+    getPoints(): Point[] { throw new Error ('Not implemented');}
+    equalTo(otherShape: Shape): boolean { throw new Error ('Not implemented');}
+    toString(): string { throw new Error ('Not implemented');}
 
     public getSlope() {
         return _.maxBy(this.polygon.getEdges(), edge => edge.getLength()).getSlope();
@@ -40,7 +66,7 @@ export class StripeView {
      * TODO: better naming of the function
      */
     public overlaps(segment: Segment): [Segment, number] {
-        const longEdges = this.getLongEdges();
+        const longEdges = this.getEdges();
         const allEdges = this.polygon.getEdges();
 
         for (let i = 0; i < longEdges.length; i++) {
@@ -51,7 +77,7 @@ export class StripeView {
         }
     }
 
-    public getLongEdges(): [Segment, Segment] {
+    public getEdges(): [Segment, Segment] {
         const sortedEdges = _.sortBy(this.polygon.getEdges(), edge => edge.getLength());
 
         return [sortedEdges[2], sortedEdges[3]];
