@@ -13,6 +13,10 @@ export class StripeView implements Shape {
         this.polygon = polygon;
     }
 
+    public getNormal(): number {
+        return this.getCapEdges()[0].getSlope();
+    }
+
     public setPosition(point: Point, origin?: ShapeOrigin): Shape { throw new Error ('Not implemented');}
     hasPoint(point: Point): boolean { throw new Error ('Not implemented');}
     scale(point: Point): Shape { throw new Error ('Not implemented');}
