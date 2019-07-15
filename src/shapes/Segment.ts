@@ -235,14 +235,4 @@ export class Segment implements Shape {
     public toString(): string {
         return `[${this.points[0].toString()},${this.points[1].toString()}]`;
     }
-
-    private orderPoints(endPoint1: Point, endPoint2: Point): [Point, Point] {
-        if (endPoint1.y < endPoint2.y) {
-            return [endPoint1, endPoint2];
-        } else if (endPoint1.x < endPoint2.x) {
-            return [endPoint1, endPoint2];
-        } else {
-            return [endPoint2, endPoint1];
-        }
-    }
 }

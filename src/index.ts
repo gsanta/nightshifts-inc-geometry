@@ -5,4 +5,5 @@ export {Point} from './shapes/Point';
 export {Shape} from './shapes/Shape';
 export {GeometryUtils} from './utils/GeometryUtils';
 export {MeasurementUtils} from './utils/MeasurementUtils';
+export {Distance} from './utils/Distance';
 export {StripeView} from './shapes/StripeView';

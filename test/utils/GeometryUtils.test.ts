@@ -1,8 +1,8 @@
-import { Segment } from "../shapes/Segment";
-import { Point } from "../shapes/Point";
-import { GeometryUtils } from "./GeometryUtils";
+import { Segment } from "../../src/shapes/Segment";
+import { Point } from "../../src/shapes/Point";
+import { GeometryUtils } from "../../src/utils/GeometryUtils";
 import { expect } from "chai";
-import { Polygon } from '../shapes/Polygon';
+import { Polygon } from '../../src/shapes/Polygon';
 
 
 describe(`GeometryUtils`, () => {

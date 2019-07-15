@@ -1,8 +1,8 @@
-import { Segment } from "./Segment";
-import { Point } from "./Point";
+import { Segment } from "../../src/shapes/Segment";
+import { Point } from "../../src/shapes/Point";
 import { expect } from "chai";
-import { Polygon } from './Polygon';
-import { Line } from "./Line";
+import { Polygon } from '../../src/shapes/Polygon';
+import { Line } from "../../src/shapes/Line";
 
 
 describe('`Segment`', () => {

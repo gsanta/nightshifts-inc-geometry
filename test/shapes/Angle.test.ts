@@ -1,5 +1,5 @@
-import { Point } from "./Point";
-import { Angle } from './Angle';
+import { Point } from "../../src/shapes/Point";
+import { Angle } from '../../src/shapes/Angle';
 import { expect } from "chai";
 
 

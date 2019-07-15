@@ -1,7 +1,7 @@
-import { Polygon } from './Polygon';
-import { Point } from './Point';
+import { Polygon } from '../../src/shapes/Polygon';
+import { Point } from '../../src/shapes/Point';
 import { expect } from 'chai';
-import { Segment } from './Segment';
+import { Segment } from '../../src/shapes/Segment';
 
 describe('Polygon', () => {
 

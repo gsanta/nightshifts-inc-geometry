@@ -1,8 +1,8 @@
-import { StripeView } from './StripeView';
-import { Polygon } from './Polygon';
+import { StripeView } from '../../src/shapes/StripeView';
+import { Polygon } from '../../src/shapes/Polygon';
 import { expect } from 'chai';
-import { Point } from './Point';
-import { Segment } from './Segment';
+import { Point } from '../../src/shapes/Point';
+import { Segment } from '../../src/shapes/Segment';
 
 describe(`StripeView`, () => {
     describe(`getSlope`, () => {

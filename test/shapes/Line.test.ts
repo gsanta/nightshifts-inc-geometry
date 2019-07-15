@@ -1,5 +1,5 @@
-import { Point } from "./Point";
-import { Line } from './Line';
+import { Point } from "../../src/shapes/Point";
+import { Line } from '../../src/shapes/Line';
 import { expect } from 'chai';
 
 describe(`Line`, () => {

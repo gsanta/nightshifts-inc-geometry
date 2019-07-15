@@ -1,6 +1,6 @@
-import { Point } from "./Point";
+import { Point } from "../../src/shapes/Point";
 import { expect } from "chai";
-import { GeometryUtils } from '../utils/GeometryUtils';
+import { GeometryUtils } from '../../src/utils/GeometryUtils';
 
 
 describe('`Point`', () => {
