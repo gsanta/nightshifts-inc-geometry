@@ -30,6 +30,7 @@
     "@types/lodash": "^4.14.119",
     "@types/node": "^10.12.14",
     "@types/polylabel": "^1.0.5",
+    "linear-solve": "^1.2.1",
     "lodash": "^4.17.11",
     "polybooljs": "^1.2.0",
     "polylabel": "^1.0.2"
