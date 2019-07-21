@@ -16,7 +16,7 @@ export class Angle {
     }
 
     public getAngle(): number {
-        return Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x) - Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x);
+        return this.normalizeAngle(Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x)) - this.normalizeAngle(Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x));
     }
 
     public isStraightAngle(): boolean {
@@ -24,15 +24,15 @@ export class Angle {
     }
 
     public isPointInsideAngle(point: Point) {
-        const equation1 = [this.a.x - this.o.x, this.b.x - this.o.x];
         const equation2 = [this.a.y - this.o.y, this.b.y - this.o.y];
+        const equation1 = [this.a.x - this.o.x, this.b.x - this.o.x];
         const result = [point.x - this.o.x, point.y - this.o.y];
         const res = linear.solve([equation1, equation2], result);
 
         return res.length === 2 && res[0] > 0 && res[1] > 0;
     }
 
-    private isCCW(a: Point, b: Point, c: Point) {
-        return ((a.x - c.x)*(b.y - c.y) - (a.y - c.y)*(b.x - c.x)) > 0;
+    private normalizeAngle(angle: number) {
+        return angle < 0 ? angle + 2 * Math.PI : angle;
     }
 }

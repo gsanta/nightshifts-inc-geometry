@@ -7,13 +7,13 @@ describe(`Angle`, () => {
 
     describe(`getAngle`, () => {
         it ('returns the angle in radian', () => {
-            const a = new Point(1, 1);
-            const b = new Point(1, 3);
-            const c = new Point(3, 1);
+            expect(new Angle(new Point(1, 1), new Point(1, 3), new Point(1, 3)).getAngle()).to.eql(0);
 
-            const angle = new Angle(a, b, c);
+            expect(new Angle(new Point(1, 1), new Point(1, 3), new Point(3, 1)).getAngle()).to.eql(Math.PI / 2);
 
-            expect(angle.getAngle()).to.eql(Math.PI / 2);
+            expect(new Angle(new Point(1, 1), new Point(-2, 1), new Point(3, 1)).getAngle()).to.eql(Math.PI);
+
+            expect(new Angle(new Point(0, 0), new Point(0, -1), new Point(3, 0)).getAngle()).to.eql(3 * Math.PI / 2);
         });
     });
 
