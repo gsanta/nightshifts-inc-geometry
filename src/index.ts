@@ -1,5 +1,6 @@
 export {Polygon} from './shapes/Polygon';
 export {Segment} from './shapes/Segment';
+export {Angle} from './shapes/Angle';
 export {Line} from './shapes/Line';
 export {Point} from './shapes/Point';
 export {Shape} from './shapes/Shape';
@@ -7,3 +8,5 @@ export {GeometryUtils} from './utils/GeometryUtils';
 export {MeasurementUtils} from './utils/MeasurementUtils';
 export {Distance} from './utils/Distance';
 export {StripeView} from './shapes/StripeView';
+export {Matrix} from './utils/Matrix';
+export {Transform} from './utils/Transform';
