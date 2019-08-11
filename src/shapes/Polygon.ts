@@ -274,7 +274,7 @@ export class Polygon implements Shape {
             const a = point;
             const b = this.getPreviousPoint(point);
             const c = this.getNextPoint(point);
-            return new Angle(a, b, c).isStraightAngle() === false
+            return Angle.fromThreePoints(a, b, c).isStraightAngle() === false
         });
 
         const reducedPoints: Point[] = [firstPoint];
@@ -286,7 +286,7 @@ export class Polygon implements Shape {
             const b = this.getPreviousPoint(currentPoint);
             const c = this.getNextPoint(currentPoint);
 
-            if (new Angle(a, b, c).isStraightAngle() === false) {
+            if (Angle.fromThreePoints(a, b, c).isStraightAngle() === false) {
                 reducedPoints.push(currentPoint);
             }
 
@@ -306,11 +306,11 @@ export class Polygon implements Shape {
         return str;
     }
 
-    public static createRectangle(left: number, bottom: number,  width: number, height: number): Polygon {
+    public static createRectangle(left: number, top: number,  width: number, height: number): Polygon {
         const minX = left;
         const maxX = left + width;
-        const minY = bottom;
-        const maxY = bottom + height;
+        const minY = top;
+        const maxY = top + height;
 
         return new Polygon([
             new Point(minX, minY),

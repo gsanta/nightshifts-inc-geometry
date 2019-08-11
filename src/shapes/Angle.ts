@@ -1,5 +1,6 @@
 import { Point } from "./Point";
 import * as linear from 'linear-solve';
+import { Line } from './Line';
 
 /**
  * An angle is represented as the anticlockwise angle from b to a.
@@ -9,14 +10,17 @@ export class Angle {
     public a: Point;
     public b: Point;
 
-    constructor(o: Point, a: Point, b: Point) {
+    private angle: number;
+
+    private constructor(o: Point, a: Point, b: Point) {
         this.o = o;
         this.a = a;
         this.b = b;
+        this.angle = this.normalizeAngle(Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x)) - this.normalizeAngle(Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x));
     }
 
     public getAngle(): number {
-        return this.normalizeAngle(Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x)) - this.normalizeAngle(Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x));
+        return this.angle;
     }
 
     public isStraightAngle(): boolean {
@@ -35,4 +39,23 @@ export class Angle {
     private normalizeAngle(angle: number) {
         return angle < 0 ? angle + 2 * Math.PI : angle;
     }
+
+    static fromRadian(angle: number) {
+        const slope = Math.tan(angle);
+        const line = new Line(slope, 0);
+
+        const o = new Point(0, 0);
+        const a = new Point(10, line.getY(10));
+        const b = new Point(10, 0);
+
+        return new Angle(o, a, b);
+    }
+
+    static fromThreePoints(o: Point, a: Point, b: Point) {
+        return new Angle(o, a, b);
+    }
+}
+
+export function toDegree(radian: number) {
+    return 180 / Math.PI * radian;
 }

@@ -1,4 +1,5 @@
 import { Point } from "./Point";
+import { Angle } from "./Angle";
 
 export class Line {
     public m: number;
@@ -79,6 +80,27 @@ export class Line {
         return new Point(x, y);
     }
 
+    getAngleToXAxis() {
+        if (this.isVertical()) {
+            return Angle.fromRadian(Math.PI / 2);
+        }
+
+        const xAxis = Line.createHorizontalLine(0);
+        // const xAxis = new Segment(new Point(0, 0), new Point(10, 0)).getLine();
+        const o = xAxis.intersection(this);
+
+        if (o !== undefined) {
+            const a = new Point(o.x + 10, this.getY(o.x + 10));
+            const b = new Point(o.x + 10, 0);
+
+            return Angle.fromThreePoints(o, a, b);
+
+        }
+
+        return Angle.fromThreePoints(new Point(0, 0), new Point(0, 0), new Point(0, 0));
+
+    }
+
     public static createFromPointSlopeForm(point: Point, m: number): Line {
         if (m === undefined) {
             return new Line(undefined, point.x);
@@ -94,7 +116,7 @@ export class Line {
         return new Line(undefined, x);
     }
 
-    public static createHorizontalLIne(y: number) {
+    public static createHorizontalLine(y: number) {
         return new Line(0, y);
     }
 }

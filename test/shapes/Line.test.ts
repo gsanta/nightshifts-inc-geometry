@@ -1,6 +1,7 @@
 import { Point } from "../../src/shapes/Point";
 import { Line } from '../../src/shapes/Line';
 import { expect } from 'chai';
+import { toDegree } from '../../src/shapes/Angle';
 
 describe(`Line`, () => {
     describe(`createFromPointSlopeForm`, () => {
@@ -109,9 +110,29 @@ describe(`Line`, () => {
         it ('handles horizontal lines', () => {
             const center = new Point(2, 4);
 
-            const line = Line.createHorizontalLIne(4);
+            const line = Line.createHorizontalLine(4);
 
             expect(line.getSegmentWithCenterPointAndDistance(center, 2)).to.eql([new Point(0, 4), new Point(4, 4)]);
+        });
+    });
+
+    describe(`getAngleToXAxis`, () => {
+        it ('returns with the line\'s angle to the x axis', () => {
+            const line45Deg = new Line(1, 0);
+
+            expect(toDegree(line45Deg.getAngleToXAxis().getAngle())).to.eql(45);
+
+            const lineHorizontal = Line.createHorizontalLine(1);
+
+            expect(toDegree(lineHorizontal.getAngleToXAxis().getAngle())).to.eql(0);
+
+            const lineVertical = Line.createVerticalLine(-2);
+
+            expect(toDegree(lineVertical.getAngleToXAxis().getAngle())).to.eql(90);
+
+            const lineneg45Deg = new Line(-1, 0);
+
+            expect(toDegree(lineneg45Deg.getAngleToXAxis().getAngle())).to.eql(315);
         });
     });
 });
