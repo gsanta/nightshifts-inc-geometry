@@ -92,35 +92,28 @@ describe(`Line`, () => {
 
     describe(`getSegmentWithCenterPointAndDistance`, () => {
         it ('returns the two endpoints of a segment given the center `Point` and the distance from the center.', () => {
-            const center = new Point(4, 3);
+            const center1 = new Point(4, 3);
+            const line45deg = Line.createFromPointSlopeForm(center1, 1);
 
-            const line = Line.createFromPointSlopeForm(center, 1);
+            expect(line45deg.getSegmentWithCenterPointAndDistance(center1, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
 
-            expect(line.getSegmentWithCenterPointAndDistance(center, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
-        });
+            const center2 = new Point(4, 3);
+            const lineVertical = Line.createVerticalLine(4);
 
-        it ('handles vertical lines', () => {
-            const center = new Point(4, 3);
+            expect(lineVertical.getSegmentWithCenterPointAndDistance(center2, 1)).to.eql([new Point(4, 2), new Point(4, 4)]);
 
-            const line = Line.createVerticalLine(4);
+            const center3 = new Point(2, 4);
+            const lineHorizontal = Line.createHorizontalLine(4);
 
-            expect(line.getSegmentWithCenterPointAndDistance(center, 1)).to.eql([new Point(4, 2), new Point(4, 4)]);
-        });
-
-        it ('handles horizontal lines', () => {
-            const center = new Point(2, 4);
-
-            const line = Line.createHorizontalLine(4);
-
-            expect(line.getSegmentWithCenterPointAndDistance(center, 2)).to.eql([new Point(0, 4), new Point(4, 4)]);
+            expect(lineHorizontal.getSegmentWithCenterPointAndDistance(center3, 2)).to.eql([new Point(0, 4), new Point(4, 4)]);
         });
     });
 
     describe(`getAngleToXAxis`, () => {
         it ('returns with the line\'s angle to the x axis', () => {
-            const line45Deg = new Line(1, 0);
+            const line45deg = new Line(1, 0);
 
-            expect(toDegree(line45Deg.getAngleToXAxis().getAngle())).to.eql(45);
+            expect(toDegree(line45deg.getAngleToXAxis().getAngle())).to.eql(45);
 
             const lineHorizontal = Line.createHorizontalLine(1);
 

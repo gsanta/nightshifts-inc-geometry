@@ -6,8 +6,13 @@
       "moduleResolution": "node",
       "module": "commonjs",
       "outDir": "build",
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "types": [
+        "node",
+        "jest"
+      ]
     },
+
     "include": [
       "src/**/*.ts"
     ],

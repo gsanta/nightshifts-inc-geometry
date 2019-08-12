@@ -6,9 +6,9 @@ import { Line } from './Line';
  * An angle is represented as the anticlockwise angle from b to a.
  */
 export class Angle {
-    public o: Point;
-    public a: Point;
-    public b: Point;
+    private o: Point;
+    private a: Point;
+    private b: Point;
 
     private angle: number;
 
@@ -42,10 +42,11 @@ export class Angle {
 
     static fromRadian(angle: number) {
         const slope = Math.tan(angle);
+
         const line = new Line(slope, 0);
 
         const o = new Point(0, 0);
-        const a = new Point(10, line.getY(10));
+        const a = slope < 0 ? new Point(-10, line.getY(10)) : new Point(10, line.getY(10));
         const b = new Point(10, 0);
 
         return new Angle(o, a, b);
