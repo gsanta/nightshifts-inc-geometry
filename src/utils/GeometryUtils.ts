@@ -33,10 +33,10 @@ export class GeometryUtils {
 
         const [point1, point2] = bisectorLine.getSegmentWithCenterPointAndDistance(segment.getBoundingCenter(), thickness);
 
-        const line1 = Line.createFromPointSlopeForm(point1, segment.getSlope());
+        const line1 = Line.fromPointSlopeForm(point1, segment.getSlope());
         const [side1Point1, side1Point2] = line1.getSegmentWithCenterPointAndDistance(point1, segment.getLength() / 2);
 
-        const line2 = Line.createFromPointSlopeForm(point2, segment.getSlope());
+        const line2 = Line.fromPointSlopeForm(point2, segment.getSlope());
         const [side2Point1, side2Point2] = line2.getSegmentWithCenterPointAndDistance(point2, segment.getLength() / 2);
 
         return GeometryUtils.createRectangleFromTwoOppositeSides(new Segment(side1Point1, side1Point2), new Segment(side2Point1, side2Point2));

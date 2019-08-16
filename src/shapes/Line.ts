@@ -2,12 +2,14 @@ import { Point } from "./Point";
 import { Angle } from "./Angle";
 
 export class Line {
-    public m: number;
-    public b: number;
+    slope: number;
+    yIntercept: number;
+    xIntercept: number;
 
-    constructor(m: number, b: number) {
-        this.m = m;
-        this.b = b;
+    private constructor(slope: number, yIntercept: number, xIntercept: number) {
+        this.slope = slope;
+        this.yIntercept = yIntercept;
+        this.xIntercept = xIntercept;
     }
 
     public getSegmentWithCenterPointAndDistance(centerPoint: Point, d: number): [Point, Point] {
@@ -16,8 +18,8 @@ export class Line {
         } else if (this.isVertical()) {
             return [new Point(centerPoint.x, centerPoint.y - d), new Point(centerPoint.x, centerPoint.y + d)];
         } else {
-            const x1 = centerPoint.x + d / (Math.sqrt(1 + Math.pow(this.m, 2)));
-            const x2 = centerPoint.x - d / (Math.sqrt(1 + Math.pow(this.m, 2)));
+            const x1 = centerPoint.x + d / (Math.sqrt(1 + Math.pow(this.slope, 2)));
+            const x2 = centerPoint.x - d / (Math.sqrt(1 + Math.pow(this.slope, 2)));
 
             const y1 = this.getY(x1);
             const y2 = this.getY(x2);
@@ -30,48 +32,48 @@ export class Line {
         if (this.isHorizontal()) {
             throw new Error('`getX` not supported for horizontal lines.')
         }
-        return (y - this.b) / this.m;
+        return (y - this.yIntercept) / this.slope;
     }
 
     public getY(x: number): number {
         if (this.isVertical()) {
             throw new Error('`getY` not supported for vertical lines.')
         }
-        return this.m * x + this.b;
+        return this.slope * x + this.yIntercept;
     }
 
     public isVertical(): boolean {
-        return this.m === undefined;
+        return this.slope === undefined;
     }
 
     public isHorizontal(): boolean {
-        return this.m === 0;
+        return this.slope === 0;
     }
 
     public hasEqualSlope(otherLine: Line): boolean {
-        const thisM = this.m === undefined ? Number.MAX_VALUE : this.m;
-        const thatM = otherLine.m === undefined ? Number.MAX_VALUE: otherLine.m;
+        const thisM = this.slope === undefined ? Number.MAX_VALUE : this.slope;
+        const thatM = otherLine.slope === undefined ? Number.MAX_VALUE: otherLine.slope;
 
         return Math.abs(thisM - thatM) < 0.1;
     }
 
     public intersection(otherLine: Line): Point {
-        if (this.m === otherLine.m) {
+        if (this.slope === otherLine.slope) {
             return undefined;
         }
 
         let x: number;
 
-        if (this.m === undefined) {
-            x = this.b;
-        } else if (otherLine.m === undefined) {
-            x = otherLine.b;
+        if (this.slope === undefined) {
+            x = this.xIntercept;
+        } else if (otherLine.slope === undefined) {
+            x = otherLine.xIntercept;
         } else {
-            x = (otherLine.b - this.b) / (this.m - otherLine.m);
+            x = (otherLine.yIntercept - this.yIntercept) / (this.slope - otherLine.slope);
         }
 
         let y: number;
-        if (this.m === undefined) {
+        if (this.slope === undefined) {
             y = otherLine.getY(x);
         } else {
             y = this.getY(x);
@@ -101,22 +103,35 @@ export class Line {
 
     }
 
-    public static createFromPointSlopeForm(point: Point, m: number): Line {
-        if (m === undefined) {
-            return new Line(undefined, point.x);
-        } else if (m === 0) {
-            return new Line(0, point.y);
+    static fromTwoPoints(point1: Point, point2: Point): Line {
+        const slope = point1.x === point2.x ? undefined : (point1.y - point2.y) / (point1.x - point2.x);
+
+        return this.fromPointSlopeForm(point1, slope);
+    }
+
+    static fromPointSlopeForm(point: Point, slope: number): Line {
+        let yIntercept: number;
+        let xIntercept: number;
+
+        if (slope === undefined) {
+            yIntercept = undefined;
+            xIntercept = point.x;
+        } else if (slope === 0) {
+            yIntercept = point.y;
+            xIntercept = undefined;
         } else {
-            const b = (0 - point.x) * m + point.y;
-            return new Line(m, b);
+            yIntercept = -1 * (slope * point.x) + point.y;
+            xIntercept = (-1 * yIntercept) / slope;
         }
+
+        return new Line(slope, yIntercept, xIntercept);
     }
 
     public static createVerticalLine(x: number) {
-        return new Line(undefined, x);
+        return new Line(undefined, undefined, x);
     }
 
     public static createHorizontalLine(y: number) {
-        return new Line(0, y);
+        return new Line(0, y, undefined);
     }
 }

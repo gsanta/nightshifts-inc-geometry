@@ -126,11 +126,11 @@ export class Segment implements Shape {
     public getPerpendicularBisector(): Line {
         let slope = this.getSlope();
         if (slope === 0) {
-            return Line.createFromPointSlopeForm(this.getBoundingCenter(), undefined);
+            return Line.fromPointSlopeForm(this.getBoundingCenter(), undefined);
         } else if (slope === undefined) {
-            return Line.createFromPointSlopeForm(this.getBoundingCenter(), 0);
+            return Line.fromPointSlopeForm(this.getBoundingCenter(), 0);
         } else {
-            return Line.createFromPointSlopeForm(this.getBoundingCenter(), -this.getSlope());
+            return Line.fromPointSlopeForm(this.getBoundingCenter(), -this.getSlope());
         }
     }
 
@@ -229,7 +229,7 @@ export class Segment implements Shape {
     }
 
     public getLine(): Line {
-        return Line.createFromPointSlopeForm(this.points[0], this.getSlope());
+        return Line.fromPointSlopeForm(this.points[0], this.getSlope());
     }
 
     public toString(): string {

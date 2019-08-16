@@ -43,7 +43,7 @@ export class Angle {
     static fromRadian(angle: number) {
         const slope = Math.tan(angle);
 
-        const line = new Line(slope, 0);
+        const line = Line.fromPointSlopeForm(new Point(0, 0), slope);
 
         const o = new Point(0, 0);
         const a = slope < 0 ? new Point(-10, line.getY(10)) : new Point(10, line.getY(10));
