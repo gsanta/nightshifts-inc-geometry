@@ -168,4 +168,36 @@ describe('`Segment`', () => {
             ]))
         });
     });
+
+    describe('intersection', () => {
+        it ('returns the intersecting point of the two segments if exists', () => {
+            let segments = [
+                new Segment(new Point(0, 2), new Point(8, 6)),
+                new Segment(new Point(0, 0), new Point(10, 10))
+            ];
+
+            expect(segments[0].intersection(segments[1])).toEqual(new Point(4, 4));
+
+            segments = [
+                new Segment(new Point(2, -1), new Point(2, 7)),
+                new Segment(new Point(-1, 3), new Point(2, 3))
+            ];
+
+            expect(segments[0].intersection(segments[1])).toEqual(new Point(2, 3));
+
+            segments = [
+                new Segment(new Point(2, -1), new Point(2, 7)),
+                new Segment(new Point(-1, 8), new Point(2, 8))
+            ];
+
+            expect(segments[0].intersection(segments[1])).toEqual(undefined);
+
+            segments = [
+                new Segment(new Point(2, -1), new Point(2, 7)),
+                new Segment(new Point(-1, 3), new Point(1, 3))
+            ];
+
+            expect(segments[0].intersection(segments[1])).toEqual(undefined);
+        });
+    });
 });

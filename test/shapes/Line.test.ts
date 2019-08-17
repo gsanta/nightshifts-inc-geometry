@@ -1,6 +1,5 @@
 import { Point } from "../../src/shapes/Point";
 import { Line } from '../../src/shapes/Line';
-import { expect } from 'chai';
 import { toDegree } from '../../src/shapes/Angle';
 
 describe(`Line`, () => {
@@ -11,8 +10,8 @@ describe(`Line`, () => {
 
             const line = Line.fromPointSlopeForm(point, slope);
 
-            expect(line.yIntercept).to.eq(1);
-            expect(line.slope).to.eq(0.5);
+            expect(line.yIntercept).toEqual(1);
+            expect(line.slope).toEqual(0.5);
         });
 
         it ('can create a vertical line.', () => {
@@ -21,9 +20,9 @@ describe(`Line`, () => {
 
             const line = Line.fromPointSlopeForm(point, slope);
 
-            expect(line.xIntercept).to.eq(4);
-            expect(line.yIntercept).to.eq(undefined);
-            expect(line.slope).to.eq(undefined);
+            expect(line.xIntercept).toEqual(4);
+            expect(line.yIntercept).toEqual(undefined);
+            expect(line.slope).toEqual(undefined);
         });
 
         it ('can create a horizontal line.', () => {
@@ -32,8 +31,8 @@ describe(`Line`, () => {
 
             const line = Line.fromPointSlopeForm(point, slope);
 
-            expect(line.yIntercept).to.eq(3);
-            expect(line.slope).to.eq(0);
+            expect(line.yIntercept).toEqual(3);
+            expect(line.slope).toEqual(0);
         });
     });
 
@@ -47,9 +46,9 @@ describe(`Line`, () => {
             const line = Line.fromTwoPoints(new Point(4, 3), new Point(5, 4));
             // expect(line.)
 
-            expect(line.xIntercept).to.eq(1);
-            expect(line.yIntercept).to.eq(-1);
-            expect(line.slope).to.eq(1);
+            expect(line.xIntercept).toEqual(1);
+            expect(line.yIntercept).toEqual(-1);
+            expect(line.slope).toEqual(1);
         });
     });
 
@@ -60,7 +59,7 @@ describe(`Line`, () => {
 
             const line = Line.fromPointSlopeForm(point, slope);
 
-            expect(line.getX(3)).to.eq(2);
+            expect(line.getX(3)).toEqual(2);
         });
     });
 
@@ -71,7 +70,7 @@ describe(`Line`, () => {
 
             const line = Line.fromPointSlopeForm(point, slope);
 
-            expect(line.getX(2)).to.eq(0);
+            expect(line.getX(2)).toEqual(0);
         });
     });
 
@@ -81,7 +80,7 @@ describe(`Line`, () => {
             const line1 = Line.fromPointSlopeForm(new Point(0, 2), 2);
             const line2 = Line.fromPointSlopeForm(new Point(0, -2), 3);
 
-            expect(line1.intersection(line2)).to.eql(new Point(4, 10));
+            expect(line1.intersection(line2)).toEqual(new Point(4, 10));
         });
 
         it ('returns undefined if the slopes are the same', () => {
@@ -89,15 +88,15 @@ describe(`Line`, () => {
             const line1 = Line.fromPointSlopeForm(new Point(0, 2), 2);
             const line2 = Line.fromPointSlopeForm(new Point(0, -2), 2);
 
-            expect(line1.intersection(line2)).to.eql(undefined);
+            expect(line1.intersection(line2)).toEqual(undefined);
         });
 
         it ('works if one of the `Line`s is vertical', () => {
             const line1 = Line.fromPointSlopeForm(new Point(0, 2), undefined);
             const line2 = Line.fromPointSlopeForm(new Point(0, -2), 2);
 
-            expect(line1.intersection(line2)).to.eql(new Point(0, -2));
-            expect(line2.intersection(line1)).to.eql(new Point(0, -2));
+            expect(line1.intersection(line2)).toEqual(new Point(0, -2));
+            expect(line2.intersection(line1)).toEqual(new Point(0, -2));
         });
     });
 
@@ -106,17 +105,17 @@ describe(`Line`, () => {
             const center1 = new Point(4, 3);
             const line45deg = Line.fromPointSlopeForm(center1, 1);
 
-            expect(line45deg.getSegmentWithCenterPointAndDistance(center1, Math.SQRT2)).to.eql([new Point(5, 4), new Point(3, 2)]);
+            expect(line45deg.getSegmentWithCenterPointAndDistance(center1, Math.SQRT2)).toEqual([new Point(5, 4), new Point(3, 2)]);
 
             const center2 = new Point(4, 3);
             const lineVertical = Line.createVerticalLine(4);
 
-            expect(lineVertical.getSegmentWithCenterPointAndDistance(center2, 1)).to.eql([new Point(4, 2), new Point(4, 4)]);
+            expect(lineVertical.getSegmentWithCenterPointAndDistance(center2, 1)).toEqual([new Point(4, 2), new Point(4, 4)]);
 
             const center3 = new Point(2, 4);
             const lineHorizontal = Line.createHorizontalLine(4);
 
-            expect(lineHorizontal.getSegmentWithCenterPointAndDistance(center3, 2)).to.eql([new Point(0, 4), new Point(4, 4)]);
+            expect(lineHorizontal.getSegmentWithCenterPointAndDistance(center3, 2)).toEqual([new Point(0, 4), new Point(4, 4)]);
         });
     });
 
@@ -124,19 +123,19 @@ describe(`Line`, () => {
         it ('returns with the line\'s angle to the x axis', () => {
             const line45deg = Line.fromPointSlopeForm(new Point(0, 0), 1);
 
-            expect(toDegree(line45deg.getAngleToXAxis().getAngle())).to.eql(45);
+            expect(toDegree(line45deg.getAngleToXAxis().getAngle())).toEqual(45);
 
             const lineHorizontal = Line.createHorizontalLine(1);
 
-            expect(toDegree(lineHorizontal.getAngleToXAxis().getAngle())).to.eql(0);
+            expect(toDegree(lineHorizontal.getAngleToXAxis().getAngle())).toEqual(0);
 
             const lineVertical = Line.createVerticalLine(-2);
 
-            expect(toDegree(lineVertical.getAngleToXAxis().getAngle())).to.eql(90);
+            expect(toDegree(lineVertical.getAngleToXAxis().getAngle())).toEqual(90);
 
             const lineneg45Deg = Line.fromPointSlopeForm(new Point(0, 0), -1);
 
-            expect(toDegree(lineneg45Deg.getAngleToXAxis().getAngle())).to.eql(315);
+            expect(toDegree(lineneg45Deg.getAngleToXAxis().getAngle())).toEqual(315);
         });
     });
 });

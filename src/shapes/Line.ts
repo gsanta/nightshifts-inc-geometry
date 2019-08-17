@@ -100,7 +100,6 @@ export class Line {
         }
 
         return Angle.fromThreePoints(new Point(0, 0), new Point(0, 0), new Point(0, 0));
-
     }
 
     static fromTwoPoints(point1: Point, point2: Point): Line {

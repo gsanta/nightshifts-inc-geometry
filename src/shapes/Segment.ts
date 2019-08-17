@@ -103,6 +103,44 @@ export class Segment implements Shape {
         return [this];
     }
 
+    intersection(otherSegment: Segment): Point {
+        const line1 = this.getLine();
+        const line2 = otherSegment.getLine();
+
+        const point = line1.intersection(line2);
+
+        if (point) {
+            if (
+                this.isXWithinSegment(point.x) &&
+                otherSegment.isXWithinSegment(point.x) &&
+                this.isYWithinSegment(point.y) &&
+                otherSegment.isYWithinSegment(point.y)
+            ) {
+                return point;
+            }
+        }
+    }
+
+    private isXWithinSegment(x: number): boolean {
+        let [minX, maxX] = [this.points[0].x, this.points[1].x];
+
+        if (minX > maxX) {
+            [minX, maxX] = [maxX, minX];
+        }
+
+        return x >= minX && x <= maxX;
+    }
+
+    private isYWithinSegment(y: number): boolean {
+        let [minY, maxY] = [this.points[0].y, this.points[1].y];
+
+        if (minY > maxY) {
+            [minY, maxY] = [maxY, minY];
+        }
+
+        return y >= minY && y <= maxY;
+    }
+
     /**
      * Returns true if the `Segment` segment in the parameter determines the same infinite line.
      */
