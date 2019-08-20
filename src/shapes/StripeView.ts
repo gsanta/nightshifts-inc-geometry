@@ -7,10 +7,18 @@ import { Point } from "..";
 
 export class StripeView implements Shape {
     private polygon: Polygon;
+    private angleToXAxis: number;
 
     // TODO: check if polygon is really a stripe.
-    constructor(polygon: Polygon) {
+    constructor(polygon: Polygon, angleToXAxis: number) {
         this.polygon = polygon;
+        this.angleToXAxis = angleToXAxis;
+
+        const edgeWithAxis = polygon.getEdges().find(edge => edge.getLine().getAngleToXAxis().getAngle() === this.angleToXAxis);
+
+        if (!edgeWithAxis) {
+            throw new Error('None of the edges has the desired angleToXAxis.');
+        }
     }
 
     public getNormal(): number {
@@ -43,7 +51,7 @@ export class StripeView implements Shape {
     toString(): string { throw new Error ('Not implemented');}
 
     public getSlope() {
-        return _.maxBy(this.polygon.getEdges(), edge => edge.getLength()).getSlope();
+        return this.getEdges()[0].getSlope();
     }
 
     public merge(otherStripe: StripeView): Polygon {
@@ -82,14 +90,22 @@ export class StripeView implements Shape {
     }
 
     public getEdges(): [Segment, Segment] {
-        const sortedEdges = _.sortBy(this.polygon.getEdges(), edge => edge.getLength());
+        const edges = this.polygon.getEdges();
 
-        return [sortedEdges[2], sortedEdges[3]];
+        if (edges[0].getLine().getAngleToXAxis().getAngle() === this.angleToXAxis) {
+            return [edges[0], edges[2]]
+        } else {
+            return [edges[1], edges[3]]
+        }
     }
 
     public getCapEdges(): [Segment, Segment] {
-        const sortedEdges = _.sortBy(this.polygon.getEdges(), edge => edge.getLength());
+        const edges = this.polygon.getEdges();
 
-        return [sortedEdges[0], sortedEdges[1]];
+        if (edges[0].getLine().getAngleToXAxis().getAngle() !== this.angleToXAxis) {
+            return [edges[0], edges[2]]
+        } else {
+            return [edges[1], edges[3]]
+        }
     }
 }
