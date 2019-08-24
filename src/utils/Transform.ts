@@ -1,16 +1,27 @@
-import { Polygon } from '../shapes/Polygon';
 import { Matrix } from './Matrix';
 import { Point } from '../shapes/Point';
+import { Shape } from '../shapes/Shape';
+import { Polygon } from '../shapes/Polygon';
+import { Segment } from '../shapes/Segment';
 
 export class Transform {
 
-    public rotate(polygon: Polygon, degree: number): Polygon {
-        const xVector = polygon.getPoints().map(p => p.x);
-        const yVector = polygon.getPoints().map(p => p.y);
+    rotateSegment(segment: Segment, degree: number): Segment {
+        const points = this.rotate(segment, degree);
+        return new Segment(points[0], points[1]);
+    }
+
+    rotatePolygon(polygon: Polygon, degree: number): Polygon {
+        return new Polygon(this.rotate(polygon, degree));
+    }
+
+    private rotate(shape: Shape, degree: number): Point[] {
+        const xVector = shape.getPoints().map(p => p.x);
+        const yVector = shape.getPoints().map(p => p.y);
 
         const P = [xVector, yVector];
 
-        const center = polygon.getBoundingCenter();
+        const center = shape.getBoundingCenter();
 
         const xVectorCent: number[] = [];
         const yVectorCent: number[] = [];
@@ -37,6 +48,6 @@ export class Transform {
             points.push(new Point(Pnew[0][i], Pnew[1][i]));
         }
 
-        return new Polygon(points);
+        return points;
     }
 }

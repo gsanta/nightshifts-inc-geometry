@@ -82,7 +82,7 @@ export class Line {
         return new Point(x, y);
     }
 
-    getAngleToXAxis() {
+    getAngleToXAxis(): Angle {
         if (this.isVertical()) {
             return Angle.fromRadian(Math.PI / 2);
         }
