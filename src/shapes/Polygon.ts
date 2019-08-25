@@ -114,6 +114,13 @@ export class Polygon implements Shape {
         return turf.booleanContains(poly1, poly2);
     }
 
+    public containsPoint(point: Point): boolean {
+        const turfPolygon = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const turfPoint = turf.point([point.x, point.y]);
+
+        return turf.booleanPointInPolygon(turfPoint, turfPolygon);
+    }
+
     /**
      * returns true if this `Polygon` contains more than half of the other `Polygon`s area
      */

@@ -1,6 +1,5 @@
 import { Polygon } from '../../src/shapes/Polygon';
 import { Point } from '../../src/shapes/Point';
-import { expect } from 'chai';
 import { Segment } from '../../src/shapes/Segment';
 
 describe('Polygon', () => {
@@ -10,7 +9,7 @@ describe('Polygon', () => {
             let polygon = new Polygon([new Point(1, 1), new Point(1, 2), new Point(3, 2), new Point(3, 1)]);
             polygon = polygon.setPoint(2, new Point(3, 3));
 
-            expect(polygon.equalTo(new Polygon([new Point(1, 1), new Point(1, 2), new Point(3, 3), new Point(3, 1)]))).to.be.true;
+            expect(polygon.equalTo(new Polygon([new Point(1, 1), new Point(1, 2), new Point(3, 3), new Point(3, 1)]))).toBeTruthy();
         });
     });
 
@@ -30,7 +29,7 @@ describe('Polygon', () => {
                 new Point(2, 4)
             ]);
 
-            expect(poly1.contains(poly2)).to.eql(true);
+            expect(poly1.contains(poly2)).toEqual(true);
         });
 
         it ('returns false if the two polygons overlap', () => {
@@ -48,7 +47,7 @@ describe('Polygon', () => {
                 new Point(2, 4)
             ]);
 
-            expect(poly1.contains(poly2)).to.eql(false);
+            expect(poly1.contains(poly2)).toBeFalsy();
         });
 
         it ('returns false if the two polygons do have any common parts', () => {
@@ -66,7 +65,35 @@ describe('Polygon', () => {
                 new Point(4, 4)
             ]);
 
-            expect(poly1.contains(poly2)).to.eql(false);
+            expect(poly1.contains(poly2)).toBeFalsy();
+        });
+    });
+
+    describe(`containsPoint`, () => {
+        it ('determines if the `Point` is inside the `Polygon`', () => {
+            const square = new Polygon([
+                new Point(1, 1),
+                new Point(3, 1),
+                new Point(3, 4),
+                new Point(1, 4)
+            ]);
+
+            expect(square.containsPoint(new Point(1, 1))).toBeTruthy();
+            expect(square.containsPoint(new Point(2, 2))).toBeTruthy();
+            expect(square.containsPoint(new Point(0, 0))).toBeFalsy();
+
+            const complexPoly = new Polygon([
+                new Point(1, 1),
+                new Point(3, 1),
+                new Point(3, 4),
+                new Point(6, 4),
+                new Point(6, 6),
+                new Point(1, 6)
+            ]);
+
+            expect(complexPoly.containsPoint(new Point(3, 4))).toBeTruthy();
+            expect(complexPoly.containsPoint(new Point(3.1, 3.9))).toBeFalsy();
+            expect(complexPoly.containsPoint(new Point(2.9, 4.1))).toBeTruthy();
         });
     });
 
@@ -86,7 +113,7 @@ describe('Polygon', () => {
                 new Point(4, 1)
             ]);
 
-            expect(poly1.getCoincidentLineSegment(poly2)).to.eql([new Segment(new Point(3, 1), new Point(3, 4)), 2, 0]);
+            expect(poly1.getCoincidentLineSegment(poly2)).toEqual([new Segment(new Point(3, 1), new Point(3, 4)), 2, 0]);
         });
 
         it ('returns undefined if the two `Shape`s don\'t have common edges', () => {
@@ -104,7 +131,7 @@ describe('Polygon', () => {
                 new Point(5, 1)
             ]);
 
-            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(undefined);
+            expect(poly1.getCoincidentLineSegment(poly2)).toEqual(undefined);
         });
 
         it ('returns undefined if the two `Shape`s touches only at a vertex.', () => {
@@ -122,7 +149,7 @@ describe('Polygon', () => {
                 new Point(6, 4)
             ]);
 
-            expect(poly1.getCoincidentLineSegment(poly2)).to.eql(undefined);
+            expect(poly1.getCoincidentLineSegment(poly2)).toEqual(undefined);
         });
     });
 
@@ -134,7 +161,7 @@ describe('Polygon', () => {
                 new Point(4, 2),
                 new Point(4, 0)
             ]);
-            expect(polygon.scale(new Point(3, 1))).to.eql(new Polygon([
+            expect(polygon.scale(new Point(3, 1))).toEqual(new Polygon([
                 new Point(3, 0),
                 new Point(3, 2),
                 new Point(12, 2),
@@ -149,7 +176,7 @@ describe('Polygon', () => {
                 new Point(4, 2),
                 new Point(4, 0)
             ]);
-            expect(polygon.scale(new Point(1, 3))).to.eql(new Polygon([
+            expect(polygon.scale(new Point(1, 3))).toEqual(new Polygon([
                 new Point(1, 0),
                 new Point(1, 6),
                 new Point(4, 6),
@@ -163,21 +190,21 @@ describe('Polygon', () => {
             const polygon1 = new Polygon([new Point(1, 2), new Point(3, 4), new Point(5, 6)]);
             const polygon2 = new Polygon([new Point(1, 2), new Point(3, 4), new Point(5, 6)]);
 
-            expect(polygon1.equalTo(polygon2)).to.be.true;
+            expect(polygon1.equalTo(polygon2)).toBeTruthy();
         });
 
         it ('returns false it not all the points are equal', () => {
             const polygon1 = new Polygon([new Point(1, 2), new Point(5, 4), new Point(5, 6)]);
             const polygon2 = new Polygon([new Point(1, 2), new Point(3, 4), new Point(5, 6)]);
 
-            expect(polygon1.equalTo(polygon2)).to.be.false;
+            expect(polygon1.equalTo(polygon2)).toBeFalsy();
         });
 
         it ('returns false it the two polygons do not have the same number of points', () => {
             const polygon1 = new Polygon([new Point(1, 2), new Point(3, 4)]);
             const polygon2 = new Polygon([new Point(1, 2), new Point(3, 4), new Point(5, 6)]);
 
-            expect(polygon1.equalTo(polygon2)).to.be.false;
+            expect(polygon1.equalTo(polygon2)).toBeFalsy();
         });
     });
 
@@ -199,7 +226,7 @@ describe('Polygon', () => {
                 new Point(-2, 7)
             ])
 
-            expect(polygon.negate('x').equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.negate('x').equalTo(expectedPolygon)).toBeTruthy();
         });
 
         it ('can negate to the y axis', () => {
@@ -221,7 +248,7 @@ describe('Polygon', () => {
                 new Point(2, -3)
             ])
 
-            expect(polygon.negate('y').equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.negate('y').equalTo(expectedPolygon)).toBeTruthy();
         });
     });
 
@@ -243,7 +270,7 @@ describe('Polygon', () => {
                 new Point(5, 7)
             ]);
 
-            expect(polygon.translate(new Point(3, 0)).equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.translate(new Point(3, 0)).equalTo(expectedPolygon)).toBeTruthy();
         });
 
         it ('trasnlates it by the given amount of y coordinate', () => {
@@ -263,7 +290,7 @@ describe('Polygon', () => {
                 new Point(2, 4)
             ]);
 
-            expect(polygon.translate(new Point(0, -3)).equalTo(expectedPolygon)).to.be.true;
+            expect(polygon.translate(new Point(0, -3)).equalTo(expectedPolygon)).toBeTruthy();
         });
     });
 
@@ -278,7 +305,7 @@ describe('Polygon', () => {
                 new Point(-4, 6)
             ]);
 
-            expect(polygon.getArea()).to.eql(128);
+            expect(polygon.getArea()).toEqual(128);
         });
     });
 
@@ -298,7 +325,7 @@ describe('Polygon', () => {
                 new Point(1, 3)
             ]);
 
-            expect(polygon.containsMoreThenHalf(otherPolygon)).to.be.true;
+            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeTruthy();
         });
 
         it ('returns false if less than half of the other `Polygon` is overlapping', () => {
@@ -316,7 +343,7 @@ describe('Polygon', () => {
                 new Point(1, 6)
             ]);
 
-            expect(polygon.containsMoreThenHalf(otherPolygon)).to.be.false;
+            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeFalsy();
         });
 
         it ('returns false if only the border lines are overlapping of the two `Polygon`s sides', () => {
@@ -334,7 +361,7 @@ describe('Polygon', () => {
                 new Point(0, 3)
             ]);
 
-            expect(polygon.containsMoreThenHalf(otherPolygon)).to.be.false;
+            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeFalsy();
         });
     });
 
@@ -347,7 +374,7 @@ describe('Polygon', () => {
                 new Point(3, 3),
                 new Point(1, 3)
             ]);
-            expect(polygon.getEdges()).to.eql(
+            expect(polygon.getEdges()).toEqual(
                 [
                     new Segment(new Point(1, 1), new Point(1, 3)),
                     new Segment(new Point(1, 3), new Point(3, 3)),
@@ -371,8 +398,8 @@ describe('Polygon', () => {
 
             const coincidingSides = polygon.getCoincidingSidesForLine(new Segment(new Point(3, 3), new Point(5, 3)));
 
-            expect(coincidingSides.length).to.equal(1);
-            expect(coincidingSides[0]).to.eql([new Segment(new Point(5, 3), new Point(4, 3)), 3]);
+            expect(coincidingSides.length).toEqual(1);
+            expect(coincidingSides[0]).toEqual([new Segment(new Point(5, 3), new Point(4, 3)), 3]);
         });
     });
 
@@ -390,7 +417,7 @@ describe('Polygon', () => {
             ]);
 
             const boundingRectangle = polygon.getBoundingRectangle();
-            expect(boundingRectangle).to.eql(new Polygon([
+            expect(boundingRectangle).toEqual(new Polygon([
                 new Point(1, 1),
                 new Point(1, 5),
                 new Point(6, 5),
@@ -407,7 +434,7 @@ describe('Polygon', () => {
             ]);
 
             const boundingRectangle = polygon.getBoundingRectangle();
-            expect(boundingRectangle).to.eql(polygon);
+            expect(boundingRectangle).toEqual(polygon);
         });
     });
 
@@ -415,7 +442,7 @@ describe('Polygon', () => {
         it ('creates a `Polygon` which has the features of a rectangle.', () => {
             const rectangle = Polygon.createRectangle(3, 5, 3, 2);
 
-            expect(rectangle).to.eql(new Polygon([
+            expect(rectangle).toEqual(new Polygon([
                 new Point(3, 5),
                 new Point(3, 7),
                 new Point(6, 7),
@@ -436,7 +463,7 @@ describe('Polygon', () => {
                 new Point(7, 1),
             ]);
 
-            expect(polygon.removeStraightVertices()).to.eql(new Polygon([
+            expect(polygon.removeStraightVertices()).toEqual(new Polygon([
                 new Point(1, 1),
                 new Point(1, 5),
                 new Point(7, 5),
@@ -454,7 +481,7 @@ describe('Polygon', () => {
                 new Point(6, 5)
             ]);
 
-            expect(polygon.toString()).to.eq('[(3,5)(3,7)(6,7)(6,5)]');
+            expect(polygon.toString()).toEqual('[(3,5)(3,7)(6,7)(6,5)]');
         });
     });
 
@@ -462,7 +489,7 @@ describe('Polygon', () => {
         it ('sets the center of the Polygon to the given position', () => {
             const polygon = Polygon.createRectangle(1, 2, 4, 3);
 
-            expect(polygon.setPosition(new Point(3, 3))).to.eql(Polygon.createRectangle(1, 1.5, 4, 3));
+            expect(polygon.setPosition(new Point(3, 3))).toEqual(Polygon.createRectangle(1, 1.5, 4, 3));
         });
     });
 });
