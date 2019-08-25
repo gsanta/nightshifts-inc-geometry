@@ -28,11 +28,18 @@ describe(`Transform`, () => {
             expect(transform.rotateSegment(segmentHorizontal, Math.PI / 2)).toEqual(new Segment(new Point(2, 1), new Point(2, 3)));
 
             const verticalSegment = new Segment(new Point(0, -2), new Point(0, 2));
-            const rotated =  transform.rotateSegment(verticalSegment, Math.PI / 2);
-            expect(rotated.getPoints()[0].x).toBeCloseTo(2);
-            expect(rotated.getPoints()[0].y).toBeCloseTo(0);
-            expect(rotated.getPoints()[1].x).toBeCloseTo(-2);
-            expect(rotated.getPoints()[1].y).toBeCloseTo(0);
+            const segmnentRotated90deg =  transform.rotateSegment(verticalSegment, Math.PI / 2);
+            expect(segmnentRotated90deg.getPoints()[0].x).toBeCloseTo(2);
+            expect(segmnentRotated90deg.getPoints()[0].y).toBeCloseTo(0);
+            expect(segmnentRotated90deg.getPoints()[1].x).toBeCloseTo(-2);
+            expect(segmnentRotated90deg.getPoints()[1].y).toBeCloseTo(0);
+
+            const verticalSegment2 = new Segment(new Point(-Math.SQRT2, 0), new Point(Math.SQRT2, 0));
+            const segmentRotated45deg = transform.rotateSegment(verticalSegment2, Math.PI / 4);
+            expect(segmentRotated45deg.getPoints()[0].x).toBeCloseTo(-1);
+            expect(segmentRotated45deg.getPoints()[0].y).toBeCloseTo(-1);
+            expect(segmentRotated45deg.getPoints()[1].x).toBeCloseTo(1);
+            expect(segmentRotated45deg.getPoints()[1].y).toBeCloseTo(1);
         });
     });
 });
