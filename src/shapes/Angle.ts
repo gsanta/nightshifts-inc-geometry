@@ -1,21 +1,25 @@
 import { Point } from "./Point";
 import * as linear from 'linear-solve';
 import { Line } from './Line';
+import { toRadian } from "../utils/GeometryUtils";
+import { Measurements } from '../utils/Measurements';
 
 /**
  * An angle is represented as the anticlockwise angle from b to a.
  */
 export class Angle {
+    private measurements: Measurements;
     private o: Point;
     private a: Point;
     private b: Point;
 
     private angle: number;
 
-    private constructor(o: Point, a: Point, b: Point) {
+    private constructor(o: Point, a: Point, b: Point, measurements: Measurements = new Measurements()) {
         this.o = o;
         this.a = a;
         this.b = b;
+        this.measurements = measurements;
         this.angle = this.normalizeAngle(Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x)) - this.normalizeAngle(Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x));
     }
 
@@ -54,6 +58,20 @@ export class Angle {
 
     static fromThreePoints(o: Point, a: Point, b: Point) {
         return new Angle(o, a, b);
+    }
+
+    static fromTwoLines(line1: Line, line2: Line, measurements: Measurements = new Measurements()): Angle {
+
+        if (measurements.linesParallel(line1, line2)) {
+            return undefined;
+        } else if (line1.isVertical()) {
+            return Angle.fromRadian(line2.slope === 0 ? toRadian(90) :  1 / line2.slope);
+        } else if (line2.isVertical()) {
+            return Angle.fromRadian(line1.slope === 0 ? toRadian(90) :  1 / line1.slope);
+        } else {
+            const angleBetweenLines = Math.atan((line1.slope - line2.slope) / (1 + line1.slope * line2.slope));
+            return Angle.fromRadian(angleBetweenLines);
+        }
     }
 }
 

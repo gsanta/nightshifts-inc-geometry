@@ -5,6 +5,14 @@ import { Line } from "../shapes/Line";
 import _ from "lodash";
 
 
+export function toRadian(degree: number) {
+    return degree * Math.PI / 180;
+ }
+
+export function toDegree(radian: number) {
+    return radian * 180 / Math.PI;
+}
+
 export class GeometryUtils {
 
     /**

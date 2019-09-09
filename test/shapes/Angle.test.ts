@@ -1,5 +1,10 @@
 import { Point } from "../../src/shapes/Point";
 import { Angle, toDegree } from '../../src/shapes/Angle';
+import { Line } from '../../src/shapes/Line';
+import { Segment } from '../../src/shapes/Segment';
+import { Measurements } from '../../src/utils/Measurements';
+import { GeometryUtils, toRadian } from '../../src/utils/GeometryUtils';
+import { GeometryFactory } from '../../src/GeometryFactory';
 
 describe(`Angle`, () => {
 
@@ -108,5 +113,41 @@ describe(`Angle`, () => {
 
             expect(angle135deg.isPointInsideAngle(new Point(1, 0))).toBeFalsy();
         });
-    })
+    });
+
+    describe('fromTwoLines', () => {
+        describe('returns an Angle instance', () => {
+            it ('when the angle is 45 deg', () => {
+                const geometryFactory = new GeometryFactory();
+
+                const segment1 = new Segment(new Point(0, 0), new Point(1, 1));
+                const segment2 = new Segment(new Point(0, 0), new Point(1, 0));
+
+                let angle = Angle.fromTwoLines(segment1.getLine(), segment2.getLine());
+                expect(geometryFactory.measuerments.anglesEqual(angle, Angle.fromRadian(GeometryUtils.toRadian(45))));
+            });
+
+            it ('when one of the lines is parallel to the y axis', () => {
+                const geometryFactory = new GeometryFactory();
+
+                let angle90 = Angle.fromTwoLines(Line.createVerticalLine(2), Line.createHorizontalLine(2));
+                expect(geometryFactory.measuerments.anglesEqual(angle90, Angle.fromRadian(toRadian(90))));
+
+
+                const line1 = Line.createVerticalLine(1);
+                const line2 = new Segment(new Point(0, 0), new Point(1, 1));
+                let angle45 = Angle.fromTwoLines(line1, line2.getLine());
+
+                expect(geometryFactory.measuerments.anglesEqual(angle45, Angle.fromRadian(toRadian(45))));
+            });
+
+            it ('when the lines are parallel', () => {
+                const line1 = new Segment(new Point(0, 0), new Point(1, 1));
+                const line2 = new Segment(new Point(0, 1), new Point(1, 2));
+
+                let angle = Angle.fromTwoLines(line1.getLine(), line2.getLine());
+                expect(angle).toEqual(undefined);
+            });
+        });
+    });
 });

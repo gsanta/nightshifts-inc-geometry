@@ -5,7 +5,7 @@ export {Line} from './shapes/Line';
 export {Point} from './shapes/Point';
 export {Shape} from './shapes/Shape';
 export {GeometryUtils} from './utils/GeometryUtils';
-export {MeasurementUtils} from './utils/MeasurementUtils';
+export {MeasurementUtils} from './utils/Measurements';
 export {Distance} from './utils/Distance';
 export {StripeView} from './shapes/StripeView';
 export {Matrix} from './utils/Matrix';
