@@ -1,11 +1,17 @@
 import { Polygon } from "./Polygon";
 import { Shape } from "./Shape";
+import { Measurements } from '../utils/Measurements';
+import { Angle } from "./Angle";
+import { toRadian } from "../utils/GeometryUtils";
 
 
 export class RectangleView {
+    private measurements: Measurements;
 
-    constructor(polygon: Polygon) {
+    constructor(shape: Shape, measurements = new Measurements()) {
+        this.measurements = measurements;
 
+        this.checkIfRectangle(shape);
     }
 
     getWidth() {
@@ -20,19 +26,26 @@ export class RectangleView {
         const points = shape.getPoints();
 
         if (points.length !== 4) {
-            this.throwNonRectangleError();
+            this.throwNonRectangleError(shape);
         }
 
         const [side1, side2, side3, side4] = shape.getEdges();
 
-        if (side1.getLength() !== side3.getLength() || side2.getLength() !== side4.getLength()) {
-            this.throwNonRectangleError();
-        }
+        const angles = [
+            Angle.fromTwoLines(side1.getLine(), side2.getLine()),
+            Angle.fromTwoLines(side2.getLine(), side3.getLine()),
+            Angle.fromTwoLines(side2.getLine(), side3.getLine()),
+            Angle.fromTwoLines(side4.getLine(), side1.getLine()),
+        ];
 
-        const angle1 = Mea
+        const isEveryAngle90Deg = angles.every(angle => this.measurements.angleToBe(angle, toRadian(90)))
+
+        if (!isEveryAngle90Deg) {
+            this.throwNonRectangleError(shape);
+        }
     }
 
-    private throwNonRectangleError() {
+    private throwNonRectangleError(shape: Shape) {
         throw new Error(`RectangleView can not be used with a non-rectangle shape: ${shape.toString()}`);
     }
 }
