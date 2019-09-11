@@ -11,13 +11,17 @@ import * as PolyBool from 'polybooljs';
 import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
 import { GeometryUtils } from '../utils/GeometryUtils';
 import { Angle } from './Angle';
+import { GeometryService } from '../GeometryService';
+import { GeometryFactory } from '../GeometryFactory';
 
 export class Polygon implements Shape {
     private points: Point[];
     private orederedPoints: Point[];
+    private geometryService: GeometryService;
 
-    constructor(points: Point[]) {
+    constructor(points: Point[], geometryService: GeometryService = new GeometryService) {
         this.points = points;
+        this.geometryService = geometryService;
         this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.points);
 
         if (!this.arePointsClockwise()) {
@@ -33,7 +37,7 @@ export class Polygon implements Shape {
         const clonedPoints = [...this.points];
         clonedPoints.splice(index, 1, newPoint);
 
-        return new Polygon(clonedPoints);
+        return this.geometryService.factory.polygon(clonedPoints);
     }
 
     public hasPoint(point: Point): boolean {
@@ -79,12 +83,12 @@ export class Polygon implements Shape {
 
     public translate(point: Point): Polygon {
         const translatedPoints = this.points.map(p => p.addX(point.x).addY(point.y));
-        return new Polygon(translatedPoints);
+        return this.geometryService.factory.polygon(translatedPoints);
     }
 
     public negate(axis: 'x' | 'y'): Polygon {
-        const translatedPoints = this.points.map(point => new Point(axis === 'x' ? -point.x : point.x, axis === 'y' ? -point.y : point.y));
-        return new Polygon(translatedPoints);
+        const translatedPoints = this.points.map(point => this.geometryService.factory.point(axis === 'x' ? -point.x : point.x, axis === 'y' ? -point.y : point.y));
+        return this.geometryService.factory.polygon(translatedPoints);
     }
 
     public getArea() {
@@ -102,7 +106,7 @@ export class Polygon implements Shape {
     public clone(): Polygon {
         const points = this.points.map(point => point.clone());
 
-        const clone = new Polygon(points);
+        const clone = this.geometryService.factory.polygon(points);
 
         return clone;
     }
@@ -153,7 +157,7 @@ export class Polygon implements Shape {
 
     public scale(scalePoint: Point): Polygon {
         const points = this.points.map(p => p.scaleX(scalePoint.x)).map(p => p.scaleY(scalePoint.y));
-        return new Polygon(points);
+        return this.geometryService.factory.polygon(points);
     }
 
     /**
@@ -161,7 +165,7 @@ export class Polygon implements Shape {
      */
     public getBoundingCenter(): Point {
         const center = polylabel([this.toTwoDimensionalArray()], 1.0);
-        return new Point(center[0], center[1]);
+        return this.geometryService.factory.point(center[0], center[1]);
     }
 
     public getBoundingRectangle(): Shape {
@@ -171,11 +175,11 @@ export class Polygon implements Shape {
         const minY = boudingInfo.min[1];
         const maxY = boudingInfo.max[1];
 
-        return new Polygon([
-            new Point(minX, minY),
-            new Point(minX, maxY),
-            new Point (maxX, maxY),
-            new Point(maxX, minY)
+        return this.geometryService.factory.polygon([
+            this.geometryService.factory.point(minX, minY),
+            this.geometryService.factory.point(minX, maxY),
+            this.geometryService.factory.point(maxX, maxY),
+            this.geometryService.factory.point(maxX, minY)
         ]);
     }
 
@@ -189,7 +193,7 @@ export class Polygon implements Shape {
         const width = boudingInfo.max[0] - boudingInfo.min[0]
         const height = boudingInfo.max[1] - boudingInfo.min[1];
 
-        return Polygon.createRectangle(point.x - width / 2, point.y - height / 2, width, height);
+        return this.geometryService.factory.rectangle(point.x - width / 2, point.y - height / 2, width, height);
     }
 
     public getUnion(otherPolygon: Polygon): Polygon {
@@ -204,8 +208,8 @@ export class Polygon implements Shape {
             }
         );
 
-        const points = union.regions.map(region => new Point(region[0], region[1]));
-        return new Polygon(points);
+        const points = union.regions.map(region => this.geometryService.factory.point(region[0], region[1]));
+        return this.geometryService.factory.polygon(points);
     }
 
     /**
@@ -214,9 +218,9 @@ export class Polygon implements Shape {
     public getSidesFromBottomLeftClockwise(): Segment[] {
         return this.orederedPoints.map((point, index) => {
             if (index < this.orederedPoints.length - 1) {
-                return new Segment(point, this.orederedPoints[index + 1]);
+                return this.geometryService.factory.edge(point, this.orederedPoints[index + 1]);
             } else {
-                return new Segment(point, this.orederedPoints[0]);
+                return this.geometryService.factory.edge(point, this.orederedPoints[0]);
             }
         });
     }
@@ -300,7 +304,7 @@ export class Polygon implements Shape {
             currentPoint = this.getNextPoint(currentPoint);
         }
 
-        return new Polygon(reducedPoints);
+        return this.geometryService.factory.polygon(reducedPoints);
     }
 
     public toString(): string {
@@ -313,17 +317,17 @@ export class Polygon implements Shape {
         return str;
     }
 
-    public static createRectangle(left: number, top: number,  width: number, height: number): Polygon {
+    public static createRectangle(left: number, top: number,  width: number, height: number, geometryService: GeometryService = new GeometryService()): Polygon {
         const minX = left;
         const maxX = left + width;
         const minY = top;
         const maxY = top + height;
 
-        return new Polygon([
-            new Point(minX, minY),
-            new Point(minX, maxY),
-            new Point (maxX, maxY),
-            new Point(maxX, minY)
+        return geometryService.factory.polygon([
+            geometryService.factory.point(minX, minY),
+            geometryService.factory.point(minX, maxY),
+            geometryService.factory.point(maxX, maxY),
+            geometryService.factory.point(maxX, minY)
         ]);
     }
 
@@ -339,10 +343,10 @@ export class Polygon implements Shape {
 
     private createPolygonFromTurfGeometry(geometry: {type: string, coordinates: [[number, number][]]}): Polygon {
         if (geometry.type !== 'Polygon') {
-            return new Polygon([
-                new Point(0, 0),
-                new Point(0, 0),
-                new Point(0, 0)
+            return this.geometryService.factory.polygon([
+                this.geometryService.factory.point(0, 0),
+                this.geometryService.factory.point(0, 0),
+                this.geometryService.factory.point(0, 0)
             ])
         }
 
@@ -350,7 +354,7 @@ export class Polygon implements Shape {
 
         points = without(points, last(points));
 
-        const polygon = new Polygon(points.map(p => new Point(p[0], p[1])));
+        const polygon = this.geometryService.factory.polygon(points.map(p => this.geometryService.factory.point(p[0], p[1])));
 
         return polygon;
     }

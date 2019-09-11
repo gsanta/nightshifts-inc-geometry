@@ -80,14 +80,6 @@ export class Segment implements Shape {
         return new Point((this.orderedPoints[0].x + this.orderedPoints[1].x) / 2, (this.orderedPoints[0].y + this.orderedPoints[1].y) / 2);
     }
 
-    public isVertical() {
-        return this.points[0].x === this.points[1].x;
-    }
-
-    public isHorizontal() {
-        return this.points[0].y === this.points[1].y;
-    }
-
     public getCoincidentLineSegment(other: Shape): [Segment, number, number] {
         const otherEdges = other.getEdges();
 
@@ -173,7 +165,7 @@ export class Segment implements Shape {
     }
 
     /**
-     * Determines if the `Segment` segment in the parameter overlaps with this `Segment`, if so returns the overlap as a `Segment` segment,
+     * Determines if the segment in the parameter overlaps with this segment, if so returns the overlap as a new segment,
      * otherwise returns undefined.
      */
     private getCommonLineSegmentIfExists(otherLine: Segment): Segment {
@@ -186,7 +178,7 @@ export class Segment implements Shape {
         let [e, f] = [otherLine.points[0].x, otherLine.points[0].y];
         let [g, h] = [otherLine.points[1].x, otherLine.points[1].y];
 
-        if (this.isVertical()) {
+        if (this.getLine().isVertical()) {
             [a, b, c, d] = b < d ? [a, b, c, d] : [c, d, a, b];
             [e, f, g, h] = f < h ? [e, f, g, h] : [g, h, e, f];
 
@@ -228,27 +220,9 @@ export class Segment implements Shape {
     }
 
     public scale(scalePoint: Point): Segment {
-        const points = this.points.map(p => p.scaleX(scalePoint.x)).map(p => p.scaleY(scalePoint.y));
-
         const point0 = this.points[0].scaleX(scalePoint.x).scaleY(scalePoint.y);
         const point1 = this.points[1].scaleX(scalePoint.x).scaleY(scalePoint.y);
         return new Segment(point0, point1);
-    }
-
-    public addToEnd(amount: number) {
-        if (this.isVertical()) {
-            return new Segment(this.points[0], this.points[1].addY(amount));
-        } else {
-            return new Segment(this.points[0], this.points[1].addX(amount));
-        }
-    }
-
-    public addToStart(amount: number) {
-        if (this.isVertical()) {
-            return new Segment(this.points[0].addY(amount), this.points[1]);
-        } else {
-            return new Segment(this.points[0].addX(amount), this.points[1]);
-        }
     }
 
     public equalTo(otherLine: Segment): boolean {
