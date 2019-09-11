@@ -10,3 +10,5 @@ export {Distance} from './utils/Distance';
 export {StripeView} from './shapes/StripeView';
 export {Matrix} from './utils/Matrix';
 export {Transform} from './utils/Transform';
+export {GeometryService} from './GeometryService';
+export {GeometryFactory} from './GeometryFactory';
