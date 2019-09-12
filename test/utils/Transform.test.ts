@@ -12,12 +12,16 @@ describe(`Transform`, () => {
             const polygon = Polygon.createRectangle(1, 1, 3, 2);
             const rot1 = transform.rotatePolygon(polygon, Math.PI / 2);
 
-            expect(rot1).toEqual(new Polygon([
-                new Point(1.5, 0.5),
-                new Point(1.5, 3.5),
-                new Point(3.5, 3.5),
-                new Point(3.5, 0.5)
-            ]));
+            expect(
+                rot1.equalTo(
+                    new Polygon([
+                        new Point(1.5, 0.5),
+                        new Point(1.5, 3.5),
+                        new Point(3.5, 3.5),
+                        new Point(3.5, 0.5)
+                    ])
+                )
+            ).toBeTruthy();
         });
 
         it ('rotates the `Segment` with the given degree at the center', () => {

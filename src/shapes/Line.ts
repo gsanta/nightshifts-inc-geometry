@@ -121,7 +121,7 @@ export class Line {
     static fromTwoPoints(point1: Point, point2: Point, geometryService: GeometryService = new GeometryService()): Line {
         const slope = point1.x === point2.x ? undefined : (point1.y - point2.y) / (point1.x - point2.x);
 
-        return this.fromPointSlopeForm(point1, slope, geometryService);
+        return geometryService.factory.lineFromPointSlopeForm(point1, slope);
     }
 
     static fromPointSlopeForm(point: Point, slope: number, geometryService: GeometryService = new GeometryService()): Line {

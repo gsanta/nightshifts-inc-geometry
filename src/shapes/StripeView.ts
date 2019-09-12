@@ -69,7 +69,21 @@ export class StripeView implements Shape {
 
         const [segment1, segment2] = maxDistance[1];
 
-        return GeometryUtils.createRectangleFromTwoOppositeSides(segment1, segment2);
+        return this.createRectangleFromTwoOppositeSides(segment1, segment2);
+    }
+
+    private createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
+
+        if (side1.getPoints()[0].distanceTo(side2.getPoints()[0]) < side1.getPoints()[0].distanceTo(side2.getPoints()[1])) {
+            side2 = new Segment(side2.getPoints()[1], side2.getPoints()[0]);
+        }
+
+        return new Polygon([
+            side1.getPoints()[0],
+            side1.getPoints()[1],
+            side2.getPoints()[0],
+            side2.getPoints()[1],
+        ]);
     }
 
     /**

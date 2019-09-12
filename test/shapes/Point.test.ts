@@ -1,6 +1,6 @@
 import { Point } from "../../src/shapes/Point";
 import { expect } from "chai";
-import { GeometryUtils } from '../../src/utils/GeometryUtils';
+import { GeometryUtils, toRadian } from '../../src/utils/GeometryUtils';
 import { GeometryService } from "../../src/GeometryService";
 
 
@@ -60,7 +60,7 @@ describe('`Point`', () => {
             const point1 = geometryService.factory.point(0, 3);
             const point2 = geometryService.factory.point(2, 0);
 
-            expect(point1.angleTo(point2)).to.eq(GeometryUtils.toRadian(90));
+            expect(point1.angleTo(point2)).to.eq(toRadian(90));
         });
 
 
@@ -68,7 +68,7 @@ describe('`Point`', () => {
             const point1 = geometryService.factory.point(0, 3);
             const point2 = geometryService.factory.point(2, 0);
 
-            expect(point2.angleTo(point1)).to.eq(GeometryUtils.toRadian(-90));
+            expect(point2.angleTo(point1)).to.eq(toRadian(-90));
         });
     });
 });

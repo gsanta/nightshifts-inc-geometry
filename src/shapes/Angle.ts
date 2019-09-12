@@ -45,10 +45,10 @@ export class Angle {
         return angle < 0 ? angle + 2 * Math.PI : angle;
     }
 
-    static fromRadian(angle: number) {
+    static fromRadian(angle: number, geometryService = new GeometryService()) {
         const slope = Math.tan(angle);
 
-        const line = Line.fromPointSlopeForm(new Point(0, 0), slope);
+        const line = geometryService.factory.lineFromPointSlopeForm(new Point(0, 0), slope);
 
         const o = new Point(0, 0);
         const a = slope < 0 ? new Point(-10, line.getY(10)) : new Point(10, line.getY(10));

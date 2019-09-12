@@ -1,18 +1,16 @@
-import { Point } from './Point';
 import * as turf from '@turf/turf';
-import { Segment } from './Segment';
-import minBy from 'lodash/minBy';
-import maxBy from 'lodash/maxBy';
-import without from 'lodash/without';
-import last from 'lodash/last';
-import polylabel from 'polylabel';
 import * as _ from 'lodash';
+import last from 'lodash/last';
+import maxBy from 'lodash/maxBy';
+import minBy from 'lodash/minBy';
+import without from 'lodash/without';
 import * as PolyBool from 'polybooljs';
-import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
-import { GeometryUtils } from '../utils/GeometryUtils';
-import { Angle } from './Angle';
+import polylabel from 'polylabel';
 import { GeometryService } from '../GeometryService';
-import { GeometryFactory } from '../GeometryFactory';
+import { GeometryUtils } from '../utils/GeometryUtils';
+import { Point } from './Point';
+import { Segment } from './Segment';
+import { BoundingInfo, Shape, ShapeOrigin } from './Shape';
 
 export class Polygon implements Shape {
     private points: Point[];
@@ -22,10 +20,10 @@ export class Polygon implements Shape {
     constructor(points: Point[], geometryService: GeometryService = new GeometryService) {
         this.points = points;
         this.geometryService = geometryService;
-        this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.points);
+        this.orederedPoints = this.orderPointsToStartAtBottomLeft(this.points);
 
         if (!this.arePointsClockwise()) {
-            this.orederedPoints = GeometryUtils.orderPointsToStartAtBottomLeft(this.orederedPoints.reverse());
+            this.orederedPoints = this.orderPointsToStartAtBottomLeft(this.orederedPoints.reverse());
         }
     }
 
@@ -372,5 +370,20 @@ export class Polygon implements Shape {
         );
 
         return sum >= 0;
+    }
+
+    private orderPointsToStartAtBottomLeft = (points: Point[]) => {
+        const minY = _.minBy(points, point => point.y).y;
+
+        const bottomLeftPoint = _.chain(points)
+            .filter(point => point.y === minY)
+            .minBy(point => point.x)
+            .value();
+
+        while (!points[0].equalTo(bottomLeftPoint)) {
+            points.push(points.shift());
+        }
+
+        return points;
     }
 }

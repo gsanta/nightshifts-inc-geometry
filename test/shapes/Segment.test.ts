@@ -10,25 +10,25 @@ describe('`Segment`', () => {
 
     describe('`isPointOnTheLine`', () => {
         it ('returns true if the given `Point` lines on the line.', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
 
             expect(line.isPointOnTheLine(geometryService.factory.point(3, 4))).toBeTruthy();
         });
 
         it ('returns true even if the given `Point` lies outside of the `Segment` segment, but on the `infinite` line the segment determines.', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
 
             expect(line.isPointOnTheLine(geometryService.factory.point(-2, -1))).toBeTruthy();
         });
 
         it ('can handle vertical lines where slope is undefined.', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(1, 5));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(1, 5));
 
             expect(line.isPointOnTheLine(geometryService.factory.point(1, 3))).toBeTruthy();
         });
 
         it ('returns false if the given `Point` does not lie on the line.', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
 
             expect(line.isPointOnTheLine(geometryService.factory.point(2, 2))).toBeFalsy();
         });
@@ -36,15 +36,15 @@ describe('`Segment`', () => {
 
     describe('`isCoincidentToLine`', () => {
         it ('returns true if the two `Segment` segments determine the same infinite line.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(2, 1));
-            const line2 = new Segment(geometryService.factory.point(4, 1), geometryService.factory.point(5, 1));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(2, 1));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(4, 1), geometryService.factory.point(5, 1));
 
             expect(line1.isCoincidentToLine(line2)).toBeTruthy();
         });
 
         it ('returns false if the two `Segment` segments do noet determine the same infinite line.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(2, 1));
-            const line2 = new Segment(geometryService.factory.point(4, 1), geometryService.factory.point(5, 2));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(2, 1));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(4, 1), geometryService.factory.point(5, 2));
 
             expect(line1.isCoincidentToLine(line2)).toBeFalsy();
         });
@@ -52,80 +52,80 @@ describe('`Segment`', () => {
 
     describe(`getPerpendicularBisector`, () => {
         it ('returns with the `Line` representing the perpendicular bisector', () => {
-            const segment = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(3, 3));
+            const segment = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(3, 3));
 
-            expect(segment.getPerpendicularBisector()).toEqual(Line.fromPointSlopeForm(geometryService.factory.point(0, 4), -1));
+            expect(segment.getPerpendicularBisector()).toEqual(geometryService.factory.lineFromPointSlopeForm(geometryService.factory.point(0, 4), -1));
 
-            const verticalSegment = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3));
-            expect(verticalSegment.getPerpendicularBisector()).toEqual(Line.fromPointSlopeForm(geometryService.factory.point(0, 2), 0));
+            const verticalSegment = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3));
+            expect(verticalSegment.getPerpendicularBisector()).toEqual(geometryService.factory.lineFromPointSlopeForm(geometryService.factory.point(0, 2), 0));
 
-            const horizontalSegment = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(3, 1));
-            expect(horizontalSegment.getPerpendicularBisector()).toEqual(Line.fromPointSlopeForm(geometryService.factory.point(2, 0), undefined));
+            const horizontalSegment = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(3, 1));
+            expect(horizontalSegment.getPerpendicularBisector()).toEqual(geometryService.factory.lineFromPointSlopeForm(geometryService.factory.point(2, 0), undefined));
         });
     });
 
     describe('`getCoincidentLineSegment`', () => {
         it ('returns the overlap `Segment` segment when line1 extends line2 in both ends.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(7, 8));
-            const line2 = new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(7, 8));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Segment` segment when line2 extends line1 in both ends.', () => {
-            const line1 = new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6));
-            const line2 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(7, 8));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(7, 8));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Segment` segment when the two lines overlap and line1 starts at smaller x coordinate.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
-            const line2 = new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(7, 8));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(7, 8));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Segment` segment when the two lines are identical.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
-            const line2 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6)), 0, 0]);
         });
 
         it ('returns the overlap `Segment` segment when the two lines overlap and line2 starts at smaller x coordinate.', () => {
-            const line1 = new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(7, 8));
-            const line2 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(7, 8));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(5, 6));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(5, 6)), 0, 0]);
         });
 
         it ('returns undefined when the two lines do not overlap.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
-            const line2 = new Segment(geometryService.factory.point(5, 6), geometryService.factory.point(7, 8));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(5, 6), geometryService.factory.point(7, 8));
 
             expect(line1.getCoincidentLineSegment(line2)).toEqual(undefined);
         });
 
         it ('works well also when the lines are vertical.', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 4), geometryService.factory.point(1, 0));
-            const line2 = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 4), geometryService.factory.point(1, 0));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3));
 
-            expect(line1.getCoincidentLineSegment(line2)).toEqual([new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3)), 0, 0]);
+            expect(line1.getCoincidentLineSegment(line2)).toEqual([geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(1, 3)), 0, 0]);
         });
     });
 
     describe ('equalTo', () => {
         it ('returns true if the two lines have equal endpoints', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
-            const line2 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
 
             expect(line1.equalTo(line2)).toBeTruthy();
         });
 
         it ('returns true if the two lines are equal but the endpoints are given in reverse order', () => {
-            const line1 = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
-            const line2 = new Segment(geometryService.factory.point(3, 4), geometryService.factory.point(1, 2));
+            const line1 = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const line2 = geometryService.factory.edge(geometryService.factory.point(3, 4), geometryService.factory.point(1, 2));
 
             expect(line1.equalTo(line2)).toBeTruthy();
         });
@@ -133,15 +133,15 @@ describe('`Segment`', () => {
 
     describe(`scale`, () => {
         it ('scales the two endpoints of the `Segment` by the given x', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
-            const scaledLine = new Segment(geometryService.factory.point(3, 2), geometryService.factory.point(9, 4));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const scaledLine = geometryService.factory.edge(geometryService.factory.point(3, 2), geometryService.factory.point(9, 4));
 
             expect(line.scale(geometryService.factory.point(3, 0)).equalTo(scaledLine));
         });
 
         it ('scales the two endpoints of the `Segment` by the given y', () => {
-            const line = new Segment(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
-            const scaledLine = new Segment(geometryService.factory.point(1, 6), geometryService.factory.point(3, 12));
+            const line = geometryService.factory.edge(geometryService.factory.point(1, 2), geometryService.factory.point(3, 4));
+            const scaledLine = geometryService.factory.edge(geometryService.factory.point(1, 6), geometryService.factory.point(3, 12));
 
             expect(line.scale(geometryService.factory.point(0, 3)).equalTo(scaledLine));
         });
@@ -152,7 +152,7 @@ describe('`Segment`', () => {
 
     describe('getLength', () => {
         it ('calculates the distance between `start` and `end` of `Segment`', () => {
-            const line = new Segment(geometryService.factory.point(4, 2), geometryService.factory.point(1, 2));
+            const line = geometryService.factory.edge(geometryService.factory.point(4, 2), geometryService.factory.point(1, 2));
 
             expect(line.getLength()).toEqual(3);
         });
@@ -160,44 +160,48 @@ describe('`Segment`', () => {
 
     describe('`getBoundingRectangle`', () => {
         it ('calculates the `Rectangle` which surrounds the `Polygon`', () => {
-            const polygon = new Segment(geometryService.factory.point(1, 1), geometryService.factory.point(3, 3));
+            const polygon = geometryService.factory.edge(geometryService.factory.point(1, 1), geometryService.factory.point(3, 3));
 
             const boundingRectangle = polygon.getBoundingRectangle();
-            expect(boundingRectangle).toEqual(new Polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(1, 3),
-                geometryService.factory.point(3, 3),
-                geometryService.factory.point(3, 1)
-            ]))
+            expect(
+                boundingRectangle.equalTo(
+                    geometryService.factory.polygon([
+                        geometryService.factory.point(1, 1),
+                        geometryService.factory.point(1, 3),
+                        geometryService.factory.point(3, 3),
+                        geometryService.factory.point(3, 1)
+                    ])
+                )
+            ).toBeTruthy();
         });
     });
 
     describe('intersection', () => {
         it ('returns the intersecting point of the two segments if exists', () => {
             let segments = [
-                new Segment(geometryService.factory.point(0, 2), geometryService.factory.point(8, 6)),
-                new Segment(geometryService.factory.point(0, 0), geometryService.factory.point(10, 10))
+                geometryService.factory.edge(geometryService.factory.point(0, 2), geometryService.factory.point(8, 6)),
+                geometryService.factory.edge(geometryService.factory.point(0, 0), geometryService.factory.point(10, 10))
             ];
 
             expect(segments[0].intersection(segments[1])).toEqual(geometryService.factory.point(4, 4));
 
             segments = [
-                new Segment(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
-                new Segment(geometryService.factory.point(-1, 3), geometryService.factory.point(2, 3))
+                geometryService.factory.edge(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
+                geometryService.factory.edge(geometryService.factory.point(-1, 3), geometryService.factory.point(2, 3))
             ];
 
             expect(segments[0].intersection(segments[1])).toEqual(geometryService.factory.point(2, 3));
 
             segments = [
-                new Segment(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
-                new Segment(geometryService.factory.point(-1, 8), geometryService.factory.point(2, 8))
+                geometryService.factory.edge(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
+                geometryService.factory.edge(geometryService.factory.point(-1, 8), geometryService.factory.point(2, 8))
             ];
 
             expect(segments[0].intersection(segments[1])).toEqual(undefined);
 
             segments = [
-                new Segment(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
-                new Segment(geometryService.factory.point(-1, 3), geometryService.factory.point(1, 3))
+                geometryService.factory.edge(geometryService.factory.point(2, -1), geometryService.factory.point(2, 7)),
+                geometryService.factory.edge(geometryService.factory.point(-1, 3), geometryService.factory.point(1, 3))
             ];
 
             expect(segments[0].intersection(segments[1])).toEqual(undefined);

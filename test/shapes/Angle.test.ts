@@ -1,7 +1,6 @@
 import { GeometryService } from '../../src/GeometryService';
 import { toDegree } from '../../src/shapes/Angle';
 import { Line } from '../../src/shapes/Line';
-import { Point } from "../../src/shapes/Point";
 import { Segment } from '../../src/shapes/Segment';
 import { GeometryUtils, toRadian } from '../../src/utils/GeometryUtils';
 
@@ -157,13 +156,12 @@ describe(`Angle`, () => {
     describe('fromTwoLines', () => {
         describe('returns an Angle instance', () => {
             it ('when the angle is 45 deg', () => {
-                const geometryService = new GeometryService();
 
-                const segment1 = new Segment(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
-                const segment2 = new Segment(geometryService.factory.point(0, 0), geometryService.factory.point(1, 0));
+                const segment1 = geometryService.factory.edge(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
+                const segment2 = geometryService.factory.edge(geometryService.factory.point(0, 0), geometryService.factory.point(1, 0));
 
                 let angle = geometryService.factory.angleFromTwoLines(segment1.getLine(), segment2.getLine());
-                expect(geometryService.measuerments.anglesEqual(angle, geometryService.factory.angleFromRadian(GeometryUtils.toRadian(45))));
+                expect(geometryService.measuerments.anglesEqual(angle, geometryService.factory.angleFromRadian(toRadian(45))));
             });
 
             it ('when one of the lines is parallel to the y axis', () => {
@@ -174,7 +172,7 @@ describe(`Angle`, () => {
 
 
                 const line1 = Line.createVerticalLine(1);
-                const line2 = new Segment(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
+                const line2 = geometryService.factory.edge(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
                 let angle45 = geometryService.factory.angleFromTwoLines(line1, line2.getLine());
 
                 expect(geometryService.measuerments.anglesEqual(angle45, geometryService.factory.angleFromRadian(toRadian(45))));
@@ -183,8 +181,8 @@ describe(`Angle`, () => {
             it ('when the lines are parallel', () => {
                 const geometryService = new GeometryService();
 
-                const line1 = new Segment(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
-                const line2 = new Segment(geometryService.factory.point(0, 1), geometryService.factory.point(1, 2));
+                const line1 = geometryService.factory.edge(geometryService.factory.point(0, 0), geometryService.factory.point(1, 1));
+                const line2 = geometryService.factory.edge(geometryService.factory.point(0, 1), geometryService.factory.point(1, 2));
 
                 let angle = geometryService.factory.angleFromTwoLines(line1.getLine(), line2.getLine());
                 expect(angle).toEqual(undefined);
