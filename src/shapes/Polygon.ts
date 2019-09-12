@@ -285,7 +285,7 @@ export class Polygon implements Shape {
             const a = point;
             const b = this.getPreviousPoint(point);
             const c = this.getNextPoint(point);
-            return Angle.fromThreePoints(a, b, c).isStraightAngle() === false
+            return this.geometryService.factory.angleFromThreePoints(a, b, c).isStraightAngle() === false
         });
 
         const reducedPoints: Point[] = [firstPoint];
@@ -297,7 +297,7 @@ export class Polygon implements Shape {
             const b = this.getPreviousPoint(currentPoint);
             const c = this.getNextPoint(currentPoint);
 
-            if (Angle.fromThreePoints(a, b, c).isStraightAngle() === false) {
+            if (this.geometryService.factory.angleFromThreePoints(a, b, c).isStraightAngle() === false) {
                 reducedPoints.push(currentPoint);
             }
 

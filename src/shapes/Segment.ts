@@ -3,14 +3,17 @@ import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
 import * as _ from "lodash";
 import { Polygon } from './Polygon';
 import { Line } from './Line';
+import { GeometryService } from '../GeometryService';
 
 export class Segment implements Shape {
     private points: [Point, Point] = [null, null];
     private orderedPoints: [Point, Point] = [null, null];
 
-    constructor(endPoint1: Point, endPoint2: Point) {
+    private geometryService: GeometryService;
+
+    constructor(endPoint1: Point, endPoint2: Point, geometryService: GeometryService = new GeometryService()) {
         [this.points[0], this.points[1]] = [endPoint1, endPoint2];
-    //    this.orderedPoints = this.orderPoints(...this.points);
+        this.geometryService = geometryService;
         this.orderedPoints = this.points;
     }
 
@@ -45,25 +48,25 @@ export class Segment implements Shape {
     public translate(point: Point): Shape {
         const point0 = this.points[0].addX(point.x).addY(point.y);
         const point1 = this.points[1].addX(point.x).addY(point.y);
-        return new Segment(point0, point1);
+        return this.geometryService.factory.edge(point0, point1);
     }
 
     public negate(axis: 'x' | 'y'): Segment {
         if (axis === 'x') {
-            return new Segment(this.points[0].negateX(), this.points[1].negateX());
+            return this.geometryService.factory.edge(this.points[0].negateX(), this.points[1].negateX());
         } else {
-            return new Segment(this.points[0].negateY(), this.points[1].negateY());
+            return this.geometryService.factory.edge(this.points[0].negateY(), this.points[1].negateY());
         }
     }
 
     public clone(): Shape {
-        return new Segment(this.points[0], this.points[1]);
+        return this.geometryService.factory.edge(this.points[0], this.points[1]);
     }
 
     public setPosition(point: Point, origin: ShapeOrigin = ShapeOrigin.CENTER): Shape {
         const diff = this.getBoundingCenter().subtract(point);
 
-        return new Segment(this.points[0].addX(diff.x).addY(diff.y), this.points[1].addX(diff.x).addY(diff.y));
+        return this.geometryService.factory.edge(this.points[0].addX(diff.x).addY(diff.y), this.points[1].addX(diff.x).addY(diff.y));
     }
 
     public getBoundingRectangle(): Shape {
@@ -73,11 +76,15 @@ export class Segment implements Shape {
         [x1, x2] = x1 < x2 ? [x1, x2] : [x2, x1];
         [y1, y2] = y1 < y2 ? [y1, y2] : [y2, y1];
 
-        return new Polygon([new Point(x1, y1), new Point(x1, y2), new Point(x2, y2), new Point(x2, y1)]);
+        return this.geometryService.factory.polygon([
+            this.geometryService.factory.point(x1, y1),
+            this.geometryService.factory.point(x1, y2),
+            this.geometryService.factory.point(x2, y2),
+            this.geometryService.factory.point(x2, y1)]);
     }
 
     public getBoundingCenter(): Point {
-        return new Point((this.orderedPoints[0].x + this.orderedPoints[1].x) / 2, (this.orderedPoints[0].y + this.orderedPoints[1].y) / 2);
+        return this.geometryService.factory.point((this.orderedPoints[0].x + this.orderedPoints[1].x) / 2, (this.orderedPoints[0].y + this.orderedPoints[1].y) / 2);
     }
 
     public getCoincidentLineSegment(other: Shape): [Segment, number, number] {
@@ -183,26 +190,26 @@ export class Segment implements Shape {
             [e, f, g, h] = f < h ? [e, f, g, h] : [g, h, e, f];
 
             if (b <= f && d >= h) {
-                return new Segment(new Point(e, f), new Point(g, h));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(e, f), this.geometryService.factory.point(g, h));
             } else if (f <= b && h >= d) {
-                return new Segment(new Point(a, b), new Point(c, d));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(a, b), this.geometryService.factory.point(c, d));
             } else if (b < f && d > f) {
-                return new Segment(new Point(e, f), new Point(c, d));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(e, f), this.geometryService.factory.point(c, d));
             } else if (f < b && h > b) {
-                return new Segment(new Point(a, b), new Point(g, h));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(a, b), this.geometryService.factory.point(g, h));
             }
         } else {
             [a, b, c, d] = a < c ? [a, b, c, d] : [c, d, a, b];
             [e, f, g, h] = e < g ? [e, f, g, h] : [g, h, e, f];
 
             if (a <= e && c >= g) {
-                return new Segment(new Point(e, f), new Point(g, h));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(e, f), this.geometryService.factory.point(g, h));
             } else if (e <= a && g >= c) {
-                return new Segment(new Point(a, b), new Point(c, d));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(a, b), this.geometryService.factory.point(c, d));
             } else if (a < e && c > e) {
-                return new Segment(new Point(e, f), new Point(c, d));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(e, f), this.geometryService.factory.point(c, d));
             } else if (e < a && g > a) {
-                return new Segment(new Point(a, b), new Point(g, h));
+                return this.geometryService.factory.edge(this.geometryService.factory.point(a, b), this.geometryService.factory.point(g, h));
             }
         }
 
@@ -222,7 +229,7 @@ export class Segment implements Shape {
     public scale(scalePoint: Point): Segment {
         const point0 = this.points[0].scaleX(scalePoint.x).scaleY(scalePoint.y);
         const point1 = this.points[1].scaleX(scalePoint.x).scaleY(scalePoint.y);
-        return new Segment(point0, point1);
+        return this.geometryService.factory.edge(point0, point1);
     }
 
     public equalTo(otherLine: Segment): boolean {
@@ -237,7 +244,7 @@ export class Segment implements Shape {
     }
 
     public getB(): Point {
-        return new Point(0, this.points[0].y - this.getSlope() * this.points[0].x);
+        return this.geometryService.factory.point(0, this.points[0].y - this.getSlope() * this.points[0].x);
     }
 
     public getLine(): Line {

@@ -3,6 +3,7 @@ import * as linear from 'linear-solve';
 import { Line } from './Line';
 import { toRadian } from "../utils/GeometryUtils";
 import { Measurements } from '../utils/Measurements';
+import { GeometryService } from '../GeometryService';
 
 /**
  * An angle is represented as the anticlockwise angle from b to a.
@@ -60,9 +61,8 @@ export class Angle {
         return new Angle(o, a, b);
     }
 
-    static fromTwoLines(line1: Line, line2: Line, measurements: Measurements = new Measurements()): Angle {
-
-        if (measurements.linesParallel(line1, line2)) {
+    static fromTwoLines(line1: Line, line2: Line, geometryService: GeometryService = new GeometryService()): Angle {
+        if (geometryService.measuerments.linesParallel(line1, line2)) {
             return undefined;
         } else if (line1.isVertical()) {
             return Angle.fromRadian(line2.slope === 0 ? toRadian(90) :  1 / line2.slope);

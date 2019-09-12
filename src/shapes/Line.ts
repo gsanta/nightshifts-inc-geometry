@@ -97,7 +97,7 @@ export class Line {
 
     getAngleToXAxis(): Angle {
         if (this.isVertical()) {
-            return Angle.fromRadian(Math.PI / 2);
+            return this.geometryService.factory.angleFromRadian(Math.PI / 2);
         }
 
         const xAxis = Line.createHorizontalLine(0);
@@ -107,11 +107,11 @@ export class Line {
             const a = this.geometryService.factory.point(o.x + 10, this.getY(o.x + 10));
             const b = this.geometryService.factory.point(o.x + 10, 0);
 
-            return Angle.fromThreePoints(o, a, b);
+            return this.geometryService.factory.angleFromThreePoints(o, a, b);
 
         }
 
-        return Angle.fromThreePoints(
+        return this.geometryService.factory.angleFromThreePoints(
             this.geometryService.factory.point(0, 0),
             this.geometryService.factory.point(0, 0),
             this.geometryService.factory.point(0, 0)

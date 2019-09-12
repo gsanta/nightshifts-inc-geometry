@@ -1,15 +1,13 @@
-import { Polygon } from "./Polygon";
-import { Shape } from "./Shape";
-import { Measurements } from '../utils/Measurements';
-import { Angle } from "./Angle";
+import { GeometryService } from '../GeometryService';
 import { toRadian } from "../utils/GeometryUtils";
+import { Shape } from "./Shape";
 
 
 export class RectangleView {
-    private measurements: Measurements;
+    private geometryService: GeometryService;
 
-    constructor(shape: Shape, measurements = new Measurements()) {
-        this.measurements = measurements;
+    constructor(shape: Shape, geometryService: GeometryService) {
+        this.geometryService = geometryService;
 
         this.checkIfRectangle(shape);
     }
@@ -32,13 +30,13 @@ export class RectangleView {
         const [side1, side2, side3, side4] = shape.getEdges();
 
         const angles = [
-            Angle.fromTwoLines(side1.getLine(), side2.getLine()),
-            Angle.fromTwoLines(side2.getLine(), side3.getLine()),
-            Angle.fromTwoLines(side2.getLine(), side3.getLine()),
-            Angle.fromTwoLines(side4.getLine(), side1.getLine()),
+            this.geometryService.factory.angleFromTwoLines(side1.getLine(), side2.getLine()),
+            this.geometryService.factory.angleFromTwoLines(side2.getLine(), side3.getLine()),
+            this.geometryService.factory.angleFromTwoLines(side2.getLine(), side3.getLine()),
+            this.geometryService.factory.angleFromTwoLines(side4.getLine(), side1.getLine()),
         ];
 
-        const isEveryAngle90Deg = angles.every(angle => this.measurements.angleToBe(angle, toRadian(90)))
+        const isEveryAngle90Deg = angles.every(angle => this.geometryService.measuerments.angleToBe(angle, toRadian(90)))
 
         if (!isEveryAngle90Deg) {
             this.throwNonRectangleError(shape);

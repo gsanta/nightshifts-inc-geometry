@@ -1,9 +1,9 @@
-import { Measurements } from "./utils/Measurements";
 import { Line } from './shapes/Line';
 import { Point } from "./shapes/Point";
 import { Polygon } from "./shapes/Polygon";
 import { Segment } from "./shapes/Segment";
 import { GeometryService } from './GeometryService';
+import { Angle } from './shapes/Angle';
 
 
 export class GeometryFactory {
@@ -43,5 +43,17 @@ export class GeometryFactory {
 
     point(x: number, y: number): Point {
         return new Point(x, y);
+    }
+
+    angleFromRadian(angle: number): Angle {
+        return Angle.fromRadian(angle);
+    }
+
+    angleFromThreePoints(o: Point, a: Point, b: Point) {
+        return Angle.fromThreePoints(o, a, b);
+    }
+
+    angleFromTwoLines(line1: Line, line2: Line) {
+        return Angle.fromTwoLines(line1, line2, this.geometryService);
     }
 }

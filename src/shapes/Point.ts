@@ -1,39 +1,43 @@
+import { GeometryService } from '../GeometryService';
 
 export class Point {
     public x: number;
     public y: number;
 
-    constructor(x: number, y: number) {
+    private geometryService: GeometryService;
+
+    constructor(x: number, y: number, geometryService: GeometryService = new GeometryService()) {
         this.x = x;
         this.y = y;
+        this.geometryService = geometryService;
     }
 
     public addX(amount: number): Point {
-        return new Point(this.x + amount, this.y);
+        return this.geometryService.factory.point(this.x + amount, this.y);
     }
 
     public addY(amount: number): Point {
-        return new Point(this.x, this.y + amount);
+        return this.geometryService.factory.point(this.x, this.y + amount);
     }
 
     public scaleX(times: number): Point {
-        return new Point(this.x * times, this.y);
+        return this.geometryService.factory.point(this.x * times, this.y);
     }
 
     public scaleY(times: number): Point {
-        return new Point(this.x, this.y * times);
+        return this.geometryService.factory.point(this.x, this.y * times);
     }
 
     public negate(): Point {
-        return new Point(-this.x, - this.y);
+        return this.geometryService.factory.point(-this.x, - this.y);
     }
 
     public negateX(): Point {
-        return new Point(-this.x, this.y);
+        return this.geometryService.factory.point(-this.x, this.y);
     }
 
     public negateY(): Point {
-        return new Point(this.x, -this.y);
+        return this.geometryService.factory.point(this.x, -this.y);
     }
 
     /*
@@ -60,13 +64,13 @@ export class Point {
     }
 
     public subtract(otherPoint: Point): Point {
-        return new Point(this.x - otherPoint.x, this.y - otherPoint.y);
+        return this.geometryService.factory.point(this.x - otherPoint.x, this.y - otherPoint.y);
     }
 
     public normalize() {
         const length = this.distanceToOrigin();
 
-        return new Point(this.x / length, this.y / length);
+        return this.geometryService.factory.point(this.x / length, this.y / length);
     }
 
     public isNormalized() {
@@ -80,7 +84,7 @@ export class Point {
     }
 
     public clone(): Point {
-        return new Point(this.x, this.y);
+        return this.geometryService.factory.point(this.x, this.y);
     }
 
     public equalTo(otherPoint: Point) {
