@@ -2,6 +2,14 @@ import { Point } from "../shapes/Point";
 import { Angle } from '../shapes/Angle';
 import { Line } from '../shapes/Line';
 
+export function toRadian(degree: number) {
+    return degree * Math.PI / 180;
+ }
+
+export function toDegree(radian: number) {
+    return radian * 180 / Math.PI;
+}
+
 export class Measurements {
     // TODO: rename to smth like "closeTo" so that the exact distance is not mentioned in the name
     public static isDistanceSmallerThan(point1: Point, point2: Point, unit = 0.5) {

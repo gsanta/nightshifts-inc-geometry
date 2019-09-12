@@ -1,8 +1,7 @@
 import { GeometryService } from '../../src/GeometryService';
 import { toDegree } from '../../src/shapes/Angle';
 import { Line } from '../../src/shapes/Line';
-import { Segment } from '../../src/shapes/Segment';
-import { GeometryUtils, toRadian } from '../../src/utils/GeometryUtils';
+import { toRadian } from '../../src/utils/Measurements';
 
 
 describe(`Angle`, () => {

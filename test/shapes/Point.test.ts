@@ -1,7 +1,6 @@
-import { Point } from "../../src/shapes/Point";
 import { expect } from "chai";
-import { GeometryUtils, toRadian } from '../../src/utils/GeometryUtils';
 import { GeometryService } from "../../src/GeometryService";
+import { toRadian } from "../../src/utils/Measurements";
 
 
 describe('`Point`', () => {

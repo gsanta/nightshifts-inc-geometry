@@ -1,6 +1,6 @@
 import { GeometryService } from '../GeometryService';
-import { toRadian } from "../utils/GeometryUtils";
 import { Shape } from "./Shape";
+import { toRadian } from '../utils/Measurements';
 
 
 export class RectangleView {

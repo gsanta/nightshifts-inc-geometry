@@ -7,7 +7,6 @@ import without from 'lodash/without';
 import * as PolyBool from 'polybooljs';
 import polylabel from 'polylabel';
 import { GeometryService } from '../GeometryService';
-import { GeometryUtils } from '../utils/GeometryUtils';
 import { Point } from './Point';
 import { Segment } from './Segment';
 import { BoundingInfo, Shape, ShapeOrigin } from './Shape';

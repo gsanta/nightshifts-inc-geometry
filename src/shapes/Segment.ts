@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { Polygon } from './Polygon';
 import { Line } from './Line';
 import { GeometryService } from '../GeometryService';
+import { StripeView } from './StripeView';
 
 export class Segment implements Shape {
     private points: [Point, Point] = [null, null];
@@ -119,6 +120,24 @@ export class Segment implements Shape {
             }
         }
     }
+
+    /**
+     * Creates a rectangular `Polygon` from a `Segment` via adding 'thickness' to it
+     * on the `Segment`s normal direction
+     */
+    public addThickness(thickness: number): Polygon {
+        const bisectorLine = this.getPerpendicularBisector();
+
+        const [point1, point2] = bisectorLine.getSegmentWithCenterPointAndDistance(this.getBoundingCenter(), thickness);
+
+        const line1 = Line.fromPointSlopeForm(point1, this.getSlope());
+        const [side1Point1, side1Point2] = line1.getSegmentWithCenterPointAndDistance(point1, this.getLength() / 2);
+
+        const line2 = Line.fromPointSlopeForm(point2, this.getSlope());
+        const [side2Point1, side2Point2] = line2.getSegmentWithCenterPointAndDistance(point2, this.getLength() / 2);
+
+        return StripeView.createRectangleFromTwoOppositeSides(new Segment(side1Point1, side1Point2), new Segment(side2Point1, side2Point2));
+     }
 
     private isXWithinSegment(x: number): boolean {
         let [minX, maxX] = [this.points[0].x, this.points[1].x];

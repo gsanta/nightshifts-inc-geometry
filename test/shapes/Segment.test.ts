@@ -207,4 +207,21 @@ describe('`Segment`', () => {
             expect(segments[0].intersection(segments[1])).toEqual(undefined);
         });
     });
+
+    describe(`addThicknessToSegment`, () => {
+        it ('creates a rectangular `Polygon` via adding thickness to a `Segment` 2', () => {
+            const segment = geometryService.factory.edge(new Point(1, 1), new Point(3, 3));
+            const rectangle = segment.addThickness(Math.SQRT2);
+            expect(
+                rectangle.equalTo(
+                    geometryService.factory.polygon([
+                        new Point(2, 0),
+                        new Point(4, 2),
+                        new Point(2, 4),
+                        new Point(0, 2),
+                    ])
+                )
+            ).toBeTruthy();
+        });
+    });
 });

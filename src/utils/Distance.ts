@@ -5,7 +5,7 @@ import { Point } from '../shapes/Point';
 export class Distance {
 
 
-    public pointToSegment(point: Point, segment: Segment) {
+    public pointToSegment(point: Point, segment: Segment): number {
         const [v, w] = segment.getPoints();
         const l2 = dist2(v, w);
 

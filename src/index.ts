@@ -4,7 +4,6 @@ export {Angle} from './shapes/Angle';
 export {Line} from './shapes/Line';
 export {Point} from './shapes/Point';
 export {Shape} from './shapes/Shape';
-export {GeometryUtils} from './utils/GeometryUtils';
 export {Measurements} from './utils/Measurements';
 export {Distance} from './utils/Distance';
 export {StripeView} from './shapes/StripeView';

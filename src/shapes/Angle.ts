@@ -1,8 +1,7 @@
 import { Point } from "./Point";
 import * as linear from 'linear-solve';
 import { Line } from './Line';
-import { toRadian } from "../utils/GeometryUtils";
-import { Measurements } from '../utils/Measurements';
+import { Measurements, toRadian } from '../utils/Measurements';
 import { GeometryService } from '../GeometryService';
 
 /**

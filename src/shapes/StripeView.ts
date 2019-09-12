@@ -1,9 +1,8 @@
-import { Polygon } from "./Polygon";
 import _ from "lodash";
-import { Segment } from "./Segment";
-import { GeometryUtils } from '../utils/GeometryUtils';
-import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
 import { Point } from "..";
+import { Polygon } from "./Polygon";
+import { Segment } from "./Segment";
+import { BoundingInfo, Shape, ShapeOrigin } from './Shape';
 
 export class StripeView implements Shape {
     private polygon: Polygon;
@@ -69,10 +68,10 @@ export class StripeView implements Shape {
 
         const [segment1, segment2] = maxDistance[1];
 
-        return this.createRectangleFromTwoOppositeSides(segment1, segment2);
+        return StripeView.createRectangleFromTwoOppositeSides(segment1, segment2);
     }
 
-    private createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
+    public static createRectangleFromTwoOppositeSides(side1: Segment, side2: Segment): Polygon {
 
         if (side1.getPoints()[0].distanceTo(side2.getPoints()[0]) < side1.getPoints()[0].distanceTo(side2.getPoints()[1])) {
             side2 = new Segment(side2.getPoints()[1], side2.getPoints()[0]);
