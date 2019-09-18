@@ -28,4 +28,8 @@ export class Measurements {
     linesParallel(line1: Line, line2: Line) {
         return line1.slope === line2.slope;
     }
+
+    coordinatesEqual(coord1: number, coord2: number) {
+        return Math.abs(coord1 - coord2) < 0.1;
+    }
 }

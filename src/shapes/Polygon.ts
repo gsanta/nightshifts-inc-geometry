@@ -16,7 +16,7 @@ export class Polygon implements Shape {
     private orederedPoints: Point[];
     private geometryService: GeometryService;
 
-    constructor(points: Point[], geometryService: GeometryService = new GeometryService) {
+    constructor(points: Point[], geometryService: GeometryService = new GeometryService()) {
         this.points = points;
         this.geometryService = geometryService;
         this.orederedPoints = this.orderPointsToStartAtBottomLeft(this.points);
@@ -375,7 +375,7 @@ export class Polygon implements Shape {
         const minY = _.minBy(points, point => point.y).y;
 
         const bottomLeftPoint = _.chain(points)
-            .filter(point => point.y === minY)
+            .filter(point => this.geometryService.measuerments.coordinatesEqual(point.y, minY))
             .minBy(point => point.x)
             .value();
 
