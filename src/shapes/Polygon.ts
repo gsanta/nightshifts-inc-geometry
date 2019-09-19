@@ -20,7 +20,7 @@ export class Polygon implements Shape {
         this.points = points;
         this.geometryService = geometryService;
         this.orederedPoints = this.orderPointsToStartAtBottomLeft(this.points);
-
+        this.points = this.orederedPoints;
         if (!this.arePointsClockwise()) {
             this.orederedPoints = this.orderPointsToStartAtBottomLeft(this.orederedPoints.reverse());
         }

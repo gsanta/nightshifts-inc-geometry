@@ -125,7 +125,7 @@ export class Segment implements Shape {
      * Creates a rectangular `Polygon` from a `Segment` via adding 'thickness' to it
      * on the `Segment`s normal direction
      */
-    public addThickness(thickness: number): Polygon {
+    addThickness(thickness: number): Polygon {
         const bisectorLine = this.getPerpendicularBisector();
 
         const [point1, point2] = bisectorLine.getSegmentWithCenterPointAndDistance(this.getBoundingCenter(), thickness);
@@ -137,7 +137,11 @@ export class Segment implements Shape {
         const [side2Point1, side2Point2] = line2.getSegmentWithCenterPointAndDistance(point2, this.getLength() / 2);
 
         return StripeView.createRectangleFromTwoOppositeSides(new Segment(side1Point1, side1Point2), new Segment(side2Point1, side2Point2));
-     }
+    }
+
+    toVector(): Point {
+        return new Point(this.getPoints()[0].x - this.getPoints()[1].x, this.getPoints()[0].y - this.getPoints()[1].y);
+    }
 
     private isXWithinSegment(x: number): boolean {
         let [minX, maxX] = [this.points[0].x, this.points[1].x];
