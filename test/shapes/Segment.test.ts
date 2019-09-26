@@ -224,4 +224,56 @@ describe('`Segment`', () => {
             ).toBeTruthy();
         });
     });
+
+    describe('isPointOnSegment', () => {
+        it ('returns true if the point is on the segment', () => {
+            const segment45deg = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(5, 5),
+            );
+
+            expect(segment45deg.isPointOnSegment(geometryService.factory.point(2, 2))).toEqual(true);
+            expect(segment45deg.isPointOnSegment(geometryService.factory.point(1, 1))).toEqual(true);
+
+            const segmentVertical = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(1, 5),
+            );
+
+            expect(segmentVertical.isPointOnSegment(geometryService.factory.point(1, 3))).toEqual(true);
+
+            const segmentHorizontal = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(5, 1),
+            );
+
+            expect(segmentHorizontal.isPointOnSegment(geometryService.factory.point(3, 1))).toEqual(true);
+        });
+
+        it ('returns false if the point is not on the segment', () => {
+            const segment45deg = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(5, 5),
+            );
+
+            expect(segment45deg.isPointOnSegment(geometryService.factory.point(6, 6))).toEqual(false);
+            expect(segment45deg.isPointOnSegment(geometryService.factory.point(0, 0))).toEqual(false);
+
+            const segmentVertical = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(1, 5),
+            );
+
+            expect(segmentVertical.isPointOnSegment(geometryService.factory.point(1, 6))).toEqual(false);
+
+            const segmentHorizontal = geometryService.factory.edge(
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(5, 1),
+            );
+
+            expect(segmentHorizontal.isPointOnSegment(geometryService.factory.point(6, 1))).toEqual(false);
+
+
+        });
+    });
 });

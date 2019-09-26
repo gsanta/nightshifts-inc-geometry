@@ -1,4 +1,4 @@
-import { Point } from "./Point";
+import { Point } from './Point';
 import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
 import * as _ from "lodash";
 import { Polygon } from './Polygon';
@@ -181,6 +181,10 @@ export class Segment implements Shape {
         } else {
             return point.y - this.points[0].y === this.getSlope() * (point.x - this.points[0].x)
         }
+    }
+
+    isPointOnSegment(point: Point): boolean {
+        return this.isPointOnTheLine(point) && this.isXWithinSegment(point.x) && this.isYWithinSegment(point.y);
     }
 
     public getPerpendicularBisector(): Line {
