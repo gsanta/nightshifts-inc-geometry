@@ -1,15 +1,11 @@
 import * as turf from '@turf/turf';
-import * as _ from 'lodash';
-import last from 'lodash/last';
-import maxBy from 'lodash/maxBy';
-import minBy from 'lodash/minBy';
-import without from 'lodash/without';
 import * as PolyBool from 'polybooljs';
 import polylabel from 'polylabel';
 import { GeometryService } from '../GeometryService';
 import { Point } from './Point';
 import { Segment } from './Segment';
 import { BoundingInfo, Shape, ShapeOrigin } from './Shape';
+import { minBy, maxBy, without, last, every } from '../utils/Functions';
 
 export class Polygon implements Shape {
     private points: Point[];
@@ -38,7 +34,7 @@ export class Polygon implements Shape {
     }
 
     public hasPoint(point: Point): boolean {
-        return _.find(this.points, p => p.equalTo(point)) !== undefined;
+        return this.points.find(p => p.equalTo(point)) !== undefined;
     }
 
     public getPointsStartingFrom(point: Point) {
@@ -75,7 +71,8 @@ export class Polygon implements Shape {
     }
 
     public getOrderedIndex(point: Point) {
-        return _.findIndex(this.orederedPoints, p => p.equalTo(point));
+        const p = this.orederedPoints.find(p => p.equalTo(point));
+        return this.orederedPoints.indexOf(p);
     }
 
     public translate(point: Point): Polygon {
@@ -249,14 +246,14 @@ export class Polygon implements Shape {
             }
         }
 
-        return _.maxBy(coincidentSegmentInfos, info => info[0].getLength());
+        return maxBy<[Segment, number, number]>(coincidentSegmentInfos, (a, b) => a[0].getLength() - b[0].getLength());
     }
 
     public getBoundingInfo(): BoundingInfo {
-        const minX = minBy(this.points, point => point.x).x;
-        const maxX = maxBy(this.points, point => point.x).x;
-        const minY = minBy(this.points, point => point.y).y;
-        const maxY = maxBy(this.points, point => point.y).y;
+        const minX = minBy<Point>(this.points, (a, b) => a.x - b.x).x;
+        const maxX = maxBy<Point>(this.points, (a, b) => a.x - b.x).x;
+        const minY = minBy<Point>(this.points, (a, b) => a.y - b.y).y;
+        const maxY = maxBy<Point>(this.points, (a, b) => a.y - b.y).y;
 
         return {
             min: [minX, minY],
@@ -274,11 +271,11 @@ export class Polygon implements Shape {
             return false;
         }
 
-        return _.every(this.orederedPoints, (point, index) => point.equalTo(otherPolygon.orederedPoints[index]));
+        return every(this.orederedPoints, (point, index) => point.equalTo(otherPolygon.orederedPoints[index]));
     }
 
     public removeStraightVertices(): Polygon {
-        const firstPoint: Point = _.find(this.getPoints(), point => {
+        const firstPoint: Point = this.getPoints().find(point => {
             const a = point;
             const b = this.getPreviousPoint(point);
             const c = this.getNextPoint(point);
@@ -372,12 +369,10 @@ export class Polygon implements Shape {
     }
 
     private orderPointsToStartAtBottomLeft = (points: Point[]) => {
-        const minY = _.minBy(points, point => point.y).y;
+        const minY = minBy<Point>(points, (a, b) => a.y - b.y).y;
 
-        const bottomLeftPoint = _.chain(points)
-            .filter(point => this.geometryService.measuerments.coordinatesEqual(point.y, minY))
-            .minBy(point => point.x)
-            .value();
+        const poinstWithYEqualToMinY = points.filter(point => this.geometryService.measuerments.coordinatesEqual(point.y, minY))
+        const bottomLeftPoint = minBy<Point>(poinstWithYEqualToMinY, (a, b) => a.x - b.x);
 
         while (!points[0].equalTo(bottomLeftPoint)) {
             points.push(points.shift());

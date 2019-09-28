@@ -1,6 +1,5 @@
 import { Point } from './Point';
 import { Shape, ShapeOrigin, BoundingInfo } from './Shape';
-import * as _ from "lodash";
 import { Polygon } from './Polygon';
 import { Line } from './Line';
 import { GeometryService } from '../GeometryService';
@@ -30,7 +29,7 @@ export class Segment implements Shape {
     }
 
     public hasPoint(point: Point): boolean {
-        return _.find(this.points, p => p.equalTo(point)) !== undefined;
+        return this.points.find(p => p.equalTo(point)) !== undefined;
     }
 
     public getBoundingInfo(): BoundingInfo {
@@ -260,7 +259,7 @@ export class Segment implements Shape {
     }
 
     public equalTo(otherLine: Segment): boolean {
-        return _.some(otherLine.getPoints(), point => point.equalTo(this.getPoints()[0])) && _.some(otherLine.getPoints(), point => point.equalTo(this.getPoints()[1]));
+        return otherLine.getPoints().find(point => point.equalTo(this.getPoints()[0])) !== undefined && otherLine.getPoints().find(point => point.equalTo(this.getPoints()[1])) !== undefined;
     }
 
     public getLength(): number {

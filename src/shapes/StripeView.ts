@@ -1,8 +1,8 @@
-import _ from "lodash";
 import { Point } from "..";
 import { Polygon } from "./Polygon";
 import { Segment } from "./Segment";
 import { BoundingInfo, Shape, ShapeOrigin } from './Shape';
+import { maxBy } from "../utils/Functions";
 
 export class StripeView implements Shape {
     private polygon: Polygon;
@@ -64,7 +64,7 @@ export class StripeView implements Shape {
             [edge2.getBoundingCenter().distanceTo(edge4.getBoundingCenter()), [edge2, edge4]]
         ];
 
-        const maxDistance = _.maxBy(distances, distance => distance[0]);
+        const maxDistance = maxBy<[number, [Segment, Segment]]>(distances, (a, b) => a[0] - b[0]);
 
         const [segment1, segment2] = maxDistance[1];
 
@@ -97,7 +97,8 @@ export class StripeView implements Shape {
         for (let i = 0; i < longEdges.length; i++) {
             const coincidentInfo = segment.getCoincidentLineSegment(longEdges[i]);
             if (coincidentInfo) {
-                return [coincidentInfo[0], _.findIndex(allEdges, edge => edge.equalTo(longEdges[i]))];
+                const edge = allEdges.find(e => e.equalTo(longEdges[i]));
+                return [coincidentInfo[0], allEdges.indexOf(edge)];
             }
         }
     }
