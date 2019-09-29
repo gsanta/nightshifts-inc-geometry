@@ -8,18 +8,18 @@ import { GeometryService } from '../GeometryService';
  * An angle is represented as the anticlockwise angle from b to a.
  */
 export class Angle {
-    private measurements: Measurements;
+    private geometryService: GeometryService;
     private o: Point;
     private a: Point;
     private b: Point;
 
     private angle: number;
 
-    private constructor(o: Point, a: Point, b: Point, measurements: Measurements = new Measurements()) {
+    private constructor(o: Point, a: Point, b: Point, geometryService: GeometryService = new GeometryService()) {
         this.o = o;
         this.a = a;
         this.b = b;
-        this.measurements = measurements;
+        this.geometryService = geometryService;
         this.angle = this.normalizeAngle(Math.atan2(this.a.y - this.o.y, this.a.x - this.o.x)) - this.normalizeAngle(Math.atan2(this.b.y - this.o.y, this.b.x - this.o.x));
     }
 
@@ -40,20 +40,49 @@ export class Angle {
         return res.length === 2 && res[0] > 0 && res[1] > 0;
     }
 
+    is90Deg(): boolean {
+        return this.geometryService.measuerments.angleToBe(this, Math.PI);
+    }
+
+    is270Deg(): boolean {
+        return this.geometryService.measuerments.angleToBe(this, 3 * Math.PI / 2);
+    }
+
     private normalizeAngle(angle: number) {
         return angle < 0 ? angle + 2 * Math.PI : angle;
     }
 
     static fromRadian(angle: number, geometryService = new GeometryService()) {
+        angle = angle % (Math.PI * 2);
+        angle = angle < 0 ? angle + 2 * Math.PI : angle;
         const slope = Math.tan(angle);
 
         const line = geometryService.factory.lineFromPointSlopeForm(new Point(0, 0), slope);
 
-        const o = new Point(0, 0);
-        const a = slope < 0 ? new Point(-10, line.getY(10)) : new Point(10, line.getY(10));
-        const b = new Point(10, 0);
+        let o = geometryService.factory.point(0, 0);
+        let b = geometryService.factory.point(10, 0);
 
-        return new Angle(o, a, b);
+        let a: Point = null;
+
+        if (line.isVertical()) {
+            if (geometryService.measuerments.radToBe(angle, Math.PI)) {
+                a = geometryService.factory.point(10, 0);
+            } else {
+                a = geometryService.factory.point(0, -10);
+            }
+        }
+
+        if (angle <= Math.PI / 2) {
+            a = geometryService.factory.point(10, line.getY(10));
+        } else if (angle <= Math.PI) {
+            a = geometryService.factory.point(-10, line.getY(-10));
+        } else if (angle <= 3 * Math.PI / 2) {
+            a = geometryService.factory.point(-10, line.getY(-10));
+        } else {
+            a = geometryService.factory.point(10, line.getY(10));
+        }
+
+        return new Angle(o, a, b, geometryService);
     }
 
     static fromThreePoints(o: Point, a: Point, b: Point) {

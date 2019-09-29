@@ -1,5 +1,8 @@
-import * as turf from '@turf/turf';
 import * as PolyBool from 'polybooljs';
+import * as turfHelpers from '@turf/helpers';
+import turfIntersect from '@turf/intersect';
+import booleanContains from '@turf/boolean-contains';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import polylabel from 'polylabel';
 import { GeometryService } from '../GeometryService';
 import { Point } from './Point';
@@ -106,30 +109,30 @@ export class Polygon implements Shape {
     }
 
     public contains(other: Polygon): boolean {
-        const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
-        const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
+        const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
-        return turf.booleanContains(poly1, poly2);
+        return booleanContains(poly1, poly2);
     }
 
     public containsPoint(point: Point): boolean {
-        const turfPolygon = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
-        const turfPoint = turf.point([point.x, point.y]);
+        const turfPolygon = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const turfPoint = turfHelpers.point([point.x, point.y]);
 
-        return turf.booleanPointInPolygon(turfPoint, turfPolygon);
+        return booleanPointInPolygon(turfPoint, turfPolygon);
     }
 
     /**
      * returns true if this `Polygon` contains more than half of the other `Polygon`s area
      */
     public containsMoreThenHalf(other: Polygon): boolean {
-        const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
-        const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
+        const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
-        const intersection = turf.intersect(poly1, poly2);
+        const intersection = turfIntersect(poly1, poly2);
 
         if (intersection) {
-            const intersectionPolygon = this.createPolygonFromTurfGeometry(intersection.geometry);
+            const intersectionPolygon = this.createPolygonFromTurfGeometry(<any> intersection.geometry);
 
             const intersectionArea = intersectionPolygon.getArea();
             const otherPolygonArea = other.getArea();
@@ -141,10 +144,10 @@ export class Polygon implements Shape {
     }
 
     public intersect(other: Polygon): boolean {
-        const poly1 = turf.polygon([this.toLinearRing().toTwoDimensionalArray()]);
-        const poly2 = turf.polygon([other.toLinearRing().toTwoDimensionalArray()]);
+        const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
-        const intersection = turf.intersect(poly1, poly2);
+        const intersection = turfIntersect(poly1, poly2);
 
         return !!intersection;
     }

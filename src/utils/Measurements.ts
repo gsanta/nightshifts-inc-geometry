@@ -25,6 +25,10 @@ export class Measurements {
         return Math.abs(angle1.getAngle() - rad) < 0.1;
     }
 
+    radToBe(actualRad: number, expectedRad: number) {
+        return Math.abs(actualRad - expectedRad) < 0.1;
+    }
+
     linesParallel(line1: Line, line2: Line) {
         return line1.slope === line2.slope;
     }

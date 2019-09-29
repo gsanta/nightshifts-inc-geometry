@@ -11,19 +11,39 @@ describe(`Angle`, () => {
         it ('creates a new Angle instance based on the given radian angle', () => {
             const angle0 = 0;
 
-            expect(geometryService.factory.angleFromRadian(angle0).getAngle()).toEqual(0);
+            expect(geometryService.factory.angleFromRadian(angle0).getAngle()).toBeCloseTo(0);
 
             const angle90 = Math.PI / 2;
 
-            expect(toDegree(geometryService.factory.angleFromRadian(angle90).getAngle())).toEqual(90);
+            expect(toDegree(geometryService.factory.angleFromRadian(angle90).getAngle())).toBeCloseTo(90);
 
             const angle180 = Math.PI;
 
-            expect(toDegree(geometryService.factory.angleFromRadian(angle180).getAngle())).toEqual(180);
+            expect(toDegree(geometryService.factory.angleFromRadian(angle180).getAngle())).toBeCloseTo(180);
 
-            const angleNeg180 = - Math.PI / 2;
+            const angleNeg90 = - Math.PI / 2;
 
-            expect(toDegree(geometryService.factory.angleFromRadian(angleNeg180).getAngle())).toEqual(270);
+            expect(toDegree(geometryService.factory.angleFromRadian(angleNeg90).getAngle())).toBeCloseTo(270);
+
+            const angle240 = toRadian(240);
+
+            expect(toDegree(geometryService.factory.angleFromRadian(angle240).getAngle())).toBeCloseTo(240);
+
+            const angle270 = 3 * Math.PI / 2;
+
+            expect(toDegree(geometryService.factory.angleFromRadian(angle270).getAngle())).toBeCloseTo(270);
+
+            const angle300 = toRadian(300);
+
+            expect(toDegree(geometryService.factory.angleFromRadian(angle300).getAngle())).toBeCloseTo(300);
+
+            const angle510 = toRadian(510);
+
+            expect(toDegree(geometryService.factory.angleFromRadian(angle510).getAngle())).toBeCloseTo(150);
+
+            const angleNeg380 = toRadian(-380);
+
+            expect(toDegree(geometryService.factory.angleFromRadian(angleNeg380).getAngle())).toBeCloseTo(340);
         });
     });
 
