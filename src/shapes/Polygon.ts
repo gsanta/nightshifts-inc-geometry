@@ -1,6 +1,6 @@
 import booleanContains from '@turf/boolean-contains';
 import * as turfHelpers from '@turf/helpers';
-import * as turf from '@turf/turf';
+import turfIntersect from '@turf/intersect';
 
 import * as PolyBool from 'polybooljs';
 import polylabel from 'polylabel';
@@ -119,7 +119,7 @@ export class Polygon implements Shape {
         const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
         const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
-        const intersection = turf.intersect(poly1, poly2);
+        const intersection = turfIntersect(poly1, poly2);
 
         return !!intersection;
     }
@@ -308,24 +308,6 @@ export class Polygon implements Shape {
         const clone = this.clone();
         clone.points.push(clone.points[0]);
         return clone;
-    }
-
-    private createPolygonFromTurfGeometry(geometry: {type: string, coordinates: [[number, number][]]}): Polygon {
-        if (geometry.type !== 'Polygon') {
-            return this.geometryService.factory.polygon([
-                this.geometryService.factory.point(0, 0),
-                this.geometryService.factory.point(0, 0),
-                this.geometryService.factory.point(0, 0)
-            ])
-        }
-
-        let points = geometry.coordinates[0];
-
-        points = without(points, last(points));
-
-        const polygon = this.geometryService.factory.polygon(points.map(p => this.geometryService.factory.point(p[0], p[1])));
-
-        return polygon;
     }
 
     private arePointsClockwise() {
