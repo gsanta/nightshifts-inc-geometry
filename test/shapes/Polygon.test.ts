@@ -84,6 +84,62 @@ describe('Polygon', () => {
         });
     });
 
+    describe('intersect', () => {
+        it ('returns true if the two polygons overlap', () => {
+            const poly1 = geometryService.factory.polygon([
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(4, 1),
+                geometryService.factory.point(4, 4),
+                geometryService.factory.point(1, 4)
+            ]);
+
+            const poly2 = geometryService.factory.polygon([
+                geometryService.factory.point(3, 1),
+                geometryService.factory.point(5, 1),
+                geometryService.factory.point(5, 4),
+                geometryService.factory.point(3, 4)
+            ]);
+
+            expect(poly1.intersect(poly2)).toBeTruthy();
+        });
+
+        it ('returns true if the two polygons intersect at an edge', () => {
+            const poly1 = geometryService.factory.polygon([
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(4, 1),
+                geometryService.factory.point(4, 4),
+                geometryService.factory.point(1, 4)
+            ]);
+
+            const poly2 = geometryService.factory.polygon([
+                geometryService.factory.point(4, 1),
+                geometryService.factory.point(5, 1),
+                geometryService.factory.point(5, 4),
+                geometryService.factory.point(4, 4)
+            ])
+
+            expect(poly1.intersect(poly2)).toBeTruthy();
+        });
+
+        it ('returns false if the two polygons do not intersect', () => {
+            const poly1 = geometryService.factory.polygon([
+                geometryService.factory.point(1, 1),
+                geometryService.factory.point(4, 1),
+                geometryService.factory.point(4, 4),
+                geometryService.factory.point(1, 4)
+            ]);
+
+            const poly2 = geometryService.factory.polygon([
+                geometryService.factory.point(5, 1),
+                geometryService.factory.point(6, 1),
+                geometryService.factory.point(6, 4),
+                geometryService.factory.point(5, 4)
+            ])
+
+            expect(poly1.intersect(poly2)).toBeFalsy();
+        });
+    });
+
     describe('`getCoincidentLineSegment`', () => {
         it ('returns with the common `Segment` segment if the `Polygon` has a common edge with the other `Shape`', () => {
             const poly1 = geometryService.factory.polygon([

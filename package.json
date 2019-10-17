@@ -36,6 +36,7 @@
     "@types/polylabel": "^1.0.5",
     "linear-solve": "^1.2.1",
     "polybooljs": "^1.2.0",
+    "polygons-intersect": "^1.0.3",
     "polylabel": "^1.0.2"
   },
   "repository": {

@@ -1,6 +1,6 @@
 import booleanContains from '@turf/boolean-contains';
 import * as turfHelpers from '@turf/helpers';
-import turfIntersect from '@turf/intersect';
+import booleanOverlaps from '@turf/boolean-overlap';
 
 import * as PolyBool from 'polybooljs';
 import polylabel from 'polylabel';
@@ -119,9 +119,7 @@ export class Polygon implements Shape {
         const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
         const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
 
-        const intersection = turfIntersect(poly1, poly2);
-
-        return !!intersection;
+        return booleanOverlaps(poly1, poly2);
     }
 
     public scale(scalePoint: Point): Polygon {
