@@ -84,34 +84,6 @@ describe('Polygon', () => {
         });
     });
 
-    describe(`containsPoint`, () => {
-        it ('determines if the `Point` is inside the `Polygon`', () => {
-            const square = geometryService.factory.polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(3, 1),
-                geometryService.factory.point(3, 4),
-                geometryService.factory.point(1, 4)
-            ]);
-
-            expect(square.containsPoint(geometryService.factory.point(1, 1))).toBeTruthy();
-            expect(square.containsPoint(geometryService.factory.point(2, 2))).toBeTruthy();
-            expect(square.containsPoint(geometryService.factory.point(0, 0))).toBeFalsy();
-
-            const complexPoly = geometryService.factory.polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(3, 1),
-                geometryService.factory.point(3, 4),
-                geometryService.factory.point(6, 4),
-                geometryService.factory.point(6, 6),
-                geometryService.factory.point(1, 6)
-            ]);
-
-            expect(complexPoly.containsPoint(geometryService.factory.point(3, 4))).toBeTruthy();
-            expect(complexPoly.containsPoint(geometryService.factory.point(3.1, 3.9))).toBeFalsy();
-            expect(complexPoly.containsPoint(geometryService.factory.point(2.9, 4.1))).toBeTruthy();
-        });
-    });
-
     describe('`getCoincidentLineSegment`', () => {
         it ('returns with the common `Segment` segment if the `Polygon` has a common edge with the other `Shape`', () => {
             const poly1 = geometryService.factory.polygon([
@@ -332,63 +304,6 @@ describe('Polygon', () => {
             expect(polygon.getArea()).toEqual(128);
         });
     });
-
-    describe('`containsMoreThenHalf`', () => {
-        it ('returns true if more than half of the other `Polygon`s area is overlapping with the `Polygon`', () => {
-            const polygon = geometryService.factory.polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(3, 1),
-                geometryService.factory.point(3, 3),
-                geometryService.factory.point(1, 3)
-            ]);
-
-            const otherPolygon = geometryService.factory.polygon([
-                geometryService.factory.point(1, 0),
-                geometryService.factory.point(2, 0),
-                geometryService.factory.point(2, 3),
-                geometryService.factory.point(1, 3)
-            ]);
-
-            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeTruthy();
-        });
-
-        it ('returns false if less than half of the other `Polygon` is overlapping', () => {
-            const polygon = geometryService.factory.polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(3, 1),
-                geometryService.factory.point(3, 3),
-                geometryService.factory.point(1, 3)
-            ]);
-
-            const otherPolygon = geometryService.factory.polygon([
-                geometryService.factory.point(1, 0),
-                geometryService.factory.point(2, 0),
-                geometryService.factory.point(2, 6),
-                geometryService.factory.point(1, 6)
-            ]);
-
-            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeFalsy();
-        });
-
-        it ('returns false if only the border lines are overlapping of the two `Polygon`s sides', () => {
-            const polygon = geometryService.factory.polygon([
-                geometryService.factory.point(1, 1),
-                geometryService.factory.point(3, 1),
-                geometryService.factory.point(3, 3),
-                geometryService.factory.point(1, 3)
-            ]);
-
-            const otherPolygon = geometryService.factory.polygon([
-                geometryService.factory.point(0, 0),
-                geometryService.factory.point(1, 0),
-                geometryService.factory.point(1, 3),
-                geometryService.factory.point(0, 3)
-            ]);
-
-            expect(polygon.containsMoreThenHalf(otherPolygon)).toBeFalsy();
-        });
-    });
-
 
     describe('`getEdges`', () => {
         it ('returns with a `Segment` array representing the `Polygon` sides from bottom left to clockwise', () => {
