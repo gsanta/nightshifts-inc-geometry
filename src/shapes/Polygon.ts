@@ -2,7 +2,6 @@ import booleanContains from '@turf/boolean-contains';
 import * as turfHelpers from '@turf/helpers';
 import booleanOverlaps from '@turf/boolean-overlap';
 
-import * as PolyBool from 'polybooljs';
 import polylabel from 'polylabel';
 import { GeometryService } from '../GeometryService';
 import { Point } from './Point';
@@ -161,22 +160,6 @@ export class Polygon implements Shape {
         const height = boudingInfo.max[1] - boudingInfo.min[1];
 
         return this.geometryService.factory.rectangle(point.x - width / 2, point.y - height / 2, width, height);
-    }
-
-    public getUnion(otherPolygon: Polygon): Polygon {
-        const union = PolyBool.union(
-            {
-                regions: [[[1, 1], [2, 1], [2, 2], [1, 2], [1, 1]]],
-                inverted: false
-            },
-            {
-                regions: [[[1, 2], [2, 2], [2, 3], [1, 3], [1, 2]]],
-                inverted: false
-            }
-        );
-
-        const points = union.regions.map(region => this.geometryService.factory.point(region[0], region[1]));
-        return this.geometryService.factory.polygon(points);
     }
 
     /**

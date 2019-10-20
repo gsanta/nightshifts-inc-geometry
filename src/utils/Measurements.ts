@@ -36,4 +36,8 @@ export class Measurements {
     coordinatesEqual(coord1: number, coord2: number) {
         return Math.abs(coord1 - coord2) < 0.1;
     }
+
+    pointsAreVeryClose(point1: Point, point2: Point) {
+        return point1.x - point2.x < 0.1 && point1.y - point2.y < 0.1;
+    }
 }
