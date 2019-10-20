@@ -38,6 +38,6 @@ export class Measurements {
     }
 
     pointsAreVeryClose(point1: Point, point2: Point) {
-        return point1.x - point2.x < 0.1 && point1.y - point2.y < 0.1;
+        return Math.abs(point1.x - point2.x) < 0.1 && Math.abs(point1.y - point2.y) < 0.1;
     }
 }
