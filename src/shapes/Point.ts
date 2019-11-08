@@ -40,6 +40,11 @@ export class Point {
         return this.geometryService.factory.point(this.x, -this.y);
     }
 
+    mul(x: number, y?: number): Point {
+        y = y === undefined ? x : y;
+        return this.geometryService.factory.point(this.x * x, this.y * y);
+    }
+
     perpendicularVector(): Point {
         return this.geometryService.factory.point(this.y, -this.x);
     }
@@ -97,5 +102,5 @@ export class Point {
 
     toString(): string {
         return `(${this.x},${this.y})`;
-    };
+    }
 }

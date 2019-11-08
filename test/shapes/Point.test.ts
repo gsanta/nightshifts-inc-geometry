@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import { GeometryService } from "../../src/GeometryService";
 import { toRadian } from "../../src/utils/Measurements";
 
@@ -10,7 +9,7 @@ describe('`Point`', () => {
             const point = geometryService.factory.point(2, 3);
             const otherPoint = geometryService.factory.point(4, -2);
 
-            expect(point.absoluteDistanceTo(otherPoint)).to.eql([2, 5]);
+            expect(point.absoluteDistanceTo(otherPoint)).toEqual([2, 5]);
         });
     });
 
@@ -19,7 +18,7 @@ describe('`Point`', () => {
             const point = geometryService.factory.point(5, 5);
             const otherPoint = geometryService.factory.point(3, 3);
 
-            expect(point.subtract(otherPoint)).to.eql(geometryService.factory.point(2, 2));
+            expect(point.subtract(otherPoint)).toEqual(geometryService.factory.point(2, 2));
         });
     });
 
@@ -28,7 +27,7 @@ describe('`Point`', () => {
             const point1 = geometryService.factory.point(2, 2);
             const point2 = geometryService.factory.point(4, 4);
 
-            expect(point1.distanceTo(point2)).to.eq(2*Math.SQRT2);
+            expect(point1.distanceTo(point2)).toEqual(2*Math.SQRT2);
         });
     });
 
@@ -36,7 +35,7 @@ describe('`Point`', () => {
         it ('calculates the distance to the origin', () => {
             const point = geometryService.factory.point(5, 3);
 
-            expect(point.distanceToOrigin()).to.eq(Math.sqrt(25 + 9));
+            expect(point.distanceToOrigin()).toEqual(Math.sqrt(25 + 9));
         });
     });
 
@@ -44,13 +43,13 @@ describe('`Point`', () => {
         it ('normalizes the `Point`', () => {
             const point = geometryService.factory.point(2, 0);
 
-            expect(point.normalize()).to.eql(geometryService.factory.point(1, 0));
+            expect(point.normalize()).toEqual(geometryService.factory.point(1, 0));
         });
 
         it ('works well with negative numbers', () => {
             const point = geometryService.factory.point(-2, 0);
 
-            expect(point.normalize()).to.eql(geometryService.factory.point(-1, 0));
+            expect(point.normalize()).toEqual(geometryService.factory.point(-1, 0));
         });
     });
 
@@ -59,7 +58,7 @@ describe('`Point`', () => {
             const point1 = geometryService.factory.point(0, 3);
             const point2 = geometryService.factory.point(2, 0);
 
-            expect(point1.angleTo(point2)).to.eq(toRadian(90));
+            expect(point1.angleTo(point2)).toEqual(toRadian(90));
         });
 
 
@@ -67,7 +66,16 @@ describe('`Point`', () => {
             const point1 = geometryService.factory.point(0, 3);
             const point2 = geometryService.factory.point(2, 0);
 
-            expect(point2.angleTo(point1)).to.eq(toRadian(-90));
+            expect(point2.angleTo(point1)).toEqual(toRadian(-90));
+        });
+    });
+
+    describe('mul', () => {
+        it ('muiltiplies the point', () => {
+            const point = geometryService.factory.point(2, 3);
+            
+            expect(point.mul(3, 4)).toEqual(geometryService.factory.point(6, 12));
+            expect(point.mul(2)).toEqual(geometryService.factory.point(4, 6));
         });
     });
 });
