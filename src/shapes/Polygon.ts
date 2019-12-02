@@ -97,6 +97,7 @@ export class Polygon implements Shape {
         }
 
         return Math.abs(area / 2);
+        let depth: number;
     }
 
     public clone(): Polygon {
