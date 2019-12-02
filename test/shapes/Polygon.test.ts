@@ -2,6 +2,7 @@ import { Polygon } from '../../src/shapes/Polygon';
 import { Point } from '../../src/shapes/Point';
 import { Segment } from '../../src/shapes/Segment';
 import { GeometryService } from '../../src/GeometryService';
+import { Rectangle } from '../../src/shapes/Rectangle';
 
 describe('Polygon', () => {
 
@@ -25,6 +26,29 @@ describe('Polygon', () => {
                     geometryService.factory.point(3, 3),
                     geometryService.factory.point(3, 1)
             ]))).toBeTruthy();
+        });
+    });
+
+    describe('containsPoint', () => {
+        it ('returns true if the point is inside of the polygon', () => {
+            const point = new Point(2, 2);
+            const polygon = new Rectangle(new Point(1, 1), new Point(3, 3));
+
+            expect(polygon.containsPoint(point)).toBeTruthy();
+        });
+
+        it ('returns false if the point is not inside of the polygon', () => {
+            const point = new Point(0, 0);
+            const polygon = new Rectangle(new Point(1, 1), new Point(3, 3));
+
+            expect(polygon.containsPoint(point)).toBeFalsy();
+        });
+
+        it ('returns false if the point only intersets the polygon', () => {
+            const point = new Point(1, 2);
+            const polygon = new Rectangle(new Point(1, 1), new Point(3, 3));
+
+            expect(polygon.containsPoint(point)).toBeFalsy();
         });
     });
 

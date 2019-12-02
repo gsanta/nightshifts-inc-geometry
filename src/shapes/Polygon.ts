@@ -108,6 +108,13 @@ export class Polygon implements Shape {
         return clone;
     }
 
+    containsPoint(point: Point): boolean {
+        const poly = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
+        const p = turfHelpers.point([point.x, point.y]);
+
+        return booleanContains(poly, p);
+    }
+
     public contains(other: Polygon): boolean {
         const poly1 = turfHelpers.polygon([this.toLinearRing().toTwoDimensionalArray()]);
         const poly2 = turfHelpers.polygon([other.toLinearRing().toTwoDimensionalArray()]);
