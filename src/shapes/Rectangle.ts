@@ -16,4 +16,10 @@ export class Rectangle extends Polygon {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
+
+    translate(point: Point): Rectangle {
+        const topLeft = this.topLeft.addX(point.x).addY(point.y);
+        const bottomRight = this.bottomRight.addX(point.x).addY(point.y);
+        return new Rectangle(topLeft, bottomRight);
+    }
 }
